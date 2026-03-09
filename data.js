@@ -8014,7 +8014,7 @@ const stavData = {
                                 "time": "07:02"
                             },
                             {
-                                "stopId": "stop_trez_vinci/cellini",
+                                "stopId": "stop_trez_colombo/cellini",
                                 "time": "07:04"
                             },
                             {
@@ -8146,16 +8146,16 @@ const stavData = {
                                 "time": "07:28"
                             },
                             {
-                                "stopId": "stop_trez_vinci/cellini",
+                                "stopId": "stop_trez_colombo/cellini",
                                 "time": "07:30"
                             },
                             {
                                 "stopId": "stop_ces_vig/gramsci",
-                                "time": "07:22"
+                                "time": "07:32"
                             },
                             {
                                 "stopId": "stop_cors_italia",
-                                "time": "07:26"
+                                "time": "07:36"
                             },
                             {
                                 "stopId": "stop_cors_ces",
@@ -8224,7 +8224,7 @@ const stavData = {
                                 "time": "15:13"
                             },
                             {
-                                "stopId": "stop_trez_vinci/cellini2",
+                                "stopId": "stop_trez_colombo/cellini2",
                                 "time": "15:15"
                             },
                             {
@@ -10650,3 +10650,4 @@ if (typeof window !== "undefined") {
 if (typeof module !== "undefined") {
     module.exports = stavData;
 }
+
