@@ -1,7 +1,7 @@
 {
-  "name": "myATSOM | STAV Autolinee",
+  "name": "myATSOM | Mobility Companion",
   "short_name": "myATSOM",
-  "description": "Orari e fermate STAV Autolinee sempre a portata di mano.",
+  "description": "Il tuo mobility companion nel sud-ovest milanese!",
   "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#11335C",
@@ -23,11 +23,39 @@
   ],
   "screenshots": [
     {
-      "src": "ScreenshotAppCell.png",
-      "sizes": "390x844",
+      "src": "ScreenApp/App1.png",
+      "sizes": "809x1440",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "myATSOM su Mobile"
+      "label": "Screen1"
+    },
+    {
+      "src": "ScreenApp/App2.png",
+      "sizes": "809x1440",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Screen2"
+    },
+    {
+      "src": "ScreenApp/App3.png",
+      "sizes": "809x1440",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Screen3"
+    },
+    {
+      "src": "ScreenApp/App4.png",
+      "sizes": "809x1440",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Screen4"
+    },
+    {
+      "src": "ScreenApp/App5.png",
+      "sizes": "809x1440",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Screen5"
     }
   ]
 }
