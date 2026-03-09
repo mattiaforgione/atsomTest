@@ -128,6 +128,18 @@ const stavData = {
             "lng": 9.039100
         },
         {
+            "id": "stop_gagg_bon",
+            "name": "Gaggiano - Bonirola",
+            "lat": 45.412512,
+            "lng": 9.053236
+        },
+        {
+            "id": "stop_gagg_bon2",
+            "name": "Gaggiano - Bonirola",
+            "lat": 45.4126728,
+            "lng": 9.0534391
+        },
+        {
             "id": "stop_gagg_cim",
             "name": "Gaggiano - Cimitero",
             "lat": 45.3963679,
@@ -218,6 +230,30 @@ const stavData = {
             "lng": 9.071974
         },
         {
+            "id": "stop_trez_circon",
+            "name": "Trezzano sul Naviglio - Circonvallazione",
+            "lat": 45.417920,
+            "lng": 9.072443
+        },
+        {
+            "id": "stop_trez_circon2",
+            "name": "Trezzano sul Naviglio - Circonvallazione",
+            "lat": 45.417503,
+            "lng": 9.070947
+        },
+        {
+            "id": "stop_trez_milano",
+            "name": "Trezzano sul Naviglio - Via Milano",
+            "lat": 45.420192,
+            "lng": 9.074806
+        },
+        {
+            "id": "stop_trez_milano2",
+            "name": "Trezzano sul Naviglio - Via Milano",
+            "lat": 45.420793,
+            "lng": 9.075671
+        },
+        {
             "id": "stop_ces_vig/gramsci",
             "name": "Cesano Boscone - Nuova Vigevanese/Gramsci",
             "lat": 45.431397,
@@ -258,6 +294,12 @@ const stavData = {
             "name": "Corsico - Nuova Vigevanese 17",
             "lat": 45.442698,
             "lng": 9.113975
+        },
+        {
+            "id": "stop_cors_guardia",
+            "name": "Corsico - C.na Guardia",
+            "lat": 45.435976,
+            "lng": 9.098308
         },
         {
             "id": "stop_mil_lore",
@@ -10668,6 +10710,7 @@ if (typeof window !== "undefined") {
 if (typeof module !== "undefined") {
     module.exports = stavData;
 }
+
 
 
 
