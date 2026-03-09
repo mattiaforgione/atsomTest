@@ -30,6 +30,12 @@
 </head>
 
 <body>
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" class="splash-container">
+        <img src="myAtsomLogo.png" alt="myATSOM Logo" class="splash-logo">
+        <div class="splash-footer">2026 ATSOM | Associazione Trasporti Sud Ovest Milanese</div>
+    </div>
+
     <!-- CONTENUTI APP -->
     <div id="app-content-wrapper">
         <!-- TOP BANNER CON CURVATURA E LOGO -->
@@ -39,6 +45,22 @@
         </div>
 
         <div id="map"></div>
+
+        <!-- PULSANTE CHIUDI PERCORSO -->
+        <button id="close-route-btn" class="map-close-route-btn hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Chiudi Percorso
+        </button>
+
+        <!-- CARICAMENTO MAPPA -->
+        <div id="map-loader" class="map-loader hidden">
+            <div class="loader-spinner"></div>
+            <span>Calcolo percorso...</span>
+        </div>
 
         <main class="app-main map-bottom-panel" id="main-panel">
             <div class="panel-handle-container" id="main-panel-handle">
@@ -104,13 +126,21 @@
                     <img src="placeholder-stop.jpg" alt="Fermata" id="stop-image-placeholder">
                 </div>
                 <h2 id="stop-name" class="stop-title">Nome Fermata</h2>
-                <button id="close-modal-btn" class="close-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
+                <div class="header-actions">
+                    <button id="nav-btn" class="icon-btn" title="Apri nel navigatore" style="margin-right: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                    </button>
+                    <button id="close-modal-btn" class="close-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="sheet-content">
@@ -153,8 +183,32 @@
     <!-- CARICAMENTO SCRIPT -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
+    <script src="fermate.js"></script>
+    <script src="linea_Z551.js"></script>
+    <script src="linea_Z552.js"></script>
+    <script src="linea_Z553.js"></script>
+    <script src="linea_Z554.js"></script>
+    <script src="linea_Z555.js"></script>
+    <script src="linea_Z557.js"></script>
+    <script src="linea_Z559.js"></script>
+    <script src="linea_Z560.js"></script>
     <script src="data.js"></script>
     <script src="app.js"></script>
+    <script>
+        window.addEventListener('error', function (e) {
+            const errDiv = document.createElement('div');
+            errDiv.style = "position:fixed;top:0;left:0;background:red;color:white;z-index:99999;padding:20px;width:100%;font-size:16px;pointer-events:none;";
+            errDiv.innerHTML = "<b>ERROR:</b> " + e.error.message + "<br><small>" + e.error.stack + "</small>";
+            document.body.appendChild(errDiv);
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+            const errDiv = document.createElement('div');
+            errDiv.style = "position:fixed;top:0;left:0;background:orange;color:white;z-index:99999;padding:20px;width:100%;font-size:16px;pointer-events:none;";
+            errDiv.innerHTML = "<b>PROMISE ERROR:</b> " + (e.reason ? e.reason.message || e.reason : "Unknown");
+            document.body.appendChild(errDiv);
+        });
+    </script>
 </body>
 
 </html>

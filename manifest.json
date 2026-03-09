@@ -28,13 +28,6 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "myATSOM su Mobile"
-    },
-    {
-      "src": "screenshot-desktop.png",
-      "sizes": "1280x800",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "myATSOM su Desktop"
     }
   ]
 }

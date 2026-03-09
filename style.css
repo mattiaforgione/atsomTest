@@ -231,6 +231,11 @@ body {
     transform: translateX(-50%) translateY(calc(0px + var(--drag-y, 0px)));
 }
 
+.map-bottom-panel.map-hidden {
+    transform: translateX(-50%) translateY(120vh) !important;
+}
+
+/* --- SEARCH SECTION --- */
 .map-bottom-panel.dragging {
     transition: none;
 }
@@ -400,6 +405,59 @@ body {
     }
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+}
+
+/* SPLASH SCREEN */
+.splash-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.splash-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-logo {
+    width: auto;
+    height: 50px;
+    /* Adjust size based on design, made smaller as requested */
+    max-width: 80%;
+}
+
+.splash-footer {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-white);
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+    white-space: nowrap;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+}
+
 .results-list {
     list-style: none;
 }
@@ -484,6 +542,11 @@ body {
     transform: translateY(100%);
 }
 
+.bottom-sheet.map-peek {
+    /* Lascia scorgere circa 100px dall'alto (header + spazio) per far capire che c'è */
+    transform: translateY(calc(100% - 100px));
+}
+
 .sheet-handle {
     width: 40px;
     height: 5px;
@@ -530,13 +593,16 @@ body {
     font-weight: 700;
     line-height: 1.2;
     flex: 1;
-    padding-right: 30px;
+    padding-right: 10px;
 }
 
-.close-btn {
-    position: absolute;
-    top: 0;
-    right: 1.5rem;
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.close-btn,
+.icon-btn {
     background: var(--glass-bg);
     border: none;
     color: var(--text-white);
@@ -550,7 +616,8 @@ body {
     transition: background 0.2s;
 }
 
-.close-btn:hover {
+.close-btn:hover,
+.icon-btn:hover {
     background: var(--accent);
 }
 
@@ -596,10 +663,50 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     padding: 4px 12px;
-    border-radius: 12px;
     margin-bottom: 1rem;
     letter-spacing: 1px;
+    border-radius: 12px;
+    /* Aumentato il radius come richiesto */
     transition: all 0.3s ease;
+}
+
+/* MAP LOADER */
+.map-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background: var(--bg-dark);
+    padding: 24px 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    font-weight: 600;
+    color: var(--text-white);
+    border: 1px solid var(--glass-border);
+}
+
+.map-loader.hidden {
+    display: none;
+}
+
+.map-loader .loader-spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid rgba(255, 255, 255, 0.15);
+    border-top-color: var(--text-white);
+    border-radius: 50%;
+    animation: route-spin 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite;
+}
+
+@keyframes route-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .highlight-badge.urgent {
@@ -862,6 +969,139 @@ body {
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
+}
+
+/* CUSTOM MAP POPUP */
+.atsom-map-popup .leaflet-popup-content-wrapper {
+    background: rgba(17, 51, 92, 0.85);
+    /* Dark blue theme color with opacity */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    color: var(--text-white);
+    padding: 0;
+    overflow: hidden;
+}
+
+.atsom-map-popup .leaflet-popup-tip-container {
+    display: none;
+    /* Nascondiamo la freccetta bianca nativa per un look più clean a bolla */
+}
+
+.atsom-map-popup .leaflet-popup-content {
+    margin: 0;
+    width: 250px !important;
+}
+
+.custom-popup-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-time {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-white);
+    letter-spacing: -0.5px;
+}
+
+.popup-stop-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-white);
+    line-height: 1.3;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.popup-lines-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 4px;
+}
+
+.popup-line-chip {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* CONNESSIONI POPUP (Metro/Treni) */
+.popup-separator {
+    width: 100%;
+    height: 1px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.3);
+    margin: 8px 0;
+}
+
+.popup-connections-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 4px;
+}
+
+.popup-connection-pill {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: var(--text-white);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    /* better wrapping control */
+    align-items: center;
+    gap: 10px;
+    /* slightly more breathable gap */
+    cursor: default;
+    width: fit-content;
+    max-width: 100%;
+    /* don't overflow parent */
+}
+
+.popup-connection-pill span {
+    line-height: 1.3;
+    /* cleaner multi-line text */
+}
+
+.popup-connection-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    /* Just a bit more space */
+    height: 20px;
+    padding: 0 4px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    /* CRITICAL: prevent squishing from text */
+}
+
+.popup-connection-icon {
+    width: auto;
+    height: 16px;
+    max-width: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -1796,4 +2036,61 @@ body {
 
 .route-card.accordion-open .chevron-icon {
     transform: rotate(180deg);
+}
+
+/* --- PULSANTE CHIUDI PERCORSO --- */
+.map-close-route-btn {
+    position: absolute;
+    bottom: 120px;
+    /* Alzato per restare sopra il bottom-sheet peeking */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    /* Sopra la mappa, sotto l'overlay */
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    /* diventerà flex quando visualizzato */
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.map-close-route-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+}
+
+.map-close-route-btn.hidden {
+    display: none !important;
+}
+
+/* --- STILI NUOVI PALLINI MAPPA --- */
+/* Stile base per pallini e frecce del percorso (rimossi marker vecchi) */
+.route-stop-marker-html {
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.route-arrow-marker {
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Stile per i pallini delle fermate del percorso */
+.route-stop-marker {
+    background: transparent;
+    border: none;
 }

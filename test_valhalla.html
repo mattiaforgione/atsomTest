@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Valhalla</title>
+</head>
+
+<body>
+    <h1>Testing Valhalla</h1>
+    <pre id="output"></pre>
+    <script>
+        async function run() {
+            const out = document.getElementById('output');
+            try {
+                const reqData = {
+                    locations: [
+                        { lat: 45.400911, lon: 8.913239 },
+                        { lat: 45.400911, lon: 8.913239 }
+                    ],
+                    costing: "auto",
+                    units: "km"
+                };
+                const encodedJson = encodeURIComponent(JSON.stringify(reqData));
+                const valhallaUrl = `https://valhalla1.openstreetmap.de/route?json=${encodedJson}`;
+
+                out.innerText += "Fetching: " + valhallaUrl + "\n";
+                const resp = await fetch(valhallaUrl);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    out.innerText += "SUCCESS: " + data.trip.legs.length + " legs\n";
+                } else {
+                    out.innerText += "ERROR: " + resp.status + "\n";
+                    const errText = await resp.text();
+                    out.innerText += "REASON: " + errText + "\n";
+                }
+            } catch (e) {
+                out.innerText += "FETCH ERROR: " + e.message + "\n";
+            }
+        }
+        run();
+    </script>
+</body>
+
+</html>

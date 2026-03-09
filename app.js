@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Riferimenti Contenuti Modal
     const stopNameHeader = document.getElementById('stop-name');
+    const navBtn = document.getElementById('nav-btn');
     const routesContainer = document.getElementById('routes-container');
 
     // Riferimenti Day Chips
@@ -56,6 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Date Settings
     const SCHOOL_END_DATE_2026 = new Date('2026-06-08T00:00:00');
+
+    // Splash Screen logic
+    const splashScreen = document.getElementById('splash-screen');
+    if (splashScreen) {
+        setTimeout(() => {
+            splashScreen.classList.add('hidden');
+        }, 800); // 800ms mostra un po' il logo, poi sfuma
+    }
 
     // Festività con Servizio SOSPESO (Mese 0-indicizzato, quindi 0=Gen, 4=Mag, 7=Ago, 11=Dic)
     const suspendedDates = [
@@ -118,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentInterval = null;
     let activeStop = null;
+    let nextBusInterval = null;
 
     // Stato: Giorno Selezionato (Inizializzato a Oggi)
     let selectedDayType = getTodayDayType();
@@ -160,88 +170,100 @@ document.addEventListener('DOMContentLoaded', () => {
         return R * c;
     }
 
-    // Prova a ottenere la posizione dell'utente all'avvio
+    // Avvia il tracciamento in tempo reale della posizione dell'utente
     if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
+        let userMarker = null;
+
+        navigator.geolocation.watchPosition(
             (position) => {
                 userLocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
 
-                // Opzionale: se usiamo la geolocalizzazione mostriamo un marker blu dell'utente
+                // Opzionale: se usiamo la geolocalizzazione mostriamo o aggiorniamo un marker blu dell'utente
                 if (map) {
-                    const userIcon = L.divIcon({
-                        className: 'custom-map-marker user-marker',
-                        html: `<div class="marker-pin" style="background:#0984e3; border-color:#fff;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>`,
-                        iconSize: [36, 36],
-                        iconAnchor: [18, 36]
-                    });
-                    const userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
+                    if (!userMarker) {
+                        const userIcon = L.divIcon({
+                            className: 'custom-map-marker user-marker',
+                            html: `<div class="marker-pin" style="background:#0984e3; border-color:#fff;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>`,
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 36]
+                        });
+                        userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
 
-                    userMarker.on('click', async () => {
-                        let addressString = "Indirizzo in fase di recupero...";
+                        userMarker.on('click', async () => {
+                            let addressString = "Indirizzo in fase di recupero...";
 
-                        // Fake Stop per mostrare l'UI della posizione utente
-                        const userStop = {
-                            id: "user_location_stop",
-                            name: "La tua posizione",
-                            lat: userLocation.lat,
-                            lng: userLocation.lng,
-                            routes: [], // Niente rotte, quindi nessun orario
-                            isUserLocation: true // custom flag let's pass it anyway
-                        };
+                            // Fake Stop per mostrare l'UI della posizione utente
+                            const userStop = {
+                                id: "user_location_stop",
+                                name: "La tua posizione",
+                                lat: userLocation.lat, // snapshotte the current moment
+                                lng: userLocation.lng, // snapshotte the current moment
+                                routes: [], // Niente rotte, quindi nessun orario
+                                isUserLocation: true // custom flag let's pass it anyway
+                            };
 
-                        // Mostriamo provvisoriamente il popup
-                        highlightCard.classList.add('hidden');
-                        openStopDetails(userStop);
+                            // Mostriamo provvisoriamente il popup
+                            highlightCard.classList.add('hidden');
+                            openStopDetails(userStop);
 
-                        try {
-                            // Reverse geocoding via OpenStreetMap Nominatim
-                            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${userLocation.lat}&lon=${userLocation.lng}&format=json&addressdetails=1`);
-                            const data = await response.json();
+                            try {
+                                // Reverse geocoding via OpenStreetMap Nominatim
+                                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${userLocation.lat}&lon=${userLocation.lng}&format=json&addressdetails=1`);
+                                const data = await response.json();
 
-                            if (data && data.address) {
-                                const a = data.address;
-                                const street = a.road || a.pedestrian || a.isolated_dwelling || "";
-                                const houseNumber = a.house_number ? ` ${a.house_number}` : "";
-                                const city = a.city || a.town || a.village || a.municipality || "";
-                                const postcode = a.postcode || "";
-                                const province = a.county || a.state || "";
+                                if (data && data.address) {
+                                    const a = data.address;
+                                    const street = a.road || a.pedestrian || a.isolated_dwelling || "";
+                                    const houseNumber = a.house_number ? ` ${a.house_number}` : "";
+                                    const city = a.city || a.town || a.village || a.municipality || "";
+                                    const postcode = a.postcode || "";
+                                    const province = a.county || a.state || "";
 
-                                addressString = `${street}${houseNumber}, ${city}, ${postcode}, ${province}`;
-                                // Pulisce stringa da virgole iniziali/finali vuote se mancano dati
-                                addressString = addressString.replace(/^[\s,]+/, '').replace(/[\s,]+$/, '').trim();
-                            } else {
-                                addressString = "Impossibile recuperare l'indirizzo";
+                                    addressString = `${street}${houseNumber}, ${city}, ${postcode}, ${province}`;
+                                    // Pulisce stringa da virgole iniziali/finali vuote se mancano dati
+                                    addressString = addressString.replace(/^[\s,]+/, '').replace(/[\s,]+$/, '').trim();
+                                } else {
+                                    addressString = "Impossibile recuperare l'indirizzo";
+                                }
+                            } catch (e) {
+                                addressString = "Errore durante il recupero indirizzo";
+                                console.error(e);
                             }
-                        } catch (e) {
-                            addressString = "Errore durante il recupero indirizzo";
-                            console.error(e);
-                        }
 
-                        // Modifichiamo l'UI al volo se è aperto
-                        if (activeStop && activeStop.id === "user_location_stop") {
-                            // Cambiamo il subtitle o un box per mostrare l'indirizzo
-                            const subtitleEl = document.querySelector('.subtitle');
-                            if (subtitleEl) {
-                                subtitleEl.innerHTML = `<div style="font-size: 0.95rem; font-weight: normal; margin-top:-10px; margin-bottom: 20px; line-height: 1.4;">${addressString}</div>`;
+                            // Modifichiamo l'UI al volo se è aperto
+                            if (activeStop && activeStop.id === "user_location_stop") {
+                                // Cambiamo il subtitle o un box per mostrare l'indirizzo
+                                const subtitleEl = document.querySelector('.subtitle');
+                                if (subtitleEl) {
+                                    subtitleEl.innerHTML = `<div style="font-size: 0.95rem; font-weight: normal; margin-top:-10px; margin-bottom: 20px; line-height: 1.4;">${addressString}</div>`;
+                                }
+                                // Nascondi i selettori giorno dato che non ci sono mezzi
+                                const chipsContainer = document.querySelector('.day-chips-container');
+                                if (chipsContainer) chipsContainer.style.display = 'none';
                             }
-                            // Nascondi i selettori giorno dato che non ci sono mezzi
-                            const chipsContainer = document.querySelector('.day-chips-container');
-                            if (chipsContainer) chipsContainer.style.display = 'none';
-                        }
-                    });
+                        });
+                    } else {
+                        // Se il marker esiste già, aggiorniamo solo la sua posizione
+                        userMarker.setLatLng([userLocation.lat, userLocation.lng]);
+                    }
                 }
 
                 // Ricalcola e renderizza con le distanze
-                renderLists();
+                // Solo se l'utente non sta guardando una fermata specifica oppure sta guardando se stesso
+                if (!activeStop || activeStop.id === "user_location_stop") {
+                    renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+                }
             },
             (error) => {
                 console.warn("Geolocalizzazione rifiutata o non disponibile", error);
-                renderLists(); // Renderizza normalmente
+                if (!userLocation) {
+                    renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : ""); // Renderizza normalmente se non avevamo ancora lo user
+                }
             },
-            { timeout: 10000, maximumAge: 60000 }
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
     }
 
@@ -374,6 +396,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateModalData();
+
+        // 3.5. Impostazione Link Navigatore (Richiesta Sistema Operativo)
+        if (navBtn) {
+            navBtn.onclick = () => {
+                if (!stop.lat || !stop.lng) {
+                    alert('Coordinate mancanti per questa fermata.');
+                    return;
+                }
+                // Rileva se il dispositivo è mobile
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+                if (isMobile) {
+                    // Il protocollo 'geo:' fa si che il sistema operativo mobile chieda 
+                    // all'utente quale app di mappe vuole usare.
+                    const url = `geo:${stop.lat},${stop.lng}?q=${stop.lat},${stop.lng}`;
+                    window.location.href = url;
+                } else {
+                    // Su PC, apri direttamente Google Maps in una nuova scheda
+                    const url = `https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lng}`;
+                    window.open(url, '_blank');
+                }
+            };
+        }
 
         if (currentInterval) clearInterval(currentInterval);
         currentInterval = setInterval(updateModalData, 60000);
@@ -600,23 +645,92 @@ document.addEventListener('DOMContentLoaded', () => {
             routesContainer.appendChild(routeEl);
         });
 
-        // 6. Aggiornamento Highlight Card (Prossimo Bus)
-        if (isToday && absoluteNextTrip && absoluteNextTrip.diff <= 120 && (!activeStop.isUserLocation)) {
-            highlightCard.classList.remove('hidden');
-            hMins.textContent = absoluteNextTrip.diff === 0 ? "Ora" : absoluteNextTrip.diff;
-            hLine.textContent = `Linea ${absoluteNextTrip.line}`;
-            hDest.textContent = `dir. ${absoluteNextTrip.dest}`;
-            hExactTime.textContent = absoluteNextTrip.timeStr;
+        // 5.5 Aggiungi connessioni alla fine della lista (nella bottom sheet principale della fermata)
+        if (activeStop && activeStop.connections && activeStop.connections.length > 0) {
+            const separator = document.createElement('div');
+            separator.className = 'popup-separator';
+            separator.style.margin = '16px 0 12px 0';
 
-            if (absoluteNextTrip.diff <= 5) {
-                hMins.style.color = '#ff4757';
-                highlightBadge.textContent = "In Arrivo";
-                highlightBadge.classList.add('urgent');
-            } else {
-                hMins.style.color = 'var(--text-white)';
-                highlightBadge.textContent = "Prossimo Bus";
-                highlightBadge.classList.remove('urgent');
+            const connectionsTitle = document.createElement('div');
+            connectionsTitle.style.fontSize = '0.9rem';
+            connectionsTitle.style.color = 'var(--text-white)';
+            connectionsTitle.style.marginBottom = '12px';
+            connectionsTitle.textContent = 'Altre corrispondenze:';
+
+            const connectionsWrapper = document.createElement('div');
+            connectionsWrapper.className = 'popup-connections-container';
+            connectionsWrapper.style.padding = '0 0px 16px 0px';
+
+            activeStop.connections.forEach(conn => {
+                const connDiv = document.createElement('div');
+                connDiv.className = 'popup-connection-pill';
+                connDiv.innerHTML = `
+                    <div class="popup-connection-icon-wrapper" style="background-color: ${conn.color};">
+                        <img src="${conn.icon}" class="popup-connection-icon" alt="${conn.name} icon">
+                    </div>
+                    <span>${conn.name}</span>
+                `;
+                connectionsWrapper.appendChild(connDiv);
+            });
+
+            routesContainer.appendChild(separator);
+            routesContainer.appendChild(connectionsTitle);
+            routesContainer.appendChild(connectionsWrapper);
+        }
+
+        // 6. Aggiornamento Highlight Card (Prossimo Bus)
+        if (nextBusInterval) {
+            clearInterval(nextBusInterval);
+            nextBusInterval = null;
+        }
+
+        const updateHighlightCard = () => {
+            if (!activeStop || activeStop.isUserLocation || !isToday || !absoluteNextTrip) {
+                highlightCard.classList.add('hidden');
+                return;
             }
+
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            // Ricordiamo che absoluteNextTrip.diff era calcolato off-static `currentTotalMinutes` al lancio.
+            // Ricalcoliamolo con il passing time effettivo (timeToMinsMap(absoluteNextTrip.time))
+            const timeToMinsMap = t => {
+                let [h, m] = t.split(':').map(Number);
+                return h * 60 + m;
+            };
+
+            let tripMins = timeToMinsMap(absoluteNextTrip.timeStr);
+            // Gestione corse oltre la mezzanotte
+            if (tripMins < 240 && currentTotalMinutes >= 18 * 60) {
+                tripMins += 24 * 60;
+            }
+            const liveDiff = tripMins - currentTotalMinutes;
+
+            if (liveDiff > 120 || liveDiff < 0) {
+                highlightCard.classList.add('hidden');
+            } else {
+                highlightCard.classList.remove('hidden');
+                hMins.textContent = liveDiff === 0 ? "Ora" : liveDiff;
+                hLine.textContent = `Linea ${absoluteNextTrip.line}`;
+                hDest.textContent = `dir. ${absoluteNextTrip.dest}`;
+                hExactTime.textContent = absoluteNextTrip.timeStr;
+
+                if (liveDiff <= 5) {
+                    hMins.style.color = '#ff4757';
+                    highlightBadge.textContent = "In Arrivo";
+                    highlightBadge.classList.add('urgent');
+                } else {
+                    hMins.style.color = 'var(--text-white)';
+                    highlightBadge.textContent = "Prossimo Bus";
+                    highlightBadge.classList.remove('urgent');
+                }
+            }
+        };
+
+        if (isToday && absoluteNextTrip && (!activeStop.isUserLocation)) {
+            updateHighlightCard();
+            // Aggiorna ogni minuto
+            nextBusInterval = setInterval(updateHighlightCard, 60000);
         } else {
             highlightCard.classList.add('hidden');
         }
@@ -675,13 +789,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return h * 60 + m;
             };
 
-            // Generazione link OpenStreetMap con tutti i punti di passaggio
-            let osmPoints = trip.stops.map(s => {
-                const st = stavData.stops.find(fs => fs.id === s.stopId);
-                return st ? `${st.lat}%2C${st.lng}` : null;
-            }).filter(Boolean).join('%3B');
-            let osmUrl = `https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=${osmPoints}`;
-
+            // Sostituiamo il link OSM con un pulsante interno
             let html = `
                 <div class="timeline-header" style="position: sticky; top: 0; background: var(--bg-deep); z-index: 10; padding: 1rem 0; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
                     <button class="back-btn" onclick="window.closeTripDetail()" style="padding: 0.5rem; background: var(--bg-card); border-radius: 50%; border: none; color: white; cursor: pointer;">
@@ -691,10 +799,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h2 style="font-size:1.2rem; font-weight:800; margin:0;">Linea ${line.name}</h2>
                         <p style="opacity:0.6; margin:0; font-size:0.85rem;">Dir. ${trip.destination}</p>
                     </div>
-                    <a href="${osmUrl}" target="_blank" rel="noopener noreferrer" style="padding: 0.5rem 0.8rem; background: ${line.color}; border-radius: 8px; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                    <button onclick="window.showTripOnMap('${tripId}', '${lineId}')" style="padding: 0.5rem 0.8rem; background: ${line.color}; border: none; cursor: pointer; border-radius: 8px; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
                         Mappa
-                    </a>
+                    </button>
                 </div>
                 <div class="timeline-scroll" style="flex: 1; overflow-y: auto; padding: 1rem 0 3rem 0; margin-top: 1rem; position: relative;">
                     <div id="bus-tracker" class="bus-tracker-icon" style="display: none; background: ${line.color}">
@@ -864,6 +972,321 @@ document.addEventListener('DOMContentLoaded', () => {
             routesContainer.style.display = 'block';
         }
     };
+
+    // --- LOGICA MAPPA PERCORSO (IN-APP) ---
+    let currentMapPolyline = null;
+    let currentMapDecorator = null;
+    let currentMapMarkers = [];
+
+    window.showTripOnMap = async function (tripId, lineId) {
+        if (!map) return;
+
+        const line = stavData.lines.find(l => l.id === lineId);
+        if (!line) return;
+
+        let trip = null;
+        Object.values(line.dayTypes).forEach(trips => {
+            const found = trips.find(t => t.tripId === tripId);
+            if (found) trip = found;
+        });
+        if (!trip) return;
+
+        // Recupera le fermate come lat,lng
+        const stopPoints = trip.stops.map(s => {
+            const st = stavData.stops.find(fs => fs.id === s.stopId);
+            return st ? [st.lat, st.lng] : null;
+        }).filter(Boolean);
+
+        if (stopPoints.length === 0) return;
+
+        // Nascondi il modal overlay e falli abbassare ma mantenendolo leggermente visibile (peek)
+        stopDetailsSheet.classList.add('map-peek');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+
+        // Nascondi i marker blu globali della mappa temporaneamente
+        markers.forEach(m => {
+            if (map.hasLayer(m.marker)) {
+                map.removeLayer(m.marker);
+            }
+        });
+
+        // Abbassa il pannello principale se serve (nascondi l'expanded mode) e nascondilo visivamente
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel) {
+            mainPanel.classList.remove('expanded');
+            mainPanel.classList.add('map-hidden');
+        }
+
+        // Mostra il pulsante "Chiudi Percorso"
+        const closeRouteBtn = document.getElementById('close-route-btn');
+        if (closeRouteBtn) closeRouteBtn.classList.remove('hidden');
+
+        // Pulisci eventuali disegni vecchi prima di tracciare il nuovo
+        clearTripFromMap();
+
+        const mapLoader = document.getElementById('map-loader');
+        if (mapLoader) mapLoader.classList.remove('hidden');
+
+        let routePolylineData = null;
+        let allCoordinates = [];
+        let hasError = false;
+
+        try {
+            // L'API gratuita di Valhalla (su openstreetmap.de) supporta max 20 punti per chiamata
+            if (stopPoints.length > 1) {
+                const chunkSize = 19; // 19 nuovi punti + 1 di sovrapposizione = 20 max
+                const chunks = [];
+                for (let i = 0; i < stopPoints.length; i += chunkSize) {
+                    let chunk = stopPoints.slice(i, i + chunkSize + 1);
+                    if (chunk.length > 1) chunks.push(chunk);
+                }
+
+                const decodePolyline = (str, precision = 6) => {
+                    let index = 0, lat = 0, lng = 0, coordinates = [], shift = 0, result = 0, byte = null, latitude_change, longitude_change, factor = Math.pow(10, precision);
+                    while (index < str.length) {
+                        byte = null; shift = 0; result = 0;
+                        do {
+                            byte = str.charCodeAt(index++) - 63;
+                            result |= (byte & 0x1f) << shift;
+                            shift += 5;
+                        } while (byte >= 0x20);
+                        latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                        shift = result = 0;
+                        do {
+                            byte = str.charCodeAt(index++) - 63;
+                            result |= (byte & 0x1f) << shift;
+                            shift += 5;
+                        } while (byte >= 0x20);
+                        longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                        lat += latitude_change;
+                        lng += longitude_change;
+                        coordinates.push([lat / factor, lng / factor]);
+                    }
+                    return coordinates;
+                };
+
+                for (const chunk of chunks) {
+                    const reqData = {
+                        locations: chunk.map(p => ({ lat: p[0], lon: p[1] })),
+                        costing: "auto",
+                        units: "km"
+                    };
+
+                    const encodedJson = encodeURIComponent(JSON.stringify(reqData));
+                    const valhallaUrl = `https://valhalla1.openstreetmap.de/route?json=${encodedJson}`;
+
+                    const resp = await fetch(valhallaUrl);
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        if (data.trip && data.trip.legs && data.trip.legs.length > 0) {
+                            data.trip.legs.forEach(leg => {
+                                if (leg.shape) {
+                                    const decodedCoords = decodePolyline(leg.shape, 6);
+                                    allCoordinates = allCoordinates.concat(decodedCoords);
+                                }
+                            });
+                        } else {
+                            hasError = true;
+                            break;
+                        }
+                    } else {
+                        console.warn(`Errore API Valhalla: ${resp.status}`);
+                        hasError = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasError && allCoordinates.length > 0) {
+                routePolylineData = allCoordinates;
+            } else {
+                routePolylineData = null; // Forza il fallback
+            }
+
+        } catch (e) {
+            console.warn("API Routing (Valhalla) fallita. Uso fallback (linee dritte):", e);
+        } finally {
+            if (mapLoader) mapLoader.classList.add('hidden');
+        }
+
+        try {
+            // Fallback se l'API fallisce o se punti > 100
+            if (!routePolylineData) {
+                routePolylineData = stopPoints;
+            }
+
+            // 2. Disegna la linea (bordo colorato + interno bianco)
+            // Sfondo spesso colorato
+            const outerLine = L.polyline(routePolylineData, {
+                color: line.color,
+                weight: 8, // Ridotto come richiesto
+                opacity: 1,
+                lineJoin: 'round',
+                lineCap: 'round'
+            }).addTo(map);
+
+            // Interno più sottile per dare l'effetto di un binario/tubo colorato se necessario, 
+            // ma l'utente ha mandato uno screenshot dove la linea è 100% colorata e spessa, 
+            // quindi manteniamo una singola linea colorata molto spessa, stile UI moderna.
+            currentMapPolyline = outerLine;
+
+            // 3. Aggiungi frecce all'interno di cerchi bianchi con bordi colorati
+            if (L.polylineDecorator) {
+                // Creiamo un icona HTML customizzata per la freccia direzionale
+                const arrowIcon = L.divIcon({
+                    className: 'route-arrow-marker',
+                    html: `<div style="width: 100%; height: 100%; border-radius: 50%; background: #fff; border: 4px solid ${line.color}; display: flex; align-items: center; justify-content: center;">
+                               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="${line.color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(-90deg); flex-shrink: 0; margin-left: 2px;">
+                                   <polyline points="9 18 15 12 9 6"></polyline>
+                               </svg>
+                           </div>`,
+                    iconSize: [22, 22],
+                    iconAnchor: [11, 11]
+                });
+
+                currentMapDecorator = L.polylineDecorator(currentMapPolyline, {
+                    patterns: [
+                        { offset: '5%', repeat: '300px', symbol: L.Symbol.marker({ rotate: true, markerOptions: { icon: arrowIcon } }) }
+                    ]
+                }).addTo(map);
+            }
+
+            // 4. Aggiungi cerchi molto visibili per indicare le singole fermate
+            const stopIcon = L.divIcon({
+                className: 'route-stop-marker-html',
+                html: `<div style="width: 100%; height: 100%; border-radius: 50%; background: #fff; border: 4px solid ${line.color};"></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            trip.stops.forEach((s) => {
+                const stopData = stavData.stops.find(fs => fs.id === s.stopId);
+                if (!stopData) return;
+
+                const latlng = [stopData.lat, stopData.lng];
+                const marker = L.marker(latlng, {
+                    icon: stopIcon,
+                    zIndexOffset: 1000 // Sopra la linea
+                }).addTo(map);
+
+                // Calcolo delle linee che passano per questa fermata
+                let passingLinesHTML = '';
+                stavData.lines.forEach(otherLine => {
+                    let passesHere = false;
+                    for (let dayVariant in otherLine.dayTypes) {
+                        const variantTrips = otherLine.dayTypes[dayVariant];
+                        if (variantTrips && variantTrips.some(t => t.stops.some(st => st.stopId === s.stopId))) {
+                            passesHere = true;
+                            break;
+                        }
+                    }
+                    if (passesHere) {
+                        passingLinesHTML += `<div class="popup-line-chip" style="background-color: ${otherLine.color};">${otherLine.id}</div>`;
+                    }
+                });
+
+                // Gestione connessioni/interscambi (es. Metro, Treni)
+                let connectionsHTML = '';
+                if (stopData.connections && stopData.connections.length > 0) {
+                    let connectionItems = stopData.connections.map(conn => {
+                        return `
+                            <div class="popup-connection-pill">
+                                <div class="popup-connection-icon-wrapper" style="background-color: ${conn.color};">
+                                    <img src="${conn.icon}" class="popup-connection-icon" alt="${conn.name} icon">
+                                </div>
+                                <span>${conn.name}</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    connectionsHTML = `
+                        <div class="popup-separator"></div>
+                        <div style="font-size: 0.9rem; margin-bottom: 8px; color: var(--text-white);">Altre corrispondenze:</div>
+                        <div class="popup-connections-container">
+                            ${connectionItems}
+                        </div>
+                    `;
+                }
+
+                const popupContent = `
+                    <div class="custom-popup-content">
+                        <div class="popup-header">
+                            <span class="popup-time">${s.time}</span>
+                        </div>
+                        <div class="popup-stop-name">${stopData.name}</div>
+                        <div class="popup-lines-container">
+                            ${passingLinesHTML}
+                        </div>
+                        ${connectionsHTML}
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent, {
+                    className: 'atsom-map-popup',
+                    closeButton: false,
+                    minWidth: 200
+                });
+
+                currentMapMarkers.push(marker);
+            });
+
+            // 5. Adatta i bound della mappa al percorso
+            map.fitBounds(currentMapPolyline.getBounds(), { padding: [50, 50] });
+
+        } catch (e) {
+            console.error("Errore nel tracciato mappa:", e);
+        }
+    };
+
+    window.closeTripFromMapClick = function () {
+        clearTripFromMap();
+
+        // Riporta i marker blu globali sulla mappa
+        markers.forEach(m => {
+            if (!map.hasLayer(m.marker)) {
+                map.addLayer(m.marker);
+            }
+        });
+
+        // Nascondi il pulsante Close Route
+        const closeRouteBtn = document.getElementById('close-route-btn');
+        if (closeRouteBtn) closeRouteBtn.classList.add('hidden');
+
+        // Riapri completamente il modal (leva peek e ridai overlay)
+        stopDetailsSheet.classList.remove('map-peek');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Ripristina il pannello di ricerca sottostante
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel) {
+            mainPanel.classList.remove('map-hidden');
+        }
+    };
+
+    function clearTripFromMap() {
+        if (currentMapPolyline && map.hasLayer(currentMapPolyline)) {
+            map.removeLayer(currentMapPolyline);
+        }
+        currentMapPolyline = null;
+
+        if (currentMapDecorator && map.hasLayer(currentMapDecorator)) {
+            map.removeLayer(currentMapDecorator);
+        }
+        currentMapDecorator = null;
+
+        currentMapMarkers.forEach(marker => {
+            if (map.hasLayer(marker)) map.removeLayer(marker);
+        });
+        currentMapMarkers = [];
+    }
+
+    // Aggiungi event listener dal bottone close in app.html se esiste
+    const closeRouteBtnDOM = document.getElementById('close-route-btn');
+    if (closeRouteBtnDOM) {
+        closeRouteBtnDOM.addEventListener('click', window.closeTripFromMapClick);
+    }
 
     renderLists();
 
