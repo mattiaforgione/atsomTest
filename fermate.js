@@ -37,7 +37,7 @@ const stavStops = [
     },
     {
         "id": "stop_abb_cattaneo/cairoli",
-        "name": "Abbiategrasso - Via Cattaneo/Pavia",
+        "name": "Abbiategrasso - Via Cattaneo/Cairoli",
         "lat": 45.395782,
         "lng": 8.918331
     },
@@ -96,12 +96,6 @@ const stavStops = [
             { "name": "S9", "color": "#A4328A", "txColor": "#ffffff", "icon": "img/S9Logo.png" },
             { "name": "S19", "color": "#67032F", "txColor": "#ffffff", "icon": "img/S19Logo.png" }
         ]
-    },
-    {
-        "id": "stop_s_stef_tic",
-        "name": "S. Stefano Ticino - T. Stazione FS",
-        "lat": 45.480969,
-        "lng": 8.916486
     },
     {
         "id": "stop_gud_sp30",
@@ -174,7 +168,7 @@ const stavStops = [
     },
     {
         "id": "stop_gagg_bett",
-        "name": "Gaggiano - C.na Bettola",
+        "name": "Gaggiano - C.na Barbattola",
         "lat": 45.403381,
         "lng": 8.984171
     },
@@ -817,6 +811,101 @@ const stavStops = [
             { "name": "R31", "color": "#0462AC", "txColor": "#ffffff", "icon": "img/RegioLogo.png" },
             { "name": "47 - 71 - 90 - 91 - 325 - 351", "color": "#ffffffff", "txColor": "#ffffff", "icon": "img/ATMLogo.png" },
             { "name": "83 - 94 - 172", "color": "#ffffffff", "txColor": "#ffffff", "icon": "img/AGVLogo.png" }
+        ]
+    },
+    {
+        "id": "stop_alb_donatori",
+        "name": "Albairate - Via Donatori del Sangue",
+        "lat": 45.419227,
+        "lng": 8.933913
+
+    },
+    {
+        "id": "stop_cer_vincenzo",
+        "name": "Cerello - P.za S. Vincenzo",
+        "lat": 45.446626,
+        "lng": 8.925942
+    },
+    {
+        "id": "stop_cer_rosario",
+        "name": "Cerello - Via Rosario",
+        "lat": 45.450174,
+        "lng": 8.924607
+    },
+    {
+        "id": "stop_cer_rosario",
+        "name": "Cerello - Via Rosario",
+        "lat": 45.450174,
+        "lng": 8.924607
+    },
+    {
+        "id": "stop_corb_croce",
+        "name": "Cerello - Via B. Croce",
+        "lat": 45.460935,
+        "lng": 8.919893
+    },
+    {
+        "id": "stop_corb_crove",
+        "name": "Corbetta - Via B. Croce",
+        "lat": 45.460935,
+        "lng": 8.919893
+    },
+    {
+        "id": "stop_corb_repubblica",
+        "name": "Corbetta - V.le della Repubblica",
+        "lat": 45.465296,
+        "lng": 8.911037
+    },
+    {
+        "id": "stop_corb_oberdan",
+        "name": "Corbetta - Via Oberdan",
+        "lat": 45.470561,
+        "lng": 8.910081
+    },
+    {
+        "id": "stop_corb_aprile",
+        "name": "Corbetta - P.za XXV Aprile",
+        "lat": 45.469679,
+        "lng": 8.918464,
+        "connections": [
+            { "name": "Z620 - Z642", "color": "#ffffffff", "txColor": "#ffffff", "icon": "img/MBLogo.png" },
+        ]
+    },
+    {
+        "id": "stop_corb_ambrogio",
+        "name": "Corbetta - Via S. Ambrogio",
+        "lat": 45.473920,
+        "lng": 8.918732
+    },
+    {
+        "id": "stop_corb_borletti",
+        "name": "Corbetta - V.le Borletti",
+        "lat": 45.480772,
+        "lng": 8.910637
+    },
+    {
+        "id": "stop_stef_fs",
+        "name": "S. Stefano Ticino - T. Stazione FS",
+        "lat": 45.481003,
+        "lng": 8.916516,
+        "connections": [
+            { "name": "S6", "color": "#EFD309", "txColor": "#ffffff", "icon": "img/S6Logo.png" },
+            { "name": "Z642", "color": "#ffffffff", "txColor": "#ffffff", "icon": "img/MBLogo.png" },
+        ]
+    },
+    {
+        "id": "stop_stef_repubblica/dante",
+        "name": "S. Stefano Ticino - V.le della Repubblica/Dante",
+        "lat": 45.483870,
+        "lng": 8.919017
+    },
+    {
+        "id": "stop_stef_repubblica/pace",
+        "name": "S. Stefano Ticino - V.le della Repubblica/Pace",
+        "lat": 45.486250,
+        "lng": 8.922823,
+        "connections": [
+            { "name": "Z642", "color": "#ffffffff", "txColor": "#ffffff", "icon": "img/MBLogo.png" },
         ]
     },
 ];

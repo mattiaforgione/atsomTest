@@ -80,6 +80,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Riferimenti DOM
     const searchInput = document.getElementById('stop-searchInput');
     const searchResults = document.getElementById('search-results');
+    const btnOpenSearch = document.getElementById('btn-open-search');
+    const btnLocation = document.getElementById('btn-location');
+    const btnFilter = document.getElementById('btn-filter');
+    const searchPremiumContainer = document.getElementById('premium-search-container');
+    const rightActionGroup = document.getElementById('action-group-right');
+
+    // SEARCH TOGGLE
+    if (btnOpenSearch && searchPremiumContainer && rightActionGroup) {
+        btnOpenSearch.addEventListener('click', () => {
+            searchPremiumContainer.classList.remove('collapsed');
+            rightActionGroup.classList.add('hidden-group');
+            // Timeout to allow expansion animation to start prima del focus
+            setTimeout(() => searchInput.focus(), 50);
+        });
+
+        searchInput.addEventListener('blur', () => {
+            if (searchInput.value.trim() === '') {
+                searchPremiumContainer.classList.add('collapsed');
+                rightActionGroup.classList.remove('hidden-group');
+            }
+        });
+    }
+
+    // LOCATION BUTTON
+    if (btnLocation) {
+        btnLocation.addEventListener('click', () => {
+            if (userLocation && window.appMap) {
+                window.appMap.flyTo([userLocation.lat, userLocation.lng], 16, { animate: true });
+            } else if ("geolocation" in navigator) {
+                alert("Attesa geolocalizzazione o permessi mancanti. Riprova tra poco.");
+            } else {
+                alert("Geolocalizzazione non supportata o disabilitata.");
+            }
+        });
+    }
+
+    // FILTER BUTTON (Placeholder per futuro)
+    if (btnFilter) {
+        btnFilter.addEventListener('click', () => {
+            alert("Sistema di filtraggio in cantiere!");
+        });
+    }
 
     // Riferimenti Modal
     const stopDetailsSheet = document.getElementById('stop-details');
@@ -1402,9 +1444,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 for (const chunk of chunks) {
                     const reqData = {
-                        locations: chunk.map(p => ({ lat: p[0], lon: p[1] })),
-                        costing: "auto",
-                        units: "km"
+                        locations: chunk.map((p, idx) => ({ 
+                            lat: p[0], 
+                            lon: p[1],
+                            type: (idx === 0 || idx === chunk.length - 1) ? "break" : "through"
+                        })),
+                        costing: "bus",
+                        costing_options: {
+                            bus: {
+                                maneuver_penalty: 500, // Disincentiva le manovre complesse (inversioni a U)
+                                route_preference: 0.5
+                            }
+                        },
+                        directions_options: { units: "km" }
                     };
 
                     const encodedJson = encodeURIComponent(JSON.stringify(reqData));

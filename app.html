@@ -81,17 +81,29 @@
                 </div>
             </div>
 
-            <!-- SEZIONE RICERCA -->
+            <!-- SEZIONE RICERCA E AZIONI -->
             <section id="search-section">
-                <div class="search-container">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="stop-searchInput" placeholder="Es. Trezzano, Abbiategrasso..."
-                        autocomplete="off">
+                <!-- ActionBarPremium (Ricerca Espandibile + Pulsanti) -->
+                <div class="action-bar-premium" id="main-action-bar">
+                    <div class="search-premium collapsed" id="premium-search-container">
+                        <button id="btn-open-search" class="circular-btn search-icon-btn" title="Cerca">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                        <input type="text" id="stop-searchInput" class="search-input-premium" placeholder="Es. Trezzano, Abbiategrasso..." autocomplete="off">
+                    </div>
+                    <div class="action-group-right" id="action-group-right">
+                        <button id="btn-filter" class="circular-btn" title="Filtri">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        </button>
+                        <button id="btn-location" class="circular-btn" title="La tua posizione">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div id="lists-container" class="lists-container">
