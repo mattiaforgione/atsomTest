@@ -123,6 +123,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // MENU BUTTON TOGGLE
+    const btnMenu = document.getElementById('btn-menu');
+    const infoSection = document.getElementById('info-section');
+    const menuIconHamburger = document.getElementById('menu-icon-hamburger');
+    const menuIconClose = document.getElementById('menu-icon-close');
+    const allSection = document.getElementById('all-section');
+
+    if (btnMenu && infoSection) {
+        btnMenu.addEventListener('click', () => {
+            const isMenuOpen = !infoSection.classList.contains('hidden');
+
+            if (isMenuOpen) {
+                // Chiudi menu, mostra liste
+                infoSection.classList.add('hidden');
+                btnMenu.classList.remove('active');
+                menuIconHamburger.classList.remove('hidden');
+                menuIconClose.classList.add('hidden');
+                
+                // Assicurati che le sezioni delle liste siano visibili
+                allSection.classList.remove('hidden');
+                
+                // Forza un re-render per mostrare i risultati corretti
+                renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+            } else {
+                // Apri menu, nascondi liste
+                infoSection.classList.remove('hidden');
+                btnMenu.classList.add('active');
+                menuIconHamburger.classList.add('hidden');
+                menuIconClose.classList.remove('hidden');
+                
+                nearbySection.classList.add('hidden');
+                allSection.classList.add('hidden');
+
+                // Se la ricerca è attiva, chiudiamola
+                if (!searchPremiumContainer.classList.contains('collapsed')) {
+                    searchInput.value = '';
+                    searchPremiumContainer.classList.add('collapsed');
+                    rightActionGroup.classList.remove('hidden-group');
+                }
+            }
+        });
+    }
+
     // Riferimenti Modal
     const stopDetailsSheet = document.getElementById('stop-details');
     const overlay = document.getElementById('modal-overlay');
@@ -361,6 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function renderLists(query = '') {
+        // Se il menu info è aperto, non renderizzare le liste normali
+        if (infoSection && !infoSection.classList.contains('hidden')) return;
+
         searchResults.innerHTML = '';
         nearbyResults.innerHTML = '';
 
@@ -1444,16 +1490,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 for (const chunk of chunks) {
                     const reqData = {
-                        locations: chunk.map((p, idx) => ({ 
-                            lat: p[0], 
+                        locations: chunk.map((p, idx) => ({
+                            lat: p[0],
                             lon: p[1],
                             type: (idx === 0 || idx === chunk.length - 1) ? "break" : "through"
                         })),
                         costing: "bus",
                         costing_options: {
                             bus: {
-                                maneuver_penalty: 500, // Disincentiva le manovre complesse (inversioni a U)
-                                route_preference: 0.5
+                                maneuver_penalty: 10, // Disincentiva le manovre complesse (inversioni a U)
+                                route_preference: 1
                             }
                         },
                         directions_options: { units: "km" }

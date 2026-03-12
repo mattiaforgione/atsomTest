@@ -87,109 +87,178 @@
                 <div class="action-bar-premium" id="main-action-bar">
                     <div class="search-premium collapsed" id="premium-search-container">
                         <button id="btn-open-search" class="circular-btn search-icon-btn" title="Cerca">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                         </button>
-                        <input type="text" id="stop-searchInput" class="search-input-premium" placeholder="Es. Trezzano, Abbiategrasso..." autocomplete="off">
+                        <input type="text" id="stop-searchInput" class="search-input-premium"
+                            placeholder="Es. Trezzano, Abbiategrasso..." autocomplete="off">
                     </div>
                     <div class="action-group-right" id="action-group-right">
+                        <button id="btn-menu" class="circular-btn" title="Menu">
+                            <svg id="menu-icon-hamburger" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                            <svg id="menu-icon-close" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                         <button id="btn-filter" class="circular-btn" title="Filtri">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
                         </button>
                         <button id="btn-location" class="circular-btn" title="La tua posizione">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
                         </button>
                     </div>
                 </div>
 
                 <div id="lists-container" class="lists-container">
-                    <!-- Sezione Vicino a te (nascosta di default se non ci sono dati) -->
-                    <div id="nearby-section" class="list-section hidden">
-                        <h3 class="section-subtitle">
-                            Fermate vicino a te
-                            <span class="live-dot"></span>
-                        </h3>
-                        <ul id="nearby-results" class="results-list"></ul>
+                    <!-- Sezione Info / Menu -->
+                <div id="info-section" class="list-section hidden">
+                    <div class="info-menu-list">
+                        <div class="info-card">
+                            <div class="info-card-content">
+                                <div class="info-card-title">TravelCompanion</div>
+                                <div class="info-card-subtitle">Pianifica il tuo viaggio con sui mezzi STAV con ATSOM
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-content">
+                                <div class="info-card-title">Consigli per viaggiare</div>
+                                <div class="info-card-subtitle">Alcuni consigli su come viaggiare sulle linee STAV e nel
+                                    sud-ovest milanese</div>
+                            </div>
+                        </div>
+                        <a href="https://callmenouva.github.io/atsomTest" target="_blank" class="info-card link-card">
+                            <div class="info-card-content">
+                                <div class="info-card-title">
+                                    Sito web ATSOM
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="https://www.stavautolinee.it" target="_blank" class="info-card link-card">
+                            <div class="info-card-content">
+                                <div class="info-card-title">
+                                    Sito web STAV
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
                     </div>
+                </div>
+    <!-- Sezione Vicino a te (nascosta di default se non ci sono dati) -->
+    <div id="nearby-section" class="list-section hidden">
+        <h3 class="section-subtitle">
+            Fermate vicino a te
+            <span class="live-dot"></span>
+        </h3>
+        <ul id="nearby-results" class="results-list"></ul>
+    </div>
 
-                    <!-- Sezione Tutte le fermate -->
-                    <div id="all-section" class="list-section">
-                        <h3 class="section-subtitle" id="all-stops-title">Tutte le fermate</h3>
-                        <ul id="search-results" class="results-list"></ul>
+    <!-- Sezione Tutte le fermate -->
+    <div id="all-section" class="list-section">
+        <h3 class="section-subtitle" id="all-stops-title">Tutte le fermate</h3>
+        <ul id="search-results" class="results-list"></ul>
                     </div>
                 </div>
             </section>
-        </main>
+    </main>
 
-        <!-- Overlay scuro per quando si apre il modal -->
-        <div id="modal-overlay" class="overlay hidden"></div>
+    <!-- Overlay scuro per quando si apre il modal -->
+    <div id="modal-overlay" class="overlay hidden"></div>
 
-        <!-- MODAL BOTTOM SHEET PER DETTAGLIO FERMATA -->
-        <section id="stop-details" class="bottom-sheet hidden">
-            <div class="sheet-handle"></div>
+    <!-- MODAL BOTTOM SHEET PER DETTAGLIO FERMATA -->
+    <section id="stop-details" class="bottom-sheet hidden">
+        <div class="sheet-handle"></div>
 
-            <div class="sheet-header">
-                <!-- Immagine Segnaposto per la Fermata (Sostituisci src) -->
-                <div class="stop-image-circular">
-                    <img src="placeholder-stop.jpg" alt="Fermata" id="stop-image-placeholder">
+        <div class="sheet-header">
+            <!-- Immagine Segnaposto per la Fermata (Sostituisci src) -->
+            <h2 id="stop-name" class="stop-title">Nome Fermata</h2>
+            <div class="header-actions">
+                <button id="nav-btn" class="icon-btn" title="Apri nel navigatore" style="margin-right: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                    </svg>
+                </button>
+                <button id="close-modal-btn" class="close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="sheet-content">
+            <!-- SCHEDA IN EVIDENZA: IL PROSSIMO BUS -->
+            <div id="next-bus-highlight" class="highlight-card hidden">
+                <div class="highlight-badge">In Arrivo</div>
+                <div class="highlight-main">
+                    <div class="highlight-time-left">
+                        <span id="highlight-minutes" class="huge-text">--</span>
+                        <span class="small-text">min</span>
+                    </div>
+                    <div class="highlight-info">
+                        <div class="highlight-line" id="highlight-line-name">--</div>
+                        <div class="highlight-dest" id="highlight-dest-name">direzione Sconosciuta</div>
+                    </div>
                 </div>
-                <h2 id="stop-name" class="stop-title">Nome Fermata</h2>
-                <div class="header-actions">
-                    <button id="nav-btn" class="icon-btn" title="Apri nel navigatore" style="margin-right: 8px;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                        </svg>
-                    </button>
-                    <button id="close-modal-btn" class="close-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
+                <div class="highlight-footer">
+                    <span>Orario corsa:</span>
+                    <strong id="highlight-exact-time">--:--</strong>
                 </div>
             </div>
 
-            <div class="sheet-content">
-                <!-- SCHEDA IN EVIDENZA: IL PROSSIMO BUS -->
-                <div id="next-bus-highlight" class="highlight-card hidden">
-                    <div class="highlight-badge">In Arrivo</div>
-                    <div class="highlight-main">
-                        <div class="highlight-time-left">
-                            <span id="highlight-minutes" class="huge-text">--</span>
-                            <span class="small-text">min</span>
-                        </div>
-                        <div class="highlight-info">
-                            <div class="highlight-line" id="highlight-line-name">--</div>
-                            <div class="highlight-dest" id="highlight-dest-name">direzione Sconosciuta</div>
-                        </div>
-                    </div>
-                    <div class="highlight-footer">
-                        <span>Orario corsa:</span>
-                        <strong id="highlight-exact-time">--:--</strong>
-                    </div>
-                </div>
-
-                <h3 class="subtitle">Tutte le corse da questa fermata</h3>
-                <!-- DAY SELECTOR CHIPS -->
-                <div class="day-chips-container">
-                    <button class="day-chip active" data-day="feriale_scolastico">Lun-Ven (Scolastico)</button>
-                    <button class="day-chip" data-day="feriale_non_scolastico">Lun-Ven (Non Scolastico)</button>
-                    <button class="day-chip" data-day="sabato_scolastico">Sabato (Scolastico)</button>
-                    <button class="day-chip" data-day="sabato_non_scolastico">Sabato (Non Scolastico)</button>
-                    <button class="day-chip" data-day="festivo">Domenica / Festivo</button>
-                </div>
-
-                <div id="routes-container" class="routes-list">
-                    <!-- Le altre linee e gli orari appariranno qui -->
-                </div>
+            <h3 class="subtitle">Tutte le corse da questa fermata</h3>
+            <!-- DAY SELECTOR CHIPS -->
+            <div class="day-chips-container">
+                <button class="day-chip active" data-day="feriale_scolastico">Lun-Ven (Scolastico)</button>
+                <button class="day-chip" data-day="feriale_non_scolastico">Lun-Ven (Non Scolastico)</button>
+                <button class="day-chip" data-day="sabato_scolastico">Sabato (Scolastico)</button>
+                <button class="day-chip" data-day="sabato_non_scolastico">Sabato (Non Scolastico)</button>
+                <button class="day-chip" data-day="festivo">Domenica / Festivo</button>
             </div>
-        </section>
+
+            <div id="routes-container" class="routes-list">
+                <!-- Le altre linee e gli orari appariranno qui -->
+            </div>
+        </div>
+    </section>
     </div>
 
     <!-- CARICAMENTO SCRIPT -->

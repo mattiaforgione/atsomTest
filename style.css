@@ -732,6 +732,79 @@ ul {
     justify-content: center;
 }
 
+
+/* --- INFO MENU SECTION --- */
+.info-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 10px;
+}
+
+.info-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 1.4rem 1.6rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+}
+
+.info-card:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.info-card:active {
+    transform: scale(0.98);
+}
+
+.info-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info-card-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+.link-card .info-card-title svg {
+    opacity: 0.7;
+    transition: transform 0.3s;
+}
+
+.link-card:hover .info-card-title svg {
+    transform: translate(2px, -2px);
+    opacity: 1;
+}
+
+.circular-btn.active {
+    background: var(--text-white);
+    color: var(--bg-dark);
+}
+
+.circular-btn svg.hidden {
+    display: none;
+}
+
 /* OVERLAY MODAL */
 .overlay {
     position: fixed;
@@ -800,30 +873,7 @@ ul {
     position: relative;
 }
 
-.stop-image-circular {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--glass-bg);
-    border: 2px solid var(--text-white);
-    margin-right: 15px;
-    overflow: hidden;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    text-align: center;
-    color: var(--text-muted);
-}
 
-.stop-image-circular img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    /* Nascondi finché non c'è una src */
-}
 
 .stop-title {
     font-size: 1.5rem;

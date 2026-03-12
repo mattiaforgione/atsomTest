@@ -143,10 +143,64 @@ const stavStops = [
         "lng": 9.022588
     },
     {
+        "id": "stop_ros_industria",
+        "name": "Rosate - Via Industria",
+        "lat": 45.342214,
+        "lng": 9.016637,
+    },
+    {
+        "id": "stop_ros_industria2",
+        "name": "Rosate - Via Industria",
+        "lat": 45.340560,
+        "lng": 9.017431,
+    },
+    {
+        "id": "stop_ros_pellico",
+        "name": "Rosate - Via Pellico",
+        "lat": 45.352384,
+        "lng": 9.014781,
+    },
+    {
+        "id": "stop_bub_europa",
+        "name": "Bubbiano - Via Europa",
+        "lat": 45.328319,
+        "lng": 9.016735,
+    },
+    {
+        "id": "stop_cal_bettola",
+        "name": "Calvignasco - Bettola",
+        "lat": 45.331535,
+        "lng": 9.019678,
+    },
+    {
+        "id": "stop_cal_bettola2",
+        "name": "Calvignasco - Bettola",
+        "lat": 45.332352,
+        "lng": 9.020164,
+    },
+    {
         "id": "stop_zelo_sp30",
         "name": "Zelo Surrigone - SP30",
         "lat": 45.385671,
         "lng": 8.982221
+    },
+    {
+        "id": "stop_zelo_roma",
+        "name": "Zelo Surrigone - P.za Roma",
+        "lat": 45.388294,
+        "lng": 8.985440
+    },
+    {
+        "id": "stop_zelo_manzoni",
+        "name": "Zelo Surrigone - Via Manzoni",
+        "lat": 45.391235,
+        "lng": 8.983467
+    },
+    {
+        "id": "stop_zelo_manzoni2",
+        "name": "Zelo Surrigone - Via Manzoni",
+        "lat": 45.391003,
+        "lng": 8.983743
     },
     {
         "id": "stop_verm_sp30",
@@ -159,6 +213,12 @@ const stavStops = [
         "name": "Vermezzo - Cimitero",
         "lat": 45.396541,
         "lng": 8.975189
+    },
+    {
+        "id": "stop_verm_comunale",
+        "name": "Vermezzo - P.za Comunale",
+        "lat": 45.394544,
+        "lng": 8.980817
     },
     {
         "id": "stop_verm_nav",
@@ -818,6 +878,34 @@ const stavStops = [
         "name": "Albairate - Via Donatori del Sangue",
         "lat": 45.419227,
         "lng": 8.933913
+
+    },
+    {
+        "id": "stop_alb_indipendenza/marconi",
+        "name": "Albairate - Via Indipendenza/Marconi",
+        "lat": 45.419615,
+        "lng": 8.936188
+
+    },
+    {
+        "id": "stop_alb_baracca",
+        "name": "Albairate - Via Baracca",
+        "lat": 45.418389,
+        "lng": 8.941037
+
+    },
+    {
+        "id": "stop_alb_indipendenza/monti",
+        "name": "Albairate - Via Indipendenza/Monti",
+        "lat": 45.419912,
+        "lng": 8.939658
+
+    },
+    {
+        "id": "stop_alb_bellini",
+        "name": "Albairate - Via Bellini",
+        "lat": 45.418702,
+        "lng": 8.940552
 
     },
     {

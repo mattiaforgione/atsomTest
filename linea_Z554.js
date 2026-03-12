@@ -2,1394 +2,1196 @@ const linea_Z554 = {
     "id": "Z554",
     "name": "Z554",
     "description": "Linea Z554",
-    "color": "#10b981",
+    "color": "#3EB54A",
     "dayTypes": {
         "feriale_scolastico": [
             {
-                "tripId": "Z554_FS_Bubb_1",
+                "tripId": "101",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "06:12" },
+                    { "stopId": "stop_cal_bettola", "time": "06:14" },
+                    { "stopId": "stop_ros_industria", "time": "06:15" },
+                    { "stopId": "stop_ros_dante", "time": "06:16" },
+                    { "stopId": "stop_ros_pellico", "time": "06:17" },
+                    { "stopId": "stop_gud_sp30", "time": "06:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "06:24" },
+                    { "stopId": "stop_verm_sp30", "time": "06:25" },
+                    { "stopId": "stop_verm_cim", "time": "06:26" },
+                    { "stopId": "stop_alb_fs", "time": "06:30" },
+                    { "stopId": "stop_alb_baracca", "time": "06:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "06:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "06:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "103",
+                "destination": "Abbiategrasso - P.za Vittorio Veneto",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "07:02", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_cal_bettola", "time": "07:04", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_ros_industria", "time": "07:06", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_ros_dante", "time": "07:07", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_ros_pellico", "time": "07:08", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_gud_sp30", "time": "07:13", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_zelo_roma", "time": "07:17", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_zelo_manzoni", "time": "07:18", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_verm_comunale", "time": "07:20", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_alb_fs", "time": "07:24", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "07:29", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_abb_fs", "time": "07:36", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_abb_einstein", "time": "07:40", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_abb_stignani", "time": "07:41", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_abb_vv", "time": "07:47", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                ],
+                "legend": { "Via Einstein - Termina ad Abbiategrasso": "E1" }
+            },
+            {
+                "tripId": "105",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "08:08" },
+                    { "stopId": "stop_cal_bettola", "time": "08:10" },
+                    { "stopId": "stop_ros_industria", "time": "08:12" },
+                    { "stopId": "stop_ros_dante", "time": "08:14" },
+                    { "stopId": "stop_ros_pellico", "time": "08:16" },
+                    { "stopId": "stop_gud_sp30", "time": "08:21" },
+                    { "stopId": "stop_zelo_sp30", "time": "08:23" },
+                    { "stopId": "stop_verm_sp30", "time": "08:24" },
+                    { "stopId": "stop_verm_cim", "time": "08:25" },
+                    { "stopId": "stop_alb_fs", "time": "08:30" },
+                    { "stopId": "stop_alb_baracca", "time": "08:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "08:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "08:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "107",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "09:10" },
+                    { "stopId": "stop_cal_bettola", "time": "09:12" },
+                    { "stopId": "stop_ros_industria", "time": "09:13" },
+                    { "stopId": "stop_ros_dante", "time": "09:15" },
+                    { "stopId": "stop_ros_pellico", "time": "09:17" },
+                    { "stopId": "stop_gud_sp30", "time": "09:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "09:24" },
+                    { "stopId": "stop_verm_sp30", "time": "09:25" },
+                    { "stopId": "stop_verm_cim", "time": "09:26" },
+                    { "stopId": "stop_alb_fs", "time": "09:30" },
+                    { "stopId": "stop_alb_baracca", "time": "09:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "09:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "09:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "109",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "10:10" },
+                    { "stopId": "stop_cal_bettola", "time": "10:12" },
+                    { "stopId": "stop_ros_industria", "time": "10:13" },
+                    { "stopId": "stop_ros_dante", "time": "10:15" },
+                    { "stopId": "stop_ros_pellico", "time": "10:17" },
+                    { "stopId": "stop_gud_sp30", "time": "10:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "10:24" },
+                    { "stopId": "stop_verm_sp30", "time": "10:25" },
+                    { "stopId": "stop_verm_cim", "time": "10:26" },
+                    { "stopId": "stop_alb_fs", "time": "10:30" },
+                    { "stopId": "stop_alb_baracca", "time": "10:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "10:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "10:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "111",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "11:10" },
+                    { "stopId": "stop_cal_bettola", "time": "11:12" },
+                    { "stopId": "stop_ros_industria", "time": "11:13" },
+                    { "stopId": "stop_ros_dante", "time": "11:15" },
+                    { "stopId": "stop_ros_pellico", "time": "11:17" },
+                    { "stopId": "stop_gud_sp30", "time": "11:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "11:24" },
+                    { "stopId": "stop_verm_sp30", "time": "11:25" },
+                    { "stopId": "stop_verm_cim", "time": "11:26" },
+                    { "stopId": "stop_alb_fs", "time": "11:30" },
+                    { "stopId": "stop_alb_baracca", "time": "11:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "11:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "11:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "113",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "12:10" },
+                    { "stopId": "stop_cal_bettola", "time": "12:12" },
+                    { "stopId": "stop_ros_industria", "time": "12:13" },
+                    { "stopId": "stop_ros_dante", "time": "12:15" },
+                    { "stopId": "stop_ros_pellico", "time": "12:17" },
+                    { "stopId": "stop_gud_sp30", "time": "12:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "12:24" },
+                    { "stopId": "stop_verm_sp30", "time": "12:25" },
+                    { "stopId": "stop_verm_cim", "time": "12:26" },
+                    { "stopId": "stop_alb_fs", "time": "12:30" },
+                    { "stopId": "stop_alb_baracca", "time": "12:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "12:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "12:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "115",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "13:10" },
+                    { "stopId": "stop_cal_bettola", "time": "13:12" },
+                    { "stopId": "stop_ros_industria", "time": "13:13" },
+                    { "stopId": "stop_ros_dante", "time": "13:15" },
+                    { "stopId": "stop_ros_pellico", "time": "13:17" },
+                    { "stopId": "stop_gud_sp30", "time": "13:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "13:24" },
+                    { "stopId": "stop_verm_sp30", "time": "13:25" },
+                    { "stopId": "stop_verm_cim", "time": "13:26" },
+                    { "stopId": "stop_alb_fs", "time": "13:30" },
+                    { "stopId": "stop_alb_baracca", "time": "13:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "13:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "13:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "117",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "14:10" },
+                    { "stopId": "stop_cal_bettola", "time": "14:12" },
+                    { "stopId": "stop_ros_industria", "time": "14:13" },
+                    { "stopId": "stop_ros_dante", "time": "14:15" },
+                    { "stopId": "stop_ros_pellico", "time": "14:17" },
+                    { "stopId": "stop_gud_sp30", "time": "14:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "14:24" },
+                    { "stopId": "stop_verm_sp30", "time": "14:25" },
+                    { "stopId": "stop_verm_cim", "time": "14:26" },
+                    { "stopId": "stop_alb_fs", "time": "14:30" },
+                    { "stopId": "stop_alb_baracca", "time": "14:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "14:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "14:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "119",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "15:10" },
+                    { "stopId": "stop_cal_bettola", "time": "15:13" },
+                    { "stopId": "stop_ros_industria", "time": "15:15" },
+                    { "stopId": "stop_ros_dante", "time": "15:16" },
+                    { "stopId": "stop_ros_pellico", "time": "15:17" },
+                    { "stopId": "stop_gud_sp30", "time": "15:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "15:24" },
+                    { "stopId": "stop_verm_sp30", "time": "15:25" },
+                    { "stopId": "stop_verm_cim", "time": "15:26" },
+                    { "stopId": "stop_alb_fs", "time": "15:30" },
+                    { "stopId": "stop_alb_baracca", "time": "15:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "15:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "15:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "121",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "16:10" },
+                    { "stopId": "stop_cal_bettola", "time": "16:12" },
+                    { "stopId": "stop_ros_industria", "time": "16:14" },
+                    { "stopId": "stop_ros_dante", "time": "16:16" },
+                    { "stopId": "stop_ros_pellico", "time": "16:18" },
+                    { "stopId": "stop_gud_sp30", "time": "16:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "16:25" },
+                    { "stopId": "stop_verm_sp30", "time": "16:26" },
+                    { "stopId": "stop_verm_cim", "time": "16:27" },
+                    { "stopId": "stop_alb_fs", "time": "16:30" },
+                    { "stopId": "stop_alb_baracca", "time": "16:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "16:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "16:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "123",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "17:10" },
+                    { "stopId": "stop_cal_bettola", "time": "17:12" },
+                    { "stopId": "stop_ros_industria", "time": "17:14" },
+                    { "stopId": "stop_ros_dante", "time": "17:16" },
+                    { "stopId": "stop_ros_pellico", "time": "17:18" },
+                    { "stopId": "stop_gud_sp30", "time": "17:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "17:25" },
+                    { "stopId": "stop_verm_sp30", "time": "17:26" },
+                    { "stopId": "stop_verm_cim", "time": "17:27" },
+                    { "stopId": "stop_alb_fs", "time": "17:30" },
+                    { "stopId": "stop_alb_baracca", "time": "17:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "17:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "17:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "125",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "18:10" },
+                    { "stopId": "stop_cal_bettola", "time": "18:12" },
+                    { "stopId": "stop_ros_industria", "time": "18:14" },
+                    { "stopId": "stop_ros_dante", "time": "18:16" },
+                    { "stopId": "stop_ros_pellico", "time": "18:18" },
+                    { "stopId": "stop_gud_sp30", "time": "18:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "18:25" },
+                    { "stopId": "stop_verm_sp30", "time": "18:26" },
+                    { "stopId": "stop_verm_cim", "time": "18:27" },
+                    { "stopId": "stop_alb_fs", "time": "18:30" },
+                    { "stopId": "stop_alb_baracca", "time": "18:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "18:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "18:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "127",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "19:10" },
+                    { "stopId": "stop_cal_bettola", "time": "19:12" },
+                    { "stopId": "stop_ros_industria", "time": "19:14" },
+                    { "stopId": "stop_ros_dante", "time": "19:16" },
+                    { "stopId": "stop_ros_pellico", "time": "19:18" },
+                    { "stopId": "stop_gud_sp30", "time": "19:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "19:25" },
+                    { "stopId": "stop_verm_sp30", "time": "19:26" },
+                    { "stopId": "stop_verm_cim", "time": "19:27" },
+                    { "stopId": "stop_alb_fs", "time": "19:30" },
+                    { "stopId": "stop_alb_baracca", "time": "19:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "19:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "19:35" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "129",
+                "destination": "Albairate - Via Indipendenza/Marconi",
+                "stops": [
+                    { "stopId": "stop_bub_europa", "time": "20:10" },
+                    { "stopId": "stop_cal_bettola", "time": "20:12" },
+                    { "stopId": "stop_ros_industria", "time": "20:14" },
+                    { "stopId": "stop_ros_dante", "time": "20:16" },
+                    { "stopId": "stop_ros_pellico", "time": "20:18" },
+                    { "stopId": "stop_gud_sp30", "time": "20:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "20:25" },
+                    { "stopId": "stop_verm_sp30", "time": "20:26" },
+                    { "stopId": "stop_verm_cim", "time": "20:27" },
+                    { "stopId": "stop_alb_fs", "time": "20:30" },
+                    { "stopId": "stop_alb_baracca", "time": "20:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "20:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "20:35" },
+                ],
+                "legend": {}
+            },
+
+            // inverso
+
+            {
+                "tripId": "102",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "07:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "07:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "07:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "05:25" },
+                    { "stopId": "stop_alb_bellini", "time": "05:27" },
+                    { "stopId": "stop_alb_fs", "time": "05:31" },
+                    { "stopId": "stop_verm_cim", "time": "05:36" },
+                    { "stopId": "stop_verm_sp30", "time": "05:38" },
+                    { "stopId": "stop_zelo_sp30", "time": "05:39" },
+                    { "stopId": "stop_gud_sp30", "time": "05:41" },
+                    { "stopId": "stop_ros_pellico", "time": "05:44" },
+                    { "stopId": "stop_ros_dante", "time": "05:47" },
+                    { "stopId": "stop_ros_industria2", "time": "05:49" },
+                    { "stopId": "stop_cal_bettola2", "time": "05:52" },
+                    { "stopId": "stop_bub_europa", "time": "05:55" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Bubb_2",
+                "tripId": "104",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "06:25" },
+                    { "stopId": "stop_alb_bellini", "time": "06:26" },
+                    { "stopId": "stop_alb_fs", "time": "06:30" },
+                    { "stopId": "stop_verm_cim", "time": "06:36" },
+                    { "stopId": "stop_verm_sp30", "time": "06:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "06:38" },
+                    { "stopId": "stop_gud_sp30", "time": "06:40" },
+                    { "stopId": "stop_ros_pellico", "time": "06:43" },
+                    { "stopId": "stop_ros_dante", "time": "06:45" },
+                    { "stopId": "stop_ros_industria2", "time": "06:47" },
+                    { "stopId": "stop_cal_bettola2", "time": "06:50" },
+                    { "stopId": "stop_bub_europa", "time": "06:52" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Bubb_3",
+                "tripId": "106",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "07:25" },
+                    { "stopId": "stop_alb_bellini", "time": "07:26" },
+                    { "stopId": "stop_alb_fs", "time": "07:30" },
+                    { "stopId": "stop_verm_cim", "time": "07:41" },
+                    { "stopId": "stop_verm_sp30", "time": "07:42" },
+                    { "stopId": "stop_zelo_sp30", "time": "07:43" },
+                    { "stopId": "stop_gud_sp30", "time": "07:45" },
+                    { "stopId": "stop_ros_pellico", "time": "07:48" },
+                    { "stopId": "stop_ros_dante", "time": "07:50" },
+                    { "stopId": "stop_ros_industria2", "time": "07:52" },
+                    { "stopId": "stop_cal_bettola2", "time": "07:55" },
+                    { "stopId": "stop_bub_europa", "time": "07:57" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Bubb_4",
+                "tripId": "108",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "17:15"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "17:15"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "17:15"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "08:25" },
+                    { "stopId": "stop_alb_bellini", "time": "08:26" },
+                    { "stopId": "stop_alb_fs", "time": "08:30" },
+                    { "stopId": "stop_verm_cim", "time": "08:35" },
+                    { "stopId": "stop_verm_sp30", "time": "08:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "08:37" },
+                    { "stopId": "stop_gud_sp30", "time": "08:39" },
+                    { "stopId": "stop_ros_pellico", "time": "08:42" },
+                    { "stopId": "stop_ros_dante", "time": "08:44" },
+                    { "stopId": "stop_ros_industria2", "time": "08:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "08:49" },
+                    { "stopId": "stop_bub_europa", "time": "08:51" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Bubb_5",
+                "tripId": "110",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:15"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:15"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:15"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "09:25" },
+                    { "stopId": "stop_alb_bellini", "time": "09:26" },
+                    { "stopId": "stop_alb_fs", "time": "09:30" },
+                    { "stopId": "stop_verm_cim", "time": "09:36" },
+                    { "stopId": "stop_verm_sp30", "time": "09:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "09:38" },
+                    { "stopId": "stop_gud_sp30", "time": "09:40" },
+                    { "stopId": "stop_ros_pellico", "time": "09:42" },
+                    { "stopId": "stop_ros_dante", "time": "09:44" },
+                    { "stopId": "stop_ros_industria2", "time": "09:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "09:48" },
+                    { "stopId": "stop_bub_europa", "time": "09:50" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Bubb_6",
+                "tripId": "112",
                 "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "19:15"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "19:15"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "19:15"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "10:25" },
+                    { "stopId": "stop_alb_bellini", "time": "10:26" },
+                    { "stopId": "stop_alb_fs", "time": "10:29" },
+                    { "stopId": "stop_verm_cim", "time": "10:35" },
+                    { "stopId": "stop_verm_sp30", "time": "10:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "10:37" },
+                    { "stopId": "stop_gud_sp30", "time": "10:39" },
+                    { "stopId": "stop_ros_pellico", "time": "10:41" },
+                    { "stopId": "stop_ros_dante", "time": "10:43" },
+                    { "stopId": "stop_ros_industria2", "time": "10:45" },
+                    { "stopId": "stop_cal_bettola2", "time": "10:47" },
+                    { "stopId": "stop_bub_europa", "time": "10:49" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_1",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "114",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "06:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "06:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_FS_Alba_2",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "07:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "11:25" },
+                    { "stopId": "stop_alb_bellini", "time": "11:26" },
+                    { "stopId": "stop_alb_fs", "time": "11:30" },
+                    { "stopId": "stop_verm_cim", "time": "11:36" },
+                    { "stopId": "stop_verm_sp30", "time": "11:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "11:39" },
+                    { "stopId": "stop_gud_sp30", "time": "11:41" },
+                    { "stopId": "stop_ros_pellico", "time": "11:42" },
+                    { "stopId": "stop_ros_dante", "time": "11:44" },
+                    { "stopId": "stop_ros_industria2", "time": "11:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "11:48" },
+                    { "stopId": "stop_bub_europa", "time": "11:50" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_3",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "116",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:23"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:23"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "12:25" },
+                    { "stopId": "stop_alb_bellini", "time": "12:26" },
+                    { "stopId": "stop_alb_fs", "time": "12:30" },
+                    { "stopId": "stop_verm_cim", "time": "12:36" },
+                    { "stopId": "stop_verm_sp30", "time": "12:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "12:38" },
+                    { "stopId": "stop_gud_sp30", "time": "12:40" },
+                    { "stopId": "stop_ros_pellico", "time": "12:42" },
+                    { "stopId": "stop_ros_dante", "time": "12:44" },
+                    { "stopId": "stop_ros_industria2", "time": "12:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "12:48" },
+                    { "stopId": "stop_bub_europa", "time": "12:50" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_4",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "118",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "09:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "09:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "13:25" },
+                    { "stopId": "stop_alb_bellini", "time": "13:26" },
+                    { "stopId": "stop_alb_fs", "time": "13:30" },
+                    { "stopId": "stop_verm_cim", "time": "13:37" },
+                    { "stopId": "stop_verm_sp30", "time": "13:38" },
+                    { "stopId": "stop_zelo_sp30", "time": "13:39" },
+                    { "stopId": "stop_gud_sp30", "time": "13:41" },
+                    { "stopId": "stop_ros_pellico", "time": "13:44" },
+                    { "stopId": "stop_ros_dante", "time": "13:46" },
+                    { "stopId": "stop_ros_industria2", "time": "13:48" },
+                    { "stopId": "stop_cal_bettola2", "time": "13:50" },
+                    { "stopId": "stop_bub_europa", "time": "13:53" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_5",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "120",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "10:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "10:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "14:25" },
+                    { "stopId": "stop_alb_bellini", "time": "14:26" },
+                    { "stopId": "stop_alb_fs", "time": "14:30" },
+                    { "stopId": "stop_verm_cim", "time": "14:35" },
+                    { "stopId": "stop_verm_sp30", "time": "14:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "14:37" },
+                    { "stopId": "stop_gud_sp30", "time": "14:39" },
+                    { "stopId": "stop_ros_pellico", "time": "14:42" },
+                    { "stopId": "stop_ros_dante", "time": "14:44" },
+                    { "stopId": "stop_ros_industria2", "time": "14:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "14:49" },
+                    { "stopId": "stop_bub_europa", "time": "14:51" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_6",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "122",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "11:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "11:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "15:25" },
+                    { "stopId": "stop_alb_bellini", "time": "15:26" },
+                    { "stopId": "stop_alb_fs", "time": "15:30" },
+                    { "stopId": "stop_verm_cim", "time": "15:36" },
+                    { "stopId": "stop_verm_sp30", "time": "15:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "15:38" },
+                    { "stopId": "stop_gud_sp30", "time": "15:40" },
+                    { "stopId": "stop_ros_pellico", "time": "15:42" },
+                    { "stopId": "stop_ros_dante", "time": "15:44" },
+                    { "stopId": "stop_ros_industria2", "time": "15:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "15:48" },
+                    { "stopId": "stop_bub_europa", "time": "15:50" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_7",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "124",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "16:25" },
+                    { "stopId": "stop_alb_bellini", "time": "16:26" },
+                    { "stopId": "stop_alb_fs", "time": "16:29" },
+                    { "stopId": "stop_verm_cim", "time": "16:35" },
+                    { "stopId": "stop_verm_sp30", "time": "16:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "16:37" },
+                    { "stopId": "stop_gud_sp30", "time": "16:39" },
+                    { "stopId": "stop_ros_pellico", "time": "16:41" },
+                    { "stopId": "stop_ros_dante", "time": "16:43" },
+                    { "stopId": "stop_ros_industria2", "time": "16:45" },
+                    { "stopId": "stop_cal_bettola2", "time": "16:47" },
+                    { "stopId": "stop_bub_europa", "time": "16:49" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_8",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "126",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "17:25" },
+                    { "stopId": "stop_alb_bellini", "time": "17:26" },
+                    { "stopId": "stop_alb_fs", "time": "17:30" },
+                    { "stopId": "stop_verm_cim", "time": "17:36" },
+                    { "stopId": "stop_verm_sp30", "time": "17:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "17:38" },
+                    { "stopId": "stop_gud_sp30", "time": "17:40" },
+                    { "stopId": "stop_ros_pellico", "time": "17:43" },
+                    { "stopId": "stop_ros_dante", "time": "17:45" },
+                    { "stopId": "stop_ros_industria2", "time": "17:47" },
+                    { "stopId": "stop_cal_bettola2", "time": "17:50" },
+                    { "stopId": "stop_bub_europa", "time": "17:52" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_9",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "128",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "18:25" },
+                    { "stopId": "stop_alb_bellini", "time": "18:26" },
+                    { "stopId": "stop_alb_fs", "time": "18:30" },
+                    { "stopId": "stop_verm_cim", "time": "18:37" },
+                    { "stopId": "stop_verm_sp30", "time": "18:38" },
+                    { "stopId": "stop_zelo_sp30", "time": "18:39" },
+                    { "stopId": "stop_gud_sp30", "time": "18:41" },
+                    { "stopId": "stop_ros_pellico", "time": "18:44" },
+                    { "stopId": "stop_ros_dante", "time": "18:46" },
+                    { "stopId": "stop_ros_industria2", "time": "18:48" },
+                    { "stopId": "stop_cal_bettola2", "time": "18:51" },
+                    { "stopId": "stop_bub_europa", "time": "18:53" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FS_Alba_10",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "130",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "15:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "15:24"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "19:25" },
+                    { "stopId": "stop_alb_bellini", "time": "19:26" },
+                    { "stopId": "stop_alb_fs", "time": "19:30" },
+                    { "stopId": "stop_verm_cim", "time": "19:36" },
+                    { "stopId": "stop_verm_sp30", "time": "19:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "19:38" },
+                    { "stopId": "stop_gud_sp30", "time": "19:40" },
+                    { "stopId": "stop_ros_pellico", "time": "19:42" },
+                    { "stopId": "stop_ros_dante", "time": "19:44" },
+                    { "stopId": "stop_ros_industria2", "time": "19:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "19:58" },
+                    { "stopId": "stop_bub_europa", "time": "19:50" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
-            {
-                "tripId": "Z554_FS_Alba_11",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "16:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "16:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "17:15"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_FS_Alba_12",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:15"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_FS_Alba_13",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "19:15"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_FS_Alba_14",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "19:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "19:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_FS_Alba_15",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            }
+
         ],
         "feriale_non_scolastico": [
             {
-                "tripId": "Z554_FNS_Bubb_1",
-                "destination": "Bubbiano - Via Europa",
+                "tripId": "301",
+                "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "07:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "07:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "07:30"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "06:12" },
+                    { "stopId": "stop_cal_bettola", "time": "06:14" },
+                    { "stopId": "stop_ros_industria", "time": "06:15" },
+                    { "stopId": "stop_ros_dante", "time": "06:16" },
+                    { "stopId": "stop_ros_pellico", "time": "06:17" },
+                    { "stopId": "stop_gud_sp30", "time": "06:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "06:24" },
+                    { "stopId": "stop_verm_sp30", "time": "06:25" },
+                    { "stopId": "stop_verm_cim", "time": "06:26" },
+                    { "stopId": "stop_alb_fs", "time": "06:30" },
+                    { "stopId": "stop_alb_baracca", "time": "06:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "06:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "06:35" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Bubb_2",
-                "destination": "Bubbiano - Via Europa",
+                "tripId": "303",
+                "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:30"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "07:12" },
+                    { "stopId": "stop_cal_bettola", "time": "07:14" },
+                    { "stopId": "stop_ros_industria", "time": "07:15" },
+                    { "stopId": "stop_ros_dante", "time": "07:16" },
+                    { "stopId": "stop_ros_pellico", "time": "07:17" },
+                    { "stopId": "stop_gud_sp30", "time": "07:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "07:24" },
+                    { "stopId": "stop_verm_sp30", "time": "07:25" },
+                    { "stopId": "stop_verm_cim", "time": "07:26" },
+                    { "stopId": "stop_alb_fs", "time": "07:30" },
+                    { "stopId": "stop_alb_baracca", "time": "07:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "07:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "07:35" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Bubb_3",
-                "destination": "Bubbiano - Via Europa",
+                "tripId": "305",
+                "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:15"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:15"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:15"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "08:10" },
+                    { "stopId": "stop_cal_bettola", "time": "08:12" },
+                    { "stopId": "stop_ros_industria", "time": "08:13" },
+                    { "stopId": "stop_ros_dante", "time": "08:15" },
+                    { "stopId": "stop_ros_pellico", "time": "08:16" },
+                    { "stopId": "stop_gud_sp30", "time": "08:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "08:24" },
+                    { "stopId": "stop_verm_sp30", "time": "08:25" },
+                    { "stopId": "stop_verm_cim", "time": "08:26" },
+                    { "stopId": "stop_alb_fs", "time": "08:30" },
+                    { "stopId": "stop_alb_baracca", "time": "08:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "08:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "08:35" },
                 ],
                 "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_1",
+                "tripId": "307",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "06:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "06:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "09:10" },
+                    { "stopId": "stop_cal_bettola", "time": "09:12" },
+                    { "stopId": "stop_ros_industria", "time": "09:13" },
+                    { "stopId": "stop_ros_dante", "time": "09:15" },
+                    { "stopId": "stop_ros_pellico", "time": "09:16" },
+                    { "stopId": "stop_gud_sp30", "time": "09:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "09:24" },
+                    { "stopId": "stop_verm_sp30", "time": "09:25" },
+                    { "stopId": "stop_verm_cim", "time": "09:26" },
+                    { "stopId": "stop_alb_fs", "time": "09:30" },
+                    { "stopId": "stop_alb_baracca", "time": "09:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "09:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "09:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_2",
+                "tripId": "309",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "07:30"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "10:10" },
+                    { "stopId": "stop_cal_bettola", "time": "10:12" },
+                    { "stopId": "stop_ros_industria", "time": "10:13" },
+                    { "stopId": "stop_ros_dante", "time": "10:15" },
+                    { "stopId": "stop_ros_pellico", "time": "10:16" },
+                    { "stopId": "stop_gud_sp30", "time": "10:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "10:24" },
+                    { "stopId": "stop_verm_sp30", "time": "10:25" },
+                    { "stopId": "stop_verm_cim", "time": "10:26" },
+                    { "stopId": "stop_alb_fs", "time": "10:30" },
+                    { "stopId": "stop_alb_baracca", "time": "10:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "10:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "10:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_3",
+                "tripId": "311",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:23"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:23"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "11:10" },
+                    { "stopId": "stop_cal_bettola", "time": "11:12" },
+                    { "stopId": "stop_ros_industria", "time": "11:13" },
+                    { "stopId": "stop_ros_dante", "time": "11:15" },
+                    { "stopId": "stop_ros_pellico", "time": "11:16" },
+                    { "stopId": "stop_gud_sp30", "time": "11:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "11:24" },
+                    { "stopId": "stop_verm_sp30", "time": "11:25" },
+                    { "stopId": "stop_verm_cim", "time": "11:26" },
+                    { "stopId": "stop_alb_fs", "time": "11:30" },
+                    { "stopId": "stop_alb_baracca", "time": "11:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "11:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "11:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_4",
+                "tripId": "313",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "09:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "09:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "12:10" },
+                    { "stopId": "stop_cal_bettola", "time": "12:12" },
+                    { "stopId": "stop_ros_industria", "time": "12:13" },
+                    { "stopId": "stop_ros_dante", "time": "12:15" },
+                    { "stopId": "stop_ros_pellico", "time": "12:16" },
+                    { "stopId": "stop_gud_sp30", "time": "12:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "12:24" },
+                    { "stopId": "stop_verm_sp30", "time": "12:25" },
+                    { "stopId": "stop_verm_cim", "time": "12:26" },
+                    { "stopId": "stop_alb_fs", "time": "12:30" },
+                    { "stopId": "stop_alb_baracca", "time": "12:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "12:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "12:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_5",
+                "tripId": "315",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "10:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "10:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "13:10" },
+                    { "stopId": "stop_cal_bettola", "time": "13:12" },
+                    { "stopId": "stop_ros_industria", "time": "13:13" },
+                    { "stopId": "stop_ros_dante", "time": "13:15" },
+                    { "stopId": "stop_ros_pellico", "time": "13:16" },
+                    { "stopId": "stop_gud_sp30", "time": "13:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "13:24" },
+                    { "stopId": "stop_verm_sp30", "time": "13:25" },
+                    { "stopId": "stop_verm_cim", "time": "13:26" },
+                    { "stopId": "stop_alb_fs", "time": "13:30" },
+                    { "stopId": "stop_alb_baracca", "time": "13:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "13:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "13:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_6",
+                "tripId": "317",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "11:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "11:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "14:10" },
+                    { "stopId": "stop_cal_bettola", "time": "14:12" },
+                    { "stopId": "stop_ros_industria", "time": "14:13" },
+                    { "stopId": "stop_ros_dante", "time": "14:15" },
+                    { "stopId": "stop_ros_pellico", "time": "14:16" },
+                    { "stopId": "stop_gud_sp30", "time": "14:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "14:24" },
+                    { "stopId": "stop_verm_sp30", "time": "14:25" },
+                    { "stopId": "stop_verm_cim", "time": "14:26" },
+                    { "stopId": "stop_alb_fs", "time": "14:30" },
+                    { "stopId": "stop_alb_baracca", "time": "14:32" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "14:33" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "14:34" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_7",
+                "tripId": "319",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "15:10" },
+                    { "stopId": "stop_cal_bettola", "time": "15:13" },
+                    { "stopId": "stop_ros_industria", "time": "15:15" },
+                    { "stopId": "stop_ros_dante", "time": "15:16" },
+                    { "stopId": "stop_ros_pellico", "time": "15:17" },
+                    { "stopId": "stop_gud_sp30", "time": "15:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "15:24" },
+                    { "stopId": "stop_verm_sp30", "time": "15:25" },
+                    { "stopId": "stop_verm_cim", "time": "15:26" },
+                    { "stopId": "stop_alb_fs", "time": "15:30" },
+                    { "stopId": "stop_alb_baracca", "time": "15:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "15:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "15:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_8",
+                "tripId": "321",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "16:10" },
+                    { "stopId": "stop_cal_bettola", "time": "16:13" },
+                    { "stopId": "stop_ros_industria", "time": "16:15" },
+                    { "stopId": "stop_ros_dante", "time": "16:16" },
+                    { "stopId": "stop_ros_pellico", "time": "16:17" },
+                    { "stopId": "stop_gud_sp30", "time": "16:22" },
+                    { "stopId": "stop_zelo_sp30", "time": "16:24" },
+                    { "stopId": "stop_verm_sp30", "time": "16:25" },
+                    { "stopId": "stop_verm_cim", "time": "16:26" },
+                    { "stopId": "stop_alb_fs", "time": "16:30" },
+                    { "stopId": "stop_alb_baracca", "time": "16:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "16:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "16:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_9",
+                "tripId": "323",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "17:10" },
+                    { "stopId": "stop_cal_bettola", "time": "17:12" },
+                    { "stopId": "stop_ros_industria", "time": "17:14" },
+                    { "stopId": "stop_ros_dante", "time": "17:16" },
+                    { "stopId": "stop_ros_pellico", "time": "17:18" },
+                    { "stopId": "stop_gud_sp30", "time": "17:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "17:25" },
+                    { "stopId": "stop_verm_sp30", "time": "17:26" },
+                    { "stopId": "stop_verm_cim", "time": "17:27" },
+                    { "stopId": "stop_alb_fs", "time": "17:30" },
+                    { "stopId": "stop_alb_baracca", "time": "17:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "17:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "17:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_10",
+                "tripId": "325",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "15:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "15:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "18:10" },
+                    { "stopId": "stop_cal_bettola", "time": "18:12" },
+                    { "stopId": "stop_ros_industria", "time": "18:14" },
+                    { "stopId": "stop_ros_dante", "time": "18:16" },
+                    { "stopId": "stop_ros_pellico", "time": "18:18" },
+                    { "stopId": "stop_gud_sp30", "time": "18:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "18:25" },
+                    { "stopId": "stop_verm_sp30", "time": "18:26" },
+                    { "stopId": "stop_verm_cim", "time": "18:27" },
+                    { "stopId": "stop_alb_fs", "time": "18:30" },
+                    { "stopId": "stop_alb_baracca", "time": "18:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "18:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "18:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_11",
+                "tripId": "327",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "16:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "16:24"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "19:10" },
+                    { "stopId": "stop_cal_bettola", "time": "19:12" },
+                    { "stopId": "stop_ros_industria", "time": "19:14" },
+                    { "stopId": "stop_ros_dante", "time": "19:15" },
+                    { "stopId": "stop_ros_pellico", "time": "19:18" },
+                    { "stopId": "stop_gud_sp30", "time": "19:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "19:25" },
+                    { "stopId": "stop_verm_sp30", "time": "19:26" },
+                    { "stopId": "stop_verm_cim", "time": "19:27" },
+                    { "stopId": "stop_alb_fs", "time": "19:30" },
+                    { "stopId": "stop_alb_baracca", "time": "19:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "19:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "19:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_12",
+                "tripId": "329",
                 "destination": "Albairate - Via Indipendenza/Marconi",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:15"
-                    }
+                    { "stopId": "stop_bub_europa", "time": "20:10" },
+                    { "stopId": "stop_cal_bettola", "time": "20:12" },
+                    { "stopId": "stop_ros_industria", "time": "20:14" },
+                    { "stopId": "stop_ros_dante", "time": "20:15" },
+                    { "stopId": "stop_ros_pellico", "time": "20:18" },
+                    { "stopId": "stop_gud_sp30", "time": "20:23" },
+                    { "stopId": "stop_zelo_sp30", "time": "20:25" },
+                    { "stopId": "stop_verm_sp30", "time": "20:26" },
+                    { "stopId": "stop_verm_cim", "time": "20:27" },
+                    { "stopId": "stop_alb_fs", "time": "20:30" },
+                    { "stopId": "stop_alb_baracca", "time": "20:33" },
+                    { "stopId": "stop_alb_indipendenza/monti", "time": "20:34" },
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "20:35" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
+            },
+
+            // inverso
+
+            {
+                "tripId": "302",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "05:25" },
+                    { "stopId": "stop_alb_bellini", "time": "05:26" },
+                    { "stopId": "stop_alb_fs", "time": "05:30" },
+                    { "stopId": "stop_verm_cim", "time": "05:36" },
+                    { "stopId": "stop_verm_sp30", "time": "05:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "05:38" },
+                    { "stopId": "stop_gud_sp30", "time": "05:40" },
+                    { "stopId": "stop_ros_pellico", "time": "05:43" },
+                    { "stopId": "stop_ros_dante", "time": "05:45" },
+                    { "stopId": "stop_ros_industria2", "time": "05:47" },
+                    { "stopId": "stop_cal_bettola2", "time": "05:50" },
+                    { "stopId": "stop_bub_europa", "time": "05:52" },
+                ],
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_13",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "304",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:25"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "06:25" },
+                    { "stopId": "stop_alb_bellini", "time": "06:26" },
+                    { "stopId": "stop_alb_fs", "time": "06:30" },
+                    { "stopId": "stop_verm_cim", "time": "06:36" },
+                    { "stopId": "stop_verm_sp30", "time": "06:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "06:38" },
+                    { "stopId": "stop_gud_sp30", "time": "06:40" },
+                    { "stopId": "stop_ros_pellico", "time": "06:43" },
+                    { "stopId": "stop_ros_dante", "time": "06:45" },
+                    { "stopId": "stop_ros_industria2", "time": "06:47" },
+                    { "stopId": "stop_cal_bettola2", "time": "06:50" },
+                    { "stopId": "stop_bub_europa", "time": "06:52" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_14",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "306",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "19:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "19:25"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "07:25" },
+                    { "stopId": "stop_alb_bellini", "time": "07:26" },
+                    { "stopId": "stop_alb_fs", "time": "07:30" },
+                    { "stopId": "stop_verm_cim", "time": "07:41" },
+                    { "stopId": "stop_verm_sp30", "time": "07:42" },
+                    { "stopId": "stop_zelo_sp30", "time": "07:43" },
+                    { "stopId": "stop_gud_sp30", "time": "07:45" },
+                    { "stopId": "stop_ros_pellico", "time": "07:48" },
+                    { "stopId": "stop_ros_dante", "time": "07:50" },
+                    { "stopId": "stop_ros_industria2", "time": "07:52" },
+                    { "stopId": "stop_cal_bettola2", "time": "07:55" },
+                    { "stopId": "stop_bub_europa", "time": "07:57" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
+                "legend": {}
             },
             {
-                "tripId": "Z554_FNS_Alba_15",
-                "destination": "Albairate - Via Indipendenza/Marconi",
+                "tripId": "308",
+                "destination": "Bubbiano - Via Europa",
                 "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:25"
-                    }
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "08:25" },
+                    { "stopId": "stop_alb_bellini", "time": "08:26" },
+                    { "stopId": "stop_alb_fs", "time": "08:30" },
+                    { "stopId": "stop_verm_cim", "time": "08:35" },
+                    { "stopId": "stop_verm_sp30", "time": "08:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "08:37" },
+                    { "stopId": "stop_gud_sp30", "time": "08:39" },
+                    { "stopId": "stop_ros_pellico", "time": "08:42" },
+                    { "stopId": "stop_ros_dante", "time": "08:44" },
+                    { "stopId": "stop_ros_industria2", "time": "08:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "08:49" },
+                    { "stopId": "stop_bub_europa", "time": "08:51" },
                 ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            }
+                "legend": {}
+            },
+            {
+                "tripId": "310",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "09:25" },
+                    { "stopId": "stop_alb_bellini", "time": "09:26" },
+                    { "stopId": "stop_alb_fs", "time": "09:30" },
+                    { "stopId": "stop_verm_cim", "time": "09:35" },
+                    { "stopId": "stop_verm_sp30", "time": "09:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "09:37" },
+                    { "stopId": "stop_gud_sp30", "time": "09:39" },
+                    { "stopId": "stop_ros_pellico", "time": "09:42" },
+                    { "stopId": "stop_ros_dante", "time": "09:44" },
+                    { "stopId": "stop_ros_industria2", "time": "09:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "09:49" },
+                    { "stopId": "stop_bub_europa", "time": "09:51" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "312",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "10:25" },
+                    { "stopId": "stop_alb_bellini", "time": "10:26" },
+                    { "stopId": "stop_alb_fs", "time": "10:30" },
+                    { "stopId": "stop_verm_cim", "time": "10:35" },
+                    { "stopId": "stop_verm_sp30", "time": "10:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "10:37" },
+                    { "stopId": "stop_gud_sp30", "time": "10:39" },
+                    { "stopId": "stop_ros_pellico", "time": "10:42" },
+                    { "stopId": "stop_ros_dante", "time": "10:44" },
+                    { "stopId": "stop_ros_industria2", "time": "10:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "10:49" },
+                    { "stopId": "stop_bub_europa", "time": "10:51" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "314",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "11:25" },
+                    { "stopId": "stop_alb_bellini", "time": "11:26" },
+                    { "stopId": "stop_alb_fs", "time": "11:30" },
+                    { "stopId": "stop_verm_cim", "time": "11:35" },
+                    { "stopId": "stop_verm_sp30", "time": "11:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "11:37" },
+                    { "stopId": "stop_gud_sp30", "time": "11:39" },
+                    { "stopId": "stop_ros_pellico", "time": "11:42" },
+                    { "stopId": "stop_ros_dante", "time": "11:44" },
+                    { "stopId": "stop_ros_industria2", "time": "11:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "11:49" },
+                    { "stopId": "stop_bub_europa", "time": "11:51" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "316",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "12:25" },
+                    { "stopId": "stop_alb_bellini", "time": "12:26" },
+                    { "stopId": "stop_alb_fs", "time": "12:30" },
+                    { "stopId": "stop_verm_cim", "time": "12:35" },
+                    { "stopId": "stop_verm_sp30", "time": "12:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "12:37" },
+                    { "stopId": "stop_gud_sp30", "time": "12:39" },
+                    { "stopId": "stop_ros_pellico", "time": "12:42" },
+                    { "stopId": "stop_ros_dante", "time": "12:44" },
+                    { "stopId": "stop_ros_industria2", "time": "12:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "12:49" },
+                    { "stopId": "stop_bub_europa", "time": "12:51" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "318",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "13:25" },
+                    { "stopId": "stop_alb_bellini", "time": "13:26" },
+                    { "stopId": "stop_alb_fs", "time": "13:30" },
+                    { "stopId": "stop_verm_cim", "time": "13:35" },
+                    { "stopId": "stop_verm_sp30", "time": "13:36" },
+                    { "stopId": "stop_zelo_sp30", "time": "13:37" },
+                    { "stopId": "stop_gud_sp30", "time": "13:39" },
+                    { "stopId": "stop_ros_pellico", "time": "13:42" },
+                    { "stopId": "stop_ros_dante", "time": "13:44" },
+                    { "stopId": "stop_ros_industria2", "time": "13:46" },
+                    { "stopId": "stop_cal_bettola2", "time": "13:49" },
+                    { "stopId": "stop_bub_europa", "time": "13:51" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "320",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "14:25" },
+                    { "stopId": "stop_alb_bellini", "time": "14:26" },
+                    { "stopId": "stop_alb_fs", "time": "14:30" },
+                    { "stopId": "stop_verm_cim", "time": "14:36" },
+                    { "stopId": "stop_verm_sp30", "time": "14:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "14:38" },
+                    { "stopId": "stop_gud_sp30", "time": "14:41" },
+                    { "stopId": "stop_ros_pellico", "time": "14:44" },
+                    { "stopId": "stop_ros_dante", "time": "14:46" },
+                    { "stopId": "stop_ros_industria2", "time": "14:48" },
+                    { "stopId": "stop_cal_bettola2", "time": "14:51" },
+                    { "stopId": "stop_bub_europa", "time": "14:53" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "322",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "15:25" },
+                    { "stopId": "stop_alb_bellini", "time": "15:26" },
+                    { "stopId": "stop_alb_fs", "time": "15:30" },
+                    { "stopId": "stop_verm_cim", "time": "15:36" },
+                    { "stopId": "stop_verm_sp30", "time": "15:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "15:38" },
+                    { "stopId": "stop_gud_sp30", "time": "15:41" },
+                    { "stopId": "stop_ros_pellico", "time": "15:44" },
+                    { "stopId": "stop_ros_dante", "time": "15:46" },
+                    { "stopId": "stop_ros_industria2", "time": "15:48" },
+                    { "stopId": "stop_cal_bettola2", "time": "15:51" },
+                    { "stopId": "stop_bub_europa", "time": "15:53" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "324",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "16:25" },
+                    { "stopId": "stop_alb_bellini", "time": "16:26" },
+                    { "stopId": "stop_alb_fs", "time": "16:30" },
+                    { "stopId": "stop_verm_cim", "time": "16:38" },
+                    { "stopId": "stop_verm_sp30", "time": "16:39" },
+                    { "stopId": "stop_zelo_sp30", "time": "16:40" },
+                    { "stopId": "stop_gud_sp30", "time": "16:42" },
+                    { "stopId": "stop_ros_pellico", "time": "16:45" },
+                    { "stopId": "stop_ros_dante", "time": "16:47" },
+                    { "stopId": "stop_ros_industria2", "time": "16:49" },
+                    { "stopId": "stop_cal_bettola2", "time": "16:52" },
+                    { "stopId": "stop_bub_europa", "time": "16:54" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "326",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "17:25" },
+                    { "stopId": "stop_alb_bellini", "time": "17:26" },
+                    { "stopId": "stop_alb_fs", "time": "17:30" },
+                    { "stopId": "stop_verm_cim", "time": "17:38" },
+                    { "stopId": "stop_verm_sp30", "time": "17:39" },
+                    { "stopId": "stop_zelo_sp30", "time": "17:40" },
+                    { "stopId": "stop_gud_sp30", "time": "17:42" },
+                    { "stopId": "stop_ros_pellico", "time": "17:45" },
+                    { "stopId": "stop_ros_dante", "time": "17:47" },
+                    { "stopId": "stop_ros_industria2", "time": "17:49" },
+                    { "stopId": "stop_cal_bettola2", "time": "17:52" },
+                    { "stopId": "stop_bub_europa", "time": "17:54" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "328",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "18:25" },
+                    { "stopId": "stop_alb_bellini", "time": "18:26" },
+                    { "stopId": "stop_alb_fs", "time": "18:30" },
+                    { "stopId": "stop_verm_cim", "time": "18:38" },
+                    { "stopId": "stop_verm_sp30", "time": "18:39" },
+                    { "stopId": "stop_zelo_sp30", "time": "18:40" },
+                    { "stopId": "stop_gud_sp30", "time": "18:42" },
+                    { "stopId": "stop_ros_pellico", "time": "18:45" },
+                    { "stopId": "stop_ros_dante", "time": "18:47" },
+                    { "stopId": "stop_ros_industria2", "time": "18:49" },
+                    { "stopId": "stop_cal_bettola2", "time": "18:52" },
+                    { "stopId": "stop_bub_europa", "time": "18:54" },
+                ],
+                "legend": {}
+            },
+            {
+                "tripId": "330",
+                "destination": "Bubbiano - Via Europa",
+                "stops": [
+                    { "stopId": "stop_alb_indipendenza/marconi", "time": "19:25" },
+                    { "stopId": "stop_alb_bellini", "time": "19:26" },
+                    { "stopId": "stop_alb_fs", "time": "19:30" },
+                    { "stopId": "stop_verm_cim", "time": "19:36" },
+                    { "stopId": "stop_verm_sp30", "time": "19:37" },
+                    { "stopId": "stop_zelo_sp30", "time": "19:38" },
+                    { "stopId": "stop_gud_sp30", "time": "19:40" },
+                    { "stopId": "stop_ros_pellico", "time": "19:43" },
+                    { "stopId": "stop_ros_dante", "time": "19:45" },
+                    { "stopId": "stop_ros_industria2", "time": "19:47" },
+                    { "stopId": "stop_cal_bettola2", "time": "19:50" },
+                    { "stopId": "stop_bub_europa", "time": "19:52" },
+                ],
+                "legend": {}
+            },
         ],
         "sabato_scolastico": [
-            {
-                "tripId": "Z554_SS_Bubb_1",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "06:16"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "06:16"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "06:16"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Bubb_2",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:05"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:05"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:05"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Bubb_3",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "12:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:30"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Bubb_4",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "14:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:30"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Bubb_5",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:02"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:02"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:02"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Bubb_6",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "20:45"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:45"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:45"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Alba_1",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "06:16"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SS_Alba_2",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:05"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_3",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_4",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "12:30"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_5",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_6",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "14:30"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_7",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "16:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "16:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_8",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:02"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_9",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_10",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "19:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "19:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SS_Alba_11",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "20:45"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            }
+
         ],
         "sabato_non_scolastico": [
-            {
-                "tripId": "Z554_SNS_Bubb_1",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "06:16"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "06:16"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "06:16"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Bubb_2",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:05"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:05"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:05"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Bubb_3",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "12:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:30"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Bubb_4",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "14:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:30"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Bubb_5",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:02"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:02"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:02"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Bubb_6",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "20:45"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:45"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:45"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Alba_1",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "06:16"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_SNS_Alba_2",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "07:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "08:05"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_3",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "08:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "08:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_4",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "12:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "12:30"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_5",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_6",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "14:24"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "14:30"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_7",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "16:24"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "16:24"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_8",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "17:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "18:02"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_9",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "18:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "18:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_10",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "19:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "19:25"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            },
-            {
-                "tripId": "Z554_SNS_Alba_11",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "20:25"
-                    },
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "20:45"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            }
-        ],
-        "festivo": [
-            {
-                "tripId": "Z554_F_Bubb_1",
-                "destination": "Bubbiano - Via Europa",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:30"
-                    }
-                ],
-                "legend": {}
-            },
-            {
-                "tripId": "Z554_F_Alba_1",
-                "destination": "Albairate - Via Indipendenza/Marconi",
-                "stops": [
-                    {
-                        "stopId": "stop_gud_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_zelo_sp30",
-                        "time": "13:30"
-                    },
-                    {
-                        "stopId": "stop_verm_sp30",
-                        "time": "13:30"
-                    }
-                ],
-                "legend": {
-                    "Via Vermezzo Centro": "A"
-                }
-            }
+
         ]
     }
 };
