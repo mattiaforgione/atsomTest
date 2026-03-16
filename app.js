@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MAPPA (LEAFLET) ---
     let map;
     let markers = [];
+    let poiMarker = null; // Segnaposto temporaneo per POI/Indirizzi
 
     if (document.getElementById('map')) {
         map = L.map('map', { zoomControl: false }).setView([45.41, 8.95], 11);
@@ -399,9 +400,131 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
+    let searchDebounce = null;
     searchInput.addEventListener('input', (e) => {
-        renderLists(e.target.value.toLowerCase().trim());
+        const query = e.target.value.toLowerCase().trim();
+        renderLists(query);
+
+        // Se query > 3, cerchiamo anche su Nominatim
+        clearTimeout(searchDebounce);
+        if (query.length >= 3 && window.TravelCompanion && window.TravelCompanion.searchNominatim) {
+            searchDebounce = setTimeout(async () => {
+                const results = await window.TravelCompanion.searchNominatim(query);
+                if (results && results.length > 0) {
+                    renderPoiResults(results);
+                }
+            }, 500);
+        }
     });
+
+    function renderPoiResults(results) {
+        // Se il menu info è aperto o la ricerca è stata pulita, ignoriamo
+        if (infoSection && !infoSection.classList.contains('hidden')) return;
+        const currentQuery = searchInput.value.trim();
+        if (currentQuery.length < 3) return;
+
+        // Cerchiamo se esiste già una sezione POI o la creiamo
+        let poiSection = document.getElementById('poi-section');
+        if (!poiSection) {
+            poiSection = document.createElement('div');
+            poiSection.id = 'poi-section';
+            poiSection.className = 'list-section';
+            poiSection.innerHTML = `
+                <h3 class="section-subtitle">Luoghi e Indirizzi</h3>
+                <ul id="poi-results" class="results-list"></ul>
+            `;
+            // Lo inseriamo prima della sezione "Tutte le fermate" ma dopo i risultati correnti
+            searchResults.parentElement.insertBefore(poiSection, searchResults.nextSibling);
+        }
+
+        const poiList = document.getElementById('poi-results');
+        poiList.innerHTML = '';
+
+        results.forEach(poi => {
+            const li = document.createElement('li');
+            li.className = 'stop-ticket-card poi-result-card';
+            
+            const name = poi.display_name.split(',').slice(0, 3).join(', ');
+            const sub = poi.display_name.split(',').slice(1, 4).join(', ');
+
+            li.innerHTML = `
+                <div class="stop-ticket-header">
+                    <div class="stop-ticket-icon" style="background: var(--accent-color); color: white;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path></svg>
+                    </div>
+                    <div class="stop-ticket-name">${name}</div>
+                </div>
+                <div class="stop-ticket-divider"></div>
+                <div class="stop-ticket-footer" style="font-size: 0.8rem; color: var(--text-muted);">
+                    ${sub}
+                </div>
+            `;
+            
+            li.addEventListener('click', () => {
+                openPoiOnMap({
+                    lat: parseFloat(poi.lat),
+                    lng: parseFloat(poi.lon),
+                    label: name,
+                    fullAddress: poi.display_name
+                });
+            });
+            poiList.appendChild(li);
+        });
+    }
+
+    window.openPoiOnMap = function(poi) {
+        if (!map) return;
+        
+        // Chiudi UI ricerca se aperta
+        if (!searchPremiumContainer.classList.contains('collapsed')) {
+             // Non puliamo l'input per permettere di tornare indietro, ma chiudiamo la "modalità focalizzata"
+        }
+
+        const latlng = [poi.lat, poi.lng];
+        map.flyTo(latlng, 16, { animate: true });
+
+        // Rimuovi vecchio marker POI
+        if (poiMarker) map.removeLayer(poiMarker);
+
+        const poiIcon = L.divIcon({
+            className: 'custom-map-marker poi-premium-marker',
+            html: `
+                <div class="marker-pin red-version">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="10" r="3"></circle>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    </svg>
+                </div>
+            `,
+            iconSize: [36, 36],
+            iconAnchor: [18, 36]
+        });
+
+        poiMarker = L.marker(latlng, { icon: poiIcon, zIndexOffset: 1500 }).addTo(map);
+        
+        const popupContent = `
+            <div class="premium-poi-popup">
+                <div class="poi-time-large">00:00</div>
+                <div class="poi-label-main">${poi.label}</div>
+                <div class="poi-divider-premium"></div>
+                <div class="poi-actions-row">
+                    <button class="poi-chip-btn" onclick="window.planToPoi(${poi.lat}, ${poi.lng}, '${poi.label.replace(/'/g, "\\'")}')">
+                        Portami qui
+                    </button>
+                    <!-- Possibilmente altre chips se necessario -->
+                </div>
+            </div>
+        `;
+        
+        poiMarker.bindPopup(popupContent, { offset: [0, -30], className: 'custom-premium-popup' }).openPopup();
+    };
+
+    window.planToPoi = function(lat, lng, label) {
+        if (window.TravelCompanion && window.TravelCompanion.planTo) {
+            window.TravelCompanion.planTo({lat, lng}, label);
+            if (poiMarker) poiMarker.closePopup();
+        }
+    };
 
     function renderLists(query = '') {
         // Se il menu info è aperto, non renderizzare le liste normali
@@ -409,6 +532,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchResults.innerHTML = '';
         nearbyResults.innerHTML = '';
+        
+        // Puliamo anche i POI se query è vuota
+        const poiSection = document.getElementById('poi-section');
+        if (poiSection && query.length === 0) {
+            poiSection.remove();
+        } else if (poiSection && query.length < 3) {
+            const poiList = document.getElementById('poi-results');
+            if (poiList) poiList.innerHTML = '';
+        }
 
         let stopsToRender = [...stavData.stops];
 
