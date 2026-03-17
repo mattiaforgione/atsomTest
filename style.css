@@ -3387,9 +3387,42 @@ ul {
 .tc-resume-btn-dismiss { background: transparent; color: rgba(255,255,255,0.7); border: none; font-size: 1.3rem; cursor: pointer; padding: 0 2px; line-height: 1; }
 
 /* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-@keyframes tc-slide-down {
-    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* --- Guidance UI Refinements --- */
+#tc-instruction {
+    transition: all 0.3s ease;
+    min-height: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#tc-instruction strong {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.tc-tl-row-alight .tc-tl-name {
+    color: #ff4757;
+    font-weight: 800;
+}
+
+.tc-tl-row-current {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.tc-tl-node-active {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+    animation: pulse-node 2s infinite;
+}
+
+@keyframes pulse-node {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
 
