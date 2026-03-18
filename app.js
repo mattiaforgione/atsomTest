@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         L.control.zoom({ position: 'topright' }).addTo(map);
 
+        // Inizializza zone tariffarie STIBM
+        if (typeof initStibmZones === 'function') {
+            initStibmZones(map);
+        }
+
         const stopIcon = L.divIcon({
             className: 'custom-map-marker',
             html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
@@ -61,6 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         map.on('zoomend', () => {
+            if (typeof updateStibmVisibility === 'function') {
+                updateStibmVisibility(map);
+            }
             if (!activeStop || activeStop.id === "user_location_stop") {
                 renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
             }
@@ -117,10 +125,88 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FILTER BUTTON (Placeholder per futuro)
-    if (btnFilter) {
+    // --- FILTER SYSTEM ---
+    const mapFilters = {
+        showStibm: true,
+        showOnlyCorrespondences: false,
+        selectedLines: new Set()
+    };
+
+    const filterSection = document.getElementById('filter-section');
+    const chkStibm = document.getElementById('chk-stibm');
+    const chkCorrespondences = document.getElementById('chk-correspondences');
+    const filterLinesGrid = document.getElementById('filter-lines-grid');
+
+    // Toggle Filter Section
+    if (btnFilter && filterSection) {
         btnFilter.addEventListener('click', () => {
-            alert("Sistema di filtraggio in cantiere!");
+            const isFilterOpen = !filterSection.classList.contains('hidden');
+            const isMenuOpen = !infoSection.classList.contains('hidden');
+
+            if (isFilterOpen) {
+                filterSection.classList.add('hidden');
+                btnFilter.classList.remove('active');
+            } else {
+                // Close menu if open
+                if (isMenuOpen) {
+                    infoSection.classList.add('hidden');
+                    if (typeof btnMenu !== 'undefined') btnMenu.classList.remove('active');
+                    if (typeof menuIconHamburger !== 'undefined') menuIconHamburger.classList.remove('hidden');
+                    if (typeof menuIconClose !== 'undefined') menuIconClose.classList.add('hidden');
+                }
+                filterSection.classList.remove('hidden');
+                btnFilter.classList.add('active');
+
+                // Close search if open
+                if (!searchPremiumContainer.classList.contains('collapsed')) {
+                    searchInput.value = '';
+                    searchPremiumContainer.classList.add('collapsed');
+                    rightActionGroup.classList.remove('hidden-group');
+                }
+            }
+        });
+    }
+
+    // STIBM Toggle
+    if (chkStibm) {
+        chkStibm.addEventListener('change', (e) => {
+            mapFilters.showStibm = e.target.checked;
+            if (typeof toggleStibmLayer === 'function') {
+                toggleStibmLayer(mapFilters.showStibm);
+            }
+        });
+    }
+
+    // Correspondences Toggle
+    if (chkCorrespondences) {
+        chkCorrespondences.addEventListener('change', (e) => {
+            mapFilters.showOnlyCorrespondences = e.target.checked;
+            renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+        });
+    }
+
+    // Lines Filter Chips
+    if (filterLinesGrid && stavData && stavData.lines) {
+        stavData.lines.forEach(line => {
+            const chip = document.createElement('div');
+            chip.className = 'filter-line-chip';
+            chip.textContent = line.id;
+            chip.style.borderColor = line.color;
+            chip.addEventListener('click', () => {
+                if (mapFilters.selectedLines.has(line.id)) {
+                    mapFilters.selectedLines.delete(line.id);
+                    chip.classList.remove('selected');
+                    chip.style.backgroundColor = '';
+                    chip.style.color = '';
+                } else {
+                    mapFilters.selectedLines.add(line.id);
+                    chip.classList.add('selected');
+                    chip.style.backgroundColor = line.color;
+                    chip.style.color = line.txColor || 'white';
+                }
+                renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+            });
+            filterLinesGrid.appendChild(chip);
         });
     }
 
@@ -141,10 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnMenu.classList.remove('active');
                 menuIconHamburger.classList.remove('hidden');
                 menuIconClose.classList.add('hidden');
-                
+
                 // Assicurati che le sezioni delle liste siano visibili
                 allSection.classList.remove('hidden');
-                
+
                 // Forza un re-render per mostrare i risultati corretti
                 renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
             } else {
@@ -153,9 +239,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnMenu.classList.add('active');
                 menuIconHamburger.classList.add('hidden');
                 menuIconClose.classList.remove('hidden');
-                
+
                 nearbySection.classList.add('hidden');
                 allSection.classList.add('hidden');
+
+                // Chiudi Filtri se aperti
+                if (filterSection) {
+                    filterSection.classList.add('hidden');
+                    if (btnFilter) btnFilter.classList.remove('active');
+                }
 
                 // Se la ricerca è attiva, chiudiamola
                 if (!searchPremiumContainer.classList.contains('collapsed')) {
@@ -443,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach(poi => {
             const li = document.createElement('li');
             li.className = 'stop-ticket-card poi-result-card';
-            
+
             const name = poi.display_name.split(',').slice(0, 3).join(', ');
             const sub = poi.display_name.split(',').slice(1, 4).join(', ');
 
@@ -459,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${sub}
                 </div>
             `;
-            
+
             li.addEventListener('click', () => {
                 openPoiOnMap({
                     lat: parseFloat(poi.lat),
@@ -472,12 +564,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.openPoiOnMap = function(poi) {
+    window.openPoiOnMap = function (poi) {
         if (!map) return;
-        
+
         // Chiudi UI ricerca se aperta
         if (!searchPremiumContainer.classList.contains('collapsed')) {
-             // Non puliamo l'input per permettere di tornare indietro, ma chiudiamo la "modalità focalizzata"
+            // Non puliamo l'input per permettere di tornare indietro, ma chiudiamo la "modalità focalizzata"
         }
 
         const latlng = [poi.lat, poi.lng];
@@ -501,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         poiMarker = L.marker(latlng, { icon: poiIcon, zIndexOffset: 1500 }).addTo(map);
-        
+
         const popupContent = `
             <div class="premium-poi-popup">
                 <div class="poi-time-large">00:00</div>
@@ -515,13 +607,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-        
+
         poiMarker.bindPopup(popupContent, { offset: [0, -30], className: 'custom-premium-popup' }).openPopup();
     };
 
-    window.planToPoi = function(lat, lng, label) {
+    window.planToPoi = function (lat, lng, label) {
         if (window.TravelCompanion && window.TravelCompanion.planTo) {
-            window.TravelCompanion.planTo({lat, lng}, label);
+            window.TravelCompanion.planTo({ lat, lng }, label);
             if (poiMarker) poiMarker.closePopup();
         }
     };
@@ -532,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchResults.innerHTML = '';
         nearbyResults.innerHTML = '';
-        
+
         // Puliamo anche i POI se query è vuota
         const poiSection = document.getElementById('poi-section');
         if (poiSection && query.length === 0) {
@@ -542,7 +634,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (poiList) poiList.innerHTML = '';
         }
 
-        let stopsToRender = [...stavData.stops];
+        let stopsToRender = stavData.stops.filter(stop => {
+            // Filter by Correspondences
+            if (mapFilters.showOnlyCorrespondences && stop.passingLines.length <= 1) {
+                return false;
+            }
+
+            // Filter by selected Lines
+            if (mapFilters.selectedLines.size > 0) {
+                const hasSelectedLine = stop.passingLines.some(l => mapFilters.selectedLines.has(l.id));
+                if (!hasSelectedLine) return false;
+            }
+
+            return true;
+        });
 
         // Se c'è la geolocalizzazione, calcola distanze
         if (userLocation) {
@@ -558,15 +663,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Gestione visibilità marker sulla mappa
         if (map) {
-            if (mapZoom < MIN_ZOOM) {
-                markers.forEach(m => {
-                    if (map.hasLayer(m.marker)) map.removeLayer(m.marker);
-                });
-            } else {
-                markers.forEach(m => {
+            markers.forEach(m => {
+                const isFiltered = stopsToRender.some(s => s.id === m.stop.id);
+                const isZoomVisible = mapZoom >= MIN_ZOOM;
+
+                if (isFiltered && isZoomVisible) {
                     if (!map.hasLayer(m.marker)) map.addLayer(m.marker);
-                });
-            }
+                } else {
+                    if (map.hasLayer(m.marker)) map.removeLayer(m.marker);
+                }
+            });
         }
 
         // === RICERCA ATTIVA ==============================
@@ -1976,8 +2082,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LOGICA PWA & OBBLIGO INSTALLAZIONE ---
-
     // Registrazione Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
@@ -1988,3 +2092,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nota: La logica di installazione è gestita in index.html (landing page).
     // app.js si occupa solo del funzionamento dell'app standalone.
 });
+
+// --- STIBM MODAL CONTROL ---
+window.openStibmInfo = function (zoneName) {
+    const modal = document.getElementById("stibm-info-modal");
+    const title = document.getElementById("stibm-modal-title");
+    if (modal && title) {
+        title.textContent = "Area STIBM " + zoneName;
+        modal.classList.remove("hidden");
+    }
+};
+
+window.closeStibmInfo = function () {
+    const modal = document.getElementById("stibm-info-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+};
+
+// --- TICKETS MODAL CONTROL ---
+window.openTicketsInfo = function () {
+    console.log("Opening tickets info modal...");
+    const modal = document.getElementById("tickets-info-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+    } else {
+        console.error("Tickets info modal not found!");
+    }
+};
+
+window.closeTicketsInfo = function () {
+    const modal = document.getElementById("tickets-info-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+};
+
+window.downloadAtmApp = function () {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+        window.open("https://apps.apple.com/it/app/atm-milano-official-app/id415637297", "_blank");
+    } else {
+        window.open("https://play.google.com/store/apps/details?id=it.atm.appmobile&pcampaignid=web_share", "_blank");
+    }
+};
