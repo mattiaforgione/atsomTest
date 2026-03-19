@@ -2136,3 +2136,18 @@ window.downloadAtmApp = function () {
         window.open("https://play.google.com/store/apps/details?id=it.atm.appmobile&pcampaignid=web_share", "_blank");
     }
 };
+
+// --- TRAVEL TIPS MODAL CONTROL ---
+window.openTravelTips = function () {
+    const modal = document.getElementById("travel-tips-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+    }
+};
+
+window.closeTravelTips = function () {
+    const modal = document.getElementById("travel-tips-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+};

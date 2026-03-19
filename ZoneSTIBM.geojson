@@ -5,7 +5,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi3",
-                "color": "#C7AED4"
+                "color": "#B373D4",
+                "label_lat": 45.525,
+                "label_lng": 9.040
             },
             "geometry": {
                 "coordinates": [
@@ -392,7 +394,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi4",
-                "color": "#5D63AB"
+                "color": "#5D63AB",
+                "label_lat": 45.495,
+                "label_lng": 8.985
             },
             "geometry": {
                 "coordinates": [
@@ -803,7 +807,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi6",
-                "color": "#EEEA78"
+                "color": "#EEEA78",
+                "label_lat": 45.413207,
+                "label_lng": 8.955023
             },
             "geometry": {
                 "coordinates": [
@@ -1210,7 +1216,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi7",
-                "color": "#EAAC6C"
+                "color": "#EAAC6C",
+                "label_lat": 45.465,
+                "label_lng": 8.845
             },
             "geometry": {
                 "coordinates": [
@@ -1429,7 +1437,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi5",
-                "color": "#68AA6B"
+                "color": "#68AA6B",
+                "label_lat": 45.480,
+                "label_lng": 8.940
             },
             "geometry": {
                 "coordinates": [
@@ -1820,7 +1830,9 @@
             "type": "Feature",
             "properties": {
                 "name": "Mi1",
-                "color": "#EECEFF"
+                "color": "#EECEFF",
+                "label_lat": 45.461,
+                "label_lng": 9.188
             },
             "geometry": {
                 "coordinates": [

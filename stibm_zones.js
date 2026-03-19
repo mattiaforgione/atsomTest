@@ -48,9 +48,11 @@ function initStibmZones(map) {
         onEachFeature: function (feature, layer) {
             const zone = feature.properties.name || '';
 
-            // Check for hardcoded label position, fallback to calculated
+            // 1. Individual position: Check for properties first, then hardcoded, then calculated
             let labelPoint;
-            if (STIBM_LABEL_POINTS[zone]) {
+            if (feature.properties.label_lat && feature.properties.label_lng) {
+                labelPoint = L.latLng(feature.properties.label_lat, feature.properties.label_lng);
+            } else if (STIBM_LABEL_POINTS[zone]) {
                 labelPoint = L.latLng(STIBM_LABEL_POINTS[zone]);
             } else {
                 const bounds = layer.getBounds();
@@ -65,7 +67,7 @@ function initStibmZones(map) {
                 className: 'stibm-zone-label',
                 html: `<span>${zone}</span>`,
                 iconSize: [60, 30],
-                iconAnchor: [-20, 1]
+                iconAnchor: [30, 15] // Centered anchor for better scaling appearance
             });
 
             L.marker(labelPoint, { icon: labelIcon, interactive: false, zIndexOffset: -100 }).addTo(stibmLayer);
@@ -79,10 +81,10 @@ function initStibmZones(map) {
 
             layer.on('click', (e) => {
                 if (!mouseDownLatLng) return;
-                
+
                 // Sensitivity: Calculate distance between press and release
                 const moveDistance = e.latlng.distanceTo(mouseDownLatLng);
-                
+
                 // If moved more than 20 meters, it's likely a drag or zoom start
                 if (moveDistance > 20) return;
 
@@ -90,7 +92,7 @@ function initStibmZones(map) {
                 if (typeof window.openStibmInfo === 'function') {
                     window.openStibmInfo(zoneName);
                 }
-                
+
                 // Reset
                 mouseDownLatLng = null;
             });
@@ -100,17 +102,33 @@ function initStibmZones(map) {
     // CSS injection for labels
     injectStibmStyles();
 
-    // Initial visibility check
+    // Initial visibility and scale check
     updateStibmVisibility(map);
+    updateStibmLabelScale(map);
+
+    // Zoom listener for scaling
+    map.on('zoomend', () => {
+        updateStibmLabelScale(map);
+        updateStibmVisibility(map);
+    });
 }
 
 /**
- * Helper to calculate a simple centroid of a coordinate array.
+ * Updates the font size of STIBM labels based on zoom level.
+ * @param {L.Map} map 
  */
-function calculateCentroid(coords) {
-    let latSum = 0, lngSum = 0;
-    coords.forEach(c => { lngSum += c[0]; latSum += c[1]; });
-    return [latSum / coords.length, lngSum / coords.length];
+function updateStibmLabelScale(map) {
+    const zoom = map.getZoom();
+    // Base size 26px at zoom 13.
+    // Scale down by 4px for every zoom level below 13.
+    let fontSize = 26;
+    if (zoom < 13) {
+        fontSize = Math.max(8, 26 - (13 - zoom) * 4);
+    } else if (zoom > 13) {
+        // Grow slightly if zoomed in more (though usually hidden at zoom > 13)
+        fontSize = 26 + (zoom - 13) * 5;
+    }
+    document.documentElement.style.setProperty('--stibm-label-size', fontSize + 'px');
 }
 
 /**
@@ -130,25 +148,25 @@ function injectStibmStyles() {
             justify-content: center;
         }
         .stibm-zone-label span {
-            font-size: 26px;
+            font-size: var(--stibm-label-size, 26px);
             font-weight: 900;
-            color: rgba(0, 0, 0, 0.3);
-            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+            color: #11335C;
             white-space: nowrap;
             letter-spacing: -1px;
+            transition: font-size 0.2s ease;
         }
     `;
     document.head.appendChild(style);
 }
 
 /**
- * Toggles visibility based on zoom level (visible only if zoom <= 11).
+ * Toggles visibility based on zoom level.
  * @param {L.Map} map - The Leaflet map instance.
  */
 function updateStibmVisibility(map) {
     if (!stibmLayer) return;
     const zoom = map.getZoom();
-    
+
     // Show only if manual toggle is ON and zoom is <= 13
     if (stibmVisible && zoom <= 13) {
         if (!map.hasLayer(stibmLayer)) {
@@ -165,7 +183,7 @@ function updateStibmVisibility(map) {
  * Manually toggle STIBM layer visibility.
  * @param {boolean} visible 
  */
-window.toggleStibmLayer = function(visible) {
+window.toggleStibmLayer = function (visible) {
     stibmVisible = visible;
     if (window.appMap) {
         updateStibmVisibility(window.appMap);
