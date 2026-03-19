@@ -188,6 +188,46 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js');
             }
+
+            // PWA Detection and Button Update
+            async function checkPWAStatus() {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+                let isInstalled = false;
+
+                if ('getInstalledRelatedApps' in navigator) {
+                    try {
+                        const relatedApps = await navigator.getInstalledRelatedApps();
+                        isInstalled = relatedApps.length > 0;
+                    } catch (e) {
+                        console.error("Error checking installed apps:", e);
+                    }
+                }
+
+                if (isStandalone || isInstalled) {
+                    const installBtns = document.querySelectorAll('a[href="install.html"]');
+                    installBtns.forEach(btn => {
+                        btn.href = 'app.html';
+                        if (btn.classList.contains('nav-btn-right')) {
+                            btn.textContent = 'Apri App';
+                        } else if (btn.classList.contains('btn-london-main')) {
+                            // Cerca il nodo di testo per non rimuovere l'SVG
+                            const textNode = Array.from(btn.childNodes).find(node => 
+                                node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0
+                            );
+                            if (textNode) {
+                                textNode.textContent = ' Apri App';
+                            } else {
+                                // Fallback se non trova il nodo testo (es. minified)
+                                const svg = btn.querySelector('svg');
+                                btn.innerHTML = (svg ? svg.outerHTML : '') + ' Apri App';
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Esegui il controllo al caricamento
+            window.addEventListener('load', checkPWAStatus);
         </script>
 </body>
 
