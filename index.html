@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#4f46e5">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
     <title>myATSOM | Il tuo mobility companion</title>
     <link rel="icon" type="image/png" href="FavIconAtsom.png">
 
@@ -185,8 +184,22 @@
 
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-            if ('serviceWorker' in navigator) {
+            const isLocalhost = Boolean(
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '[::1]' ||
+                window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+            );
+
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || isLocalhost)) {
+                // Inietta manifest dinamico
+                const link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = 'manifest.json';
+                document.head.appendChild(link);
+
                 navigator.serviceWorker.register('sw.js');
+            } else if ('serviceWorker' in navigator) {
+                console.log('SW & Manifest skipping (non-secure origin)');
             }
 
             // PWA Detection and Button Update

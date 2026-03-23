@@ -2,48 +2,56 @@ const stavStops = [
     {
         "id": "stop_abb_vv",
         "name": "Abbiategrasso - P.za Vittorio Veneto",
+        "operatore": "STAV",
         "lat": 45.400911,
         "lng": 8.913239
     },
     {
         "id": "stop_abb_osp/uomo",
         "name": "Abbiategrasso - Ospedale/Dell'Uomo",
+        "operatore": "STAV",
         "lat": 45.395653,
         "lng": 8.914475
     },
     {
         "id": "stop_abb_osp/cattaneo",
         "name": "Abbiategrasso - Ospedale/Cattaneo",
+        "operatore": "STAV",
         "lat": 45.395288,
         "lng": 8.915165
     },
     {
         "id": "stop_abb_einstein",
         "name": "Abbiategrasso - Via Einstein",
+        "operatore": "STAV",
         "lat": 45.394267,
         "lng": 8.909060
     },
     {
         "id": "stop_abb_stignani",
         "name": "Abbiategrasso - Via Stignani",
+        "operatore": "STAV",
         "lat": 45.392028,
         "lng": 8.906648
     },
     {
         "id": "stop_abb_cattaneo/pavia",
         "name": "Abbiategrasso - Via Cattaneo/Pavia",
+        "operatore": "STAV",
         "lat": 45.395651,
         "lng": 8.917575
     },
     {
         "id": "stop_abb_cattaneo/cairoli",
         "name": "Abbiategrasso - Via Cattaneo/Cairoli",
+        "operatore": "STAV",
         "lat": 45.395782,
         "lng": 8.918331
     },
     {
         "id": "stop_abb_fs",
         "name": "Abbiategrasso - Stazione FS",
+        "operatore": "STAV",
         "lat": 45.397611,
         "lng": 8.920136,
         "connections": [
@@ -53,42 +61,49 @@ const stavStops = [
     {
         "id": "stop_abb_mazzini21",
         "name": "Abbiategrasso - V.le Mazzini 21",
+        "operatore": "STAV",
         "lat": 45.398802,
         "lng": 8.921718
     },
     {
         "id": "stop_abb_mazzini/aprile",
         "name": "Abbiategrasso - V.le Mazzini/XXV Aprile",
+        "operatore": "STAV",
         "lat": 45.398858,
         "lng": 8.923639
     },
     {
         "id": "stop_abb_mazzini/libia",
         "name": "Abbiategrasso - V.le Mazzini/Libia",
+        "operatore": "STAV",
         "lat": 45.399218,
         "lng": 8.928148
     },
     {
         "id": "stop_abb_mazzini/libia2",
         "name": "Abbiategrasso - V.le Mazzini/Libia",
+        "operatore": "STAV",
         "lat": 45.399236,
         "lng": 8.927486
     },
     {
         "id": "stop_abb_castelletto",
         "name": "Abbiategrasso - Castelletto",
+        "operatore": "STAV",
         "lat": 45.399561,
         "lng": 8.933115
     },
     {
         "id": "stop_abb_castelletto2",
         "name": "Abbiategrasso - Castelletto",
+        "operatore": "STAV",
         "lat": 45.399706,
         "lng": 8.933548
     },
     {
         "id": "stop_alb_fs",
         "name": "Albairate/Vermezzo FS",
+        "operatore": "STAV",
         "lat": 45.404184,
         "lng": 8.958023,
         "connections": [
@@ -100,12 +115,14 @@ const stavStops = [
     {
         "id": "stop_gud_sp30",
         "name": "Gudo Visconti - SP30",
+        "operatore": "STAV",
         "lat": 45.371138,
         "lng": 8.99577
     },
     {
         "id": "stop_gud_corn",
         "name": "Gudo Visconti - Via Cornaggia",
+        "operatore": "STAV",
         "lat": 45.3735,
         "lng": 8.997646
     },
@@ -121,42 +138,49 @@ const stavStops = [
     {
         "id": "stop_ros_circon/maggio",
         "name": "Rosate - Via Circonvallazione/I Maggio",
+        "operatore": "STAV",
         "lat": 45.352657,
         "lng": 9.016691
     },
     {
         "id": "stop_ros_circon/maggio2",
         "name": "Rosate - Via Circonvallazione/I Maggio",
+        "operatore": "STAV",
         "lat": 45.352402,
         "lng": 9.015978
     },
     {
         "id": "stop_ros_europa",
         "name": "Rosate - V.le Europa",
+        "operatore": "STAV",
         "lat": 45.353326,
         "lng": 9.021320
     },
     {
         "id": "stop_ros_europa2",
         "name": "Rosate - V.le Europa",
+        "operatore": "STAV",
         "lat": 45.353426,
         "lng": 9.022588
     },
     {
         "id": "stop_ros_industria",
         "name": "Rosate - Via Industria",
+        "operatore": "STAV",
         "lat": 45.342214,
         "lng": 9.016637,
     },
     {
         "id": "stop_ros_industria2",
         "name": "Rosate - Via Industria",
+        "operatore": "STAV",
         "lat": 45.340560,
         "lng": 9.017431,
     },
     {
         "id": "stop_ros_pellico",
         "name": "Rosate - Via Pellico",
+        "operatore": "STAV",
         "lat": 45.352384,
         "lng": 9.014781,
     },
@@ -181,78 +205,91 @@ const stavStops = [
     {
         "id": "stop_zelo_sp30",
         "name": "Zelo Surrigone - SP30",
+        "operatore": "STAV",
         "lat": 45.385671,
         "lng": 8.982221
     },
     {
         "id": "stop_zelo_roma",
         "name": "Zelo Surrigone - P.za Roma",
+        "operatore": "STAV",
         "lat": 45.388294,
         "lng": 8.985440
     },
     {
         "id": "stop_zelo_manzoni",
         "name": "Zelo Surrigone - Via Manzoni",
+        "operatore": "STAV",
         "lat": 45.391235,
         "lng": 8.983467
     },
     {
         "id": "stop_zelo_manzoni2",
         "name": "Zelo Surrigone - Via Manzoni",
+        "operatore": "STAV",
         "lat": 45.391003,
         "lng": 8.983743
     },
     {
         "id": "stop_verm_sp30",
         "name": "Vermezzo - SP30/Via Roma",
+        "operatore": "STAV",
         "lat": 45.392439,
         "lng": 8.977617
     },
     {
         "id": "stop_verm_cim",
         "name": "Vermezzo - Cimitero",
+        "operatore": "STAV",
         "lat": 45.396541,
         "lng": 8.975189
     },
     {
         "id": "stop_verm_comunale",
         "name": "Vermezzo - P.za Comunale",
+        "operatore": "STAV",
         "lat": 45.394544,
         "lng": 8.980817
     },
     {
         "id": "stop_verm_nav",
         "name": "Vermezzo - Naviglio",
+        "operatore": "STAV",
         "lat": 45.402706,
         "lng": 8.973638
     },
     {
         "id": "stop_gagg_bett",
         "name": "Gaggiano - C.na Barbattola",
+        "operatore": "STAV",
         "lat": 45.403381,
         "lng": 8.984171
     },
     {
         "id": "stop_gagg_rosa",
         "name": "Gaggiano - La Rosa",
+        "operatore": "STAV",
         "lat": 45.404423,
         "lng": 9.001202
     },
     {
         "id": "stop_gagg_rosa2",
         "name": "Gaggiano - La Rosa",
+        "operatore": "STAV",
         "lat": 45.404461,
         "lng": 9.000867
     },
     {
         "id": "stop_gagg_bett2",
         "name": "Gaggiano - La Bettolina",
+        "operatore": "STAV",
         "lat": 45.405114,
         "lng": 9.011338
     },
     {
         "id": "stop_gagg_fs",
         "name": "Gaggiano - Stazione FS",
+        "operatore": "STAV",
         "lat": 45.409384,
         "lng": 9.031786,
         "connections": [
@@ -263,90 +300,105 @@ const stavStops = [
     {
         "id": "stop_gagg_gasp",
         "name": "Gaggiano - Via De Gasperi",
+        "operatore": "STAV",
         "lat": 45.407751,
         "lng": 9.04406
     },
     {
         "id": "stop_gagg_polo/vinci",
         "name": "Gaggiano - Via M. Polo/Da Vinci",
+        "operatore": "STAV",
         "lat": 45.409649,
         "lng": 9.043807
     },
     {
         "id": "stop_gagg_polo/vinci2",
         "name": "Gaggiano - Via M. Polo/Da Vinci",
+        "operatore": "STAV",
         "lat": 45.410076,
         "lng": 9.045447
     },
     {
         "id": "stop_gagg_polo/corn",
         "name": "Gaggiano - Via M. Polo/Al Cornicione",
+        "operatore": "STAV",
         "lat": 45.408481,
         "lng": 9.040012
     },
     {
         "id": "stop_gagg_polo/corn2",
         "name": "Gaggiano - Via M. Polo/Al Cornicione",
+        "operatore": "STAV",
         "lat": 45.408236,
         "lng": 9.039488
     },
     {
         "id": "stop_gagg_roma",
         "name": "Gaggiano - Via Roma",
+        "operatore": "STAV",
         "lat": 45.406447,
         "lng": 9.034104
     },
     {
         "id": "stop_gagg_gramsci",
         "name": "Gaggiano - Via Gramsci",
+        "operatore": "STAV",
         "lat": 45.405319,
         "lng": 9.03361
     },
     {
         "id": "stop_gagg_corn",
         "name": "Gaggiano - Via Al Cornicione",
+        "operatore": "STAV",
         "lat": 45.404687,
         "lng": 9.038558
     },
     {
         "id": "stop_gagg_corn/roma",
         "name": "Gaggiano - Via Al Cornicione/Roma",
+        "operatore": "STAV",
         "lat": 45.407721,
         "lng": 9.0391
     },
     {
         "id": "stop_gagg_bon",
         "name": "Gaggiano - Bonirola",
+        "operatore": "STAV",
         "lat": 45.412512,
         "lng": 9.053236
     },
     {
         "id": "stop_gagg_bon2",
         "name": "Gaggiano - Bonirola",
+        "operatore": "STAV",
         "lat": 45.4126728,
         "lng": 9.0534391
     },
     {
         "id": "stop_gagg_cim",
         "name": "Gaggiano - Cimitero",
+        "operatore": "STAV",
         "lat": 45.3963679,
         "lng": 9.0301294
     },
     {
         "id": "stop_vig",
         "name": "Vigano",
+        "operatore": "STAV",
         "lat": 45.379977,
         "lng": 9.0282039
     },
     {
         "id": "stop_vig2",
         "name": "Vigano",
+        "operatore": "STAV",
         "lat": 45.3796602,
         "lng": 9.0284486
     },
     {
         "id": "stop_vito",
         "name": "San Vito",
+        "operatore": "STAV",
         "lat": 45.419784,
         "lng": 9.015116
     },
@@ -425,24 +477,28 @@ const stavStops = [
     {
         "id": "stop_trez_circon",
         "name": "Trezzano sul Naviglio - Circonvallazione",
+        "operatore": "STAV",
         "lat": 45.41792,
         "lng": 9.072443
     },
     {
         "id": "stop_trez_circon2",
         "name": "Trezzano sul Naviglio - Circonvallazione",
+        "operatore": "STAV",
         "lat": 45.417503,
         "lng": 9.070947
     },
     {
         "id": "stop_trez_milano",
         "name": "Trezzano sul Naviglio - Via Milano",
+        "operatore": "STAV",
         "lat": 45.420192,
         "lng": 9.074806
     },
     {
         "id": "stop_trez_milano2",
         "name": "Trezzano sul Naviglio - Via Milano",
+        "operatore": "STAV",
         "lat": 45.420793,
         "lng": 9.075671
     },
@@ -452,6 +508,7 @@ const stavStops = [
     {
         "id": "stop_trez_fs",
         "name": "Trezzano sul Naviglio - Stazione FS",
+        "operatore": "STAV",
         "lat": 45.420797,
         "lng": 9.067003,
         "connections": [
@@ -462,96 +519,112 @@ const stavStops = [
     {
         "id": "stop_trez_concordia",
         "name": "Trezzano sul Naviglio - Via Concordia/Scuola",
+        "operatore": "STAV",
         "lat": 45.422926,
         "lng": 9.068918
     },
     {
         "id": "stop_trez_treves/angelo",
         "name": "Trezzano sul Naviglio - Via Treves/S. Angelo",
+        "operatore": "STAV",
         "lat": 45.419341,
         "lng": 9.068462
     },
     {
         "id": "stop_trez_treves/volontari",
         "name": "Trezzano sul Naviglio - Via Treves/Volontari S.",
+        "operatore": "STAV",
         "lat": 45.417517,
         "lng": 9.063785
     },
     {
         "id": "stop_trez_treves/angelo3",
         "name": "Trezzano sul Naviglio - Via Treves/S. Angelo 3",
+        "operatore": "STAV",
         "lat": 45.419324,
         "lng": 9.068608
     },
     {
         "id": "stop_trez_indipendenza",
         "name": "Trezzano sul Naviglio - Via Indipendenza",
+        "operatore": "STAV",
         "lat": 45.418668,
         "lng": 9.070352
     },
     {
         "id": "stop_trez_cristoforo/giacosa",
         "name": "Trezzano sul Naviglio - Via S. Cristoforo/Giacosa",
+        "operatore": "STAV",
         "lat": 45.419759,
         "lng": 9.076137
     },
     {
         "id": "stop_trez_matteotti",
         "name": "Trezzano sul Naviglio - Via Matteotti",
+        "operatore": "STAV",
         "lat": 45.418452,
         "lng": 9.074476
     },
     {
         "id": "stop_trez_virgilio",
         "name": "Trezzano sul Naviglio - Via Virgilio",
+        "operatore": "STAV",
         "lat": 45.416135,
         "lng": 9.074511
     },
     {
         "id": "stop_trez_costa",
         "name": "Trezzano sul Naviglio - Via Costa",
+        "operatore": "STAV",
         "lat": 45.417834,
         "lng": 9.076334
     },
     {
         "id": "stop_trez_francesco",
         "name": "Trezzano sul Naviglio - Via S. Francesco",
+        "operatore": "STAV",
         "lat": 45.416061,
         "lng": 9.079468
     },
     {
         "id": "stop_trez_marchesina56",
         "name": "Trezzano sul Naviglio - Via Marchesina 56",
+        "operatore": "STAV",
         "lat": 45.414501,
         "lng": 9.079451
     },
     {
         "id": "stop_trez_salvini1",
         "name": "Trezzano sul Naviglio - Via Salvini 1",
+        "operatore": "STAV",
         "lat": 45.414435,
         "lng": 9.076862
     },
     {
         "id": "stop_trez_salvini2",
         "name": "Trezzano sul Naviglio - Via Salvini 2",
+        "operatore": "STAV",
         "lat": 45.414509,
         "lng": 9.074296
     },
     {
         "id": "stop_trez_salerno",
         "name": "Trezzano sul Naviglio - Via Salerno",
+        "operatore": "STAV",
         "lat": 45.414801,
         "lng": 9.071410
     },
     {
         "id": "stop_trez_croce",
         "name": "Trezzano sul Naviglio - Via B. Croce",
+        "operatore": "STAV",
         "lat": 45.420077,
         "lng": 9.070839
     },
     {
         "id": "stop_trez_ticino",
         "name": "Trezzano sul Naviglio - Via Ticino",
+        "operatore": "STAV",
         "lat": 45.421790,
         "lng": 9.072115
     },
@@ -622,24 +695,28 @@ const stavStops = [
     {
         "id": "stop_cors_guardia",
         "name": "Corsico - C.na Guardia",
+        "operatore": "STAV",
         "lat": 45.426055,
         "lng": 9.089165
     },
     {
         "id": "stop_cors_guardia2",
         "name": "Corsico - C.na Guardia",
+        "operatore": "STAV",
         "lat": 45.425871,
         "lng": 9.088684
     },
     {
         "id": "stop_cors_emanuele/montello",
         "name": "Corsico - Via V. Emanuele/Montello",
+        "operatore": "STAV",
         "lat": 45.429036,
         "lng": 9.101774
     },
     {
         "id": "stop_cors_emanuele/montello2",
         "name": "Corsico - Via V. Emanuele/Montello",
+        "operatore": "STAV",
         "lat": 45.429032,
         "lng": 9.101324
     },
@@ -754,6 +831,7 @@ const stavStops = [
     {
         "id": "stop_mil_bis",
         "name": "Milano - Bisceglie M1",
+        "operatore": "ATM",
         "lat": 45.454872,
         "lng": 9.113259,
         "connections": [
@@ -876,6 +954,7 @@ const stavStops = [
     {
         "id": "stop_alb_donatori",
         "name": "Albairate - Via Donatori del Sangue",
+        "operatore": "STAV",
         "lat": 45.419227,
         "lng": 8.933913
 
@@ -883,6 +962,7 @@ const stavStops = [
     {
         "id": "stop_alb_indipendenza/marconi",
         "name": "Albairate - Via Indipendenza/Marconi",
+        "operatore": "STAV",
         "lat": 45.419615,
         "lng": 8.936188
 
@@ -890,6 +970,7 @@ const stavStops = [
     {
         "id": "stop_alb_baracca",
         "name": "Albairate - Via Baracca",
+        "operatore": "STAV",
         "lat": 45.418389,
         "lng": 8.941037
 
@@ -897,6 +978,7 @@ const stavStops = [
     {
         "id": "stop_alb_indipendenza/monti",
         "name": "Albairate - Via Indipendenza/Monti",
+        "operatore": "STAV",
         "lat": 45.419912,
         "lng": 8.939658
 
@@ -904,6 +986,7 @@ const stavStops = [
     {
         "id": "stop_alb_bellini",
         "name": "Albairate - Via Bellini",
+        "operatore": "STAV",
         "lat": 45.418702,
         "lng": 8.940552
 
@@ -911,42 +994,49 @@ const stavStops = [
     {
         "id": "stop_cer_vincenzo",
         "name": "Cerello - P.za S. Vincenzo",
+        "operatore": "STAV",
         "lat": 45.446626,
         "lng": 8.925942
     },
     {
         "id": "stop_cer_rosario",
         "name": "Cerello - Via Rosario",
+        "operatore": "STAV",
         "lat": 45.450174,
         "lng": 8.924607
     },
     {
         "id": "stop_cer_rosario",
         "name": "Cerello - Via Rosario",
+        "operatore": "STAV",
         "lat": 45.450174,
         "lng": 8.924607
     },
     {
         "id": "stop_corb_croce",
         "name": "Cerello - Via B. Croce",
+        "operatore": "STAV",
         "lat": 45.460935,
         "lng": 8.919893
     },
     {
         "id": "stop_corb_crove",
         "name": "Corbetta - Via B. Croce",
+        "operatore": "STAV",
         "lat": 45.460935,
         "lng": 8.919893
     },
     {
         "id": "stop_corb_repubblica",
         "name": "Corbetta - V.le della Repubblica",
+        "operatore": "STAV",
         "lat": 45.465296,
         "lng": 8.911037
     },
     {
         "id": "stop_corb_oberdan",
         "name": "Corbetta - Via Oberdan",
+        "operatore": "STAV",
         "lat": 45.470561,
         "lng": 8.910081
     },

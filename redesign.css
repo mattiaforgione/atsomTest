@@ -1,0 +1,1612 @@
+/* --- REDESIGN VARIABLES & FONTS --- */
+:root {
+    --card-radius: 17px;
+    --bg-dark: #11335C;
+    --bg-deep: #11335C;
+    --text-blue: #11335C;
+}
+
+body,
+.leaflet-container,
+input,
+button,
+select,
+textarea {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* --- OVERRIDE OLD APP STYLES --- */
+.map-bottom-panel {
+    position: absolute !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 85vh !important;
+    background: #FFFFFF !important;
+    color: #11335C !important;
+    padding-bottom: 100px !important;
+    /* space for tab nav */
+    padding-top: 0 !important;
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+#main-panel {
+    transform: translateX(-50%) translateY(calc(100% - 225px + var(--drag-y, 0px))) !important;
+}
+
+#main-panel.expanded {
+    transform: translateX(-50%) translateY(max(6vh, var(--drag-y, 0px))) !important;
+}
+
+.section-subtitle {
+    color: #11335C !important;
+    font-weight: 700 !important;
+    margin-top: 10px;
+}
+
+/* Panel Handle */
+.panel-handle-container {
+    padding: 16px 0 10px !important;
+}
+
+.panel-handle {
+    background: #E0E0E0 !important;
+    width: 48px !important;
+    height: 6px !important;
+}
+
+/* --- NEW TOP SEARCH BAR --- */
+.top-search-bar {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 560px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 1000;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 100px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-input-wrapper .search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: #11335C;
+    outline: none;
+    width: 100%;
+}
+
+.search-input-wrapper input::placeholder {
+    color: rgba(17, 51, 92, 0.6);
+}
+
+.circular-btn.top-btn {
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-btn.top-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.profile-btn.top-btn {
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.profile-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #E0E0E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- NEW MAP FLOATING ACTIONS --- */
+.map-floating-actions {
+    position: absolute;
+    bottom: 150px;
+    /* Above the bottom sheet collapsed height */
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 900;
+    transition: transform 0.3s;
+}
+
+.floating-btn {
+    width: 44px !important;
+    height: 44px !important;
+    background: #FFFFFF !important;
+    border: none !important;
+    border-radius: 50%;
+    padding: 10px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.shadow-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* --- NEW BOTTOM TAB NAV --- */
+.bottom-tab-nav {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    height: 100px;
+    background: #FFFFFF;
+    border-radius: 32px 32px 0 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px 10px;
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #11335C;
+    opacity: 0.5;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    flex: 1;
+    height: 100%;
+    padding-top: 10px;
+}
+
+.nav-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #11335C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    /* PREVENT OVAL */
+    position: relative;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+}
+
+.nav-icon-wrapper img,
+.nav-icon-wrapper svg {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+    stroke: none;
+    position: absolute;
+    /* PREVENT DECENTERING */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nav-icon-wrapper .hidden {
+    display: none !important;
+}
+
+.tab-btn {
+    opacity: 1 !important;
+    /* Make sure text is fully opaque #11335C */
+    padding-bottom: 0px;
+}
+
+.tab-btn span {
+    font-weight: 600;
+}
+
+.tab-btn.active span {
+    font-weight: 800;
+}
+
+/* Line indicator below text */
+.tab-btn::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 4px;
+    background: #11335C;
+    border-radius: 4px;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tab-btn.active::after {
+    opacity: 1;
+}
+
+/* --- MAP STATE PILL --- */
+.map-state-pill {
+    background: #11335C;
+    color: #FFFFFF;
+    border-radius: 17px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 1.5rem 1rem 1.5rem;
+    box-shadow: 0 4px 15px rgba(17, 51, 92, 0.3);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.3;
+}
+
+.map-state-pill img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.map-state-pill.hidden {
+    display: none !important;
+}
+
+/* --- STOP RESULT CARDS (Mockup 3) --- */
+.results-list li {
+    background: #11335C !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 17px !important;
+    color: #FFFFFF !important;
+    padding: 1rem 1.2rem !important;
+}
+
+.stop-ticket-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+}
+
+.stop-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.stop-card-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.chevron-right {
+    opacity: 0.5;
+    width: 18px;
+    height: 18px;
+}
+
+.line-pills-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.line-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: #FFFFFF;
+}
+
+.upcoming-bus-block {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.time-box {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 65px;
+}
+
+.time-box .big-num {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.time-box .small-txt {
+    font-size: 0.65rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.upcoming-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.upcoming-info .prossimo {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+input::placeholder {
+    font-style: italic;
+}
+
+.upcoming-info .dest {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.upcoming-info .ora {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Modals Override (Stop Details & Line Details) */
+.bottom-sheet {
+    background: #FFFFFF !important;
+    border-radius: 32px 32px 0 0 !important;
+    padding-bottom: 80px;
+}
+
+.stop-title {
+    color: #11335C !important;
+}
+
+/* Route Cards (Schedules Accordion) */
+.route-card {
+    background: #11335C !important;
+    border-radius: 17px !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 12px !important;
+    overflow: hidden;
+}
+
+.route-header {
+    background: #11335C !important;
+    color: #FFFFFF !important;
+}
+
+.route-line {
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+}
+
+.time-badge {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 15px !important;
+}
+
+.time-badge.next {
+    background: #FFFFFF !important;
+    color: #11335C !important;
+    border-color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+/* --- EMPTY SERVICE CARD --- */
+.empty-service-card {
+    background: #11335C !important;
+    color: #FFFFFF !important;
+    border-radius: 17px !important;
+    padding: 24px 20px !important;
+    text-align: center !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    margin: 1.5rem 0 !important;
+    box-shadow: 0 4px 15px rgba(17, 51, 92, 0.2) !important;
+    border: none !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    --bg-deep: #11335C;
+    --bg-light: #F0F4F8;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+}
+
+/* Scrollbar styles for Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-blue) var(--bg-light);
+}
+
+#main-lists-wrapper,
+#internal-view-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    background: #FFFFFF;
+}
+
+/* Modifiche Menu Laterale per abbinarsi ai mockup */
+/* --- TRASIZIONI E VISIBILITA' PANNELLO --- */
+#main-lists-wrapper.hidden,
+#internal-view-wrapper.hidden {
+    display: none !important;
+}
+
+/* --- INTERNAL IN-PANEL VIEWS --- */
+.internal-header {
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    margin-bottom: 20px;
+    min-height: 48px;
+}
+
+.internal-back-btn {
+    width: 48px;
+    background: var(--bg-deep);
+    color: white;
+    border: none;
+    border-radius: 17px 4px 4px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.internal-back-btn:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+.internal-title {
+    flex: 1;
+    background: var(--bg-deep);
+    color: white;
+    border-radius: 4px 17px 17px 4px;
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+.line-detail-card:active {
+    transform: scale(0.98) !important;
+    opacity: 0.9 !important;
+}
+
+/* --- NEXT BUS PREMIUM CARD (IMM 2) --- */
+.next-bus-card-premium {
+    background: var(--bg-deep);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 24px rgba(17, 51, 92, 0.3);
+    color: white;
+}
+
+.next-bus-minutes-box {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.next-bus-minutes-box .minutes-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.next-bus-minutes-box .minutes-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.next-bus-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.next-bus-details .arrival-label {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-bottom: 2px;
+}
+
+.next-bus-details .line-info {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.next-bus-details .dest-info {
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0.95;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.next-bus-details .time-info {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.next-bus-card-premium.urgent .next-bus-minutes-box {
+    background: #ff4757;
+    border-color: #ff4757;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+}
+
+/* --- PREMIUM LINE DETAIL CARD (IMM 2) --- */
+.line-detail-card-premium {
+    background: var(--bg-deep);
+    border-radius: 17px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+    transition: transform 0.2s ease, background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.line-detail-card-premium:active {
+    transform: scale(0.98);
+    background: rgba(17, 51, 92, 0.9);
+}
+
+.line-color-stripe {
+    width: 6px;
+    height: 38px;
+    border-radius: 10px;
+    margin-right: 18px;
+    flex-shrink: 0;
+}
+
+.line-info-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+}
+
+.line-info-box .line-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: white;
+}
+
+.line-info-box .line-dest {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-detail-card-premium .chevron-right {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+/* --- FLOATING SEARCH RESULTS (IMM 1, 2, 4) --- */
+.floating-results-container {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    z-index: 1001;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.floating-results-container.hidden {
+    display: none;
+}
+
+.search-card-premium {
+    background: #11335C;
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.search-card-premium:active {
+    transform: scale(0.97);
+}
+
+/* Overlay per catturare i click quando la mappa è sfocata dalla ricerca */
+#map-blur-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999; /* Tra la mappa e la barra di ricerca */
+    background: transparent;
+    cursor: pointer;
+}
+
+#map-blur-overlay.hidden {
+    display: none;
+}
+
+
+.search-card-icon-box {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+}
+
+.search-card-icon-box.line-circle {
+    background: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+}
+
+.search-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.search-card-info .card-main-text {
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+}
+
+.search-card-info .card-sub-text {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.floating-results-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding-bottom: 4px;
+}
+
+.footer-info-tag {
+    background: #11335C;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(17, 51, 92, 0.3);
+}
+
+/* --- MAP BLUR EFFECT --- */
+#map {
+    transition: filter 0.3s ease;
+}
+
+.map-blurred {
+    filter: blur(8px) brightness(0.9);
+    pointer-events: none;
+}
+
+/* --- ADDRESS PANEL (IMM 3) --- */
+.address-panel-view {
+    padding: 10px 0;
+}
+
+.address-main-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+    align-items: stretch;
+}
+
+.address-close-btn {
+    width: 48px;
+    background: #FF4747;
+    border: none;
+    border-radius: 17px 4px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.2);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.address-close-btn:active {
+    transform: scale(0.92);
+}
+
+.address-close-btn svg {
+    color: white;
+    width: 24px;
+    height: 24px;
+}
+
+.address-info-box {
+    flex: 1;
+    background: #11335C;
+    border-radius: 4px 17px 4px 4px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+    overflow: hidden;
+}
+
+.address-info-box .address-icon {
+    width: 24px;
+    height: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.address-info-box .address-text {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    line-height: 1.3;
+}
+
+.portami-qui-btn {
+    width: 100%;
+    background: #41C95A;
+    color: white;
+    border: none;
+    border-radius: 4px 4px 17px 17px;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(68, 189, 50, 0.25);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.portami-qui-btn:active {
+    transform: scale(0.98);
+}
+
+.portami-qui-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===================================================
+   FULL-SCREEN MENU OVERLAY
+   =================================================== */
+
+.menu-overlay {
+    position: fixed;
+    /* Start below the fixed wave banner (~60px) */
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 990;
+    background: #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: opacity 0.25s, transform 0.25s;
+}
+
+.menu-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+
+/* Removed .menu-overlay-header — the main app wave banner stays on top */
+
+.menu-overlay-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Title card */
+.menu-page-title-card {
+    background: #11335C;
+    border-radius: 17px;
+    padding: 18px 22px;
+    margin-bottom: 4px;
+}
+
+.menu-page-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: white;
+    font-style: italic;
+}
+
+/* Cards list */
+.menu-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item-card {
+    background: #11335C;
+    border: none;
+    border-radius: 17px;
+    padding: 18px 22px;
+    text-align: left;
+    text-decoration: none;
+    display: block;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: transform 0.15s, filter 0.15s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.menu-item-card:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+}
+
+.menu-item-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: white;
+    line-height: 1.3;
+}
+
+.menu-item-subtitle {
+    font-weight: 500;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* External link cards (slightly lighter to indicate clickable) */
+.menu-item-external .menu-item-title {
+    font-weight: 600;
+}
+
+/* Row of two half-width cards */
+.menu-items-row {
+    display: flex;
+    gap: 8px;
+}
+
+.menu-item-half {
+    flex: 1;
+}
+
+/* Corner radius "join" effect:
+   When two adjacent cards share a side, that corner becomes 4px.
+   We replicate the screenshot effect using adjacent card overrides. */
+.menu-items-list > .menu-item-card + .menu-item-card {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.menu-items-list > .menu-item-card:not(:last-child) {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* First card: top corners stay large */
+.menu-items-list > .menu-item-card:first-child {
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+}
+
+/* Last item (row or card): bottom corners go back to large */
+.menu-items-list > *:last-child,
+.menu-items-list > *:last-child .menu-item-card {
+    border-bottom-left-radius: 17px;
+    border-bottom-right-radius: 17px;
+}
+
+/* The row itself: inner cards smaller top radius, adjacent item above makes bottom small */
+.menu-items-row .menu-item-half {
+    border-radius: 4px 4px 17px 17px;
+}
+
+
+/* ===================================================
+   SLIDING NAV INDICATOR
+   =================================================== */
+
+#nav-active-indicator {
+    position: absolute;
+    bottom: 14px;
+    height: 4px;
+    width: 32px;
+    background: #11335C;
+    border-radius: 4px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* Remove old active::after so the JS-driven indicator is the only one */
+.tab-btn::after {
+    display: none !important;
+}
+/* --- TRAVEL SYSTEM REDESIGN --- */
+.travel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #FFFFFF;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.travel-overlay.hidden {
+    transform: translateY(100%);
+    pointer-events: none;
+}
+
+.travel-header-wave {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background: #FFFFFF;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.travel-header-wave .wave-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.travel-logo {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 60px;
+    z-index: 2;
+}
+
+.travel-overlay-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 100px;
+    background: #FFFFFF;
+}
+
+.travel-title-card {
+    background: #11335C;
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 17px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    display: inline-block;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(17, 51, 92, 0.2);
+}
+
+.travel-search-section {
+    margin-bottom: 40px;
+}
+
+.travel-input-label {
+    color: #11335C;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.travel-input-box {
+    background: #F0F4F8;
+    border-radius: 100px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    border: 1.5px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.travel-input-box:focus-within {
+    border-color: #11335C;
+}
+
+.travel-input-box .search-icon {
+    color: #11335C;
+    opacity: 0.6;
+    margin-right: 14px;
+}
+
+.travel-input-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #11335C;
+}
+
+.travel-btn-primary {
+    background: #27AE60;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 100px;
+    width: 100%;
+    height: 60px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    transition: transform 0.2s;
+    margin-top: 20px;
+}
+
+.travel-btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Step 2: Results */
+.travel-header-back-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.travel-back-btn {
+    width: 50px;
+    height: 50px;
+    background: #11335C;
+    border: none;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.travel-results-subtitle {
+    color: #11335C;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.travel-solutions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Nav Bars */
+.nav-top-bar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 1001;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nav-top-bar.hidden {
+    transform: translateY(-120%);
+    opacity: 0;
+}
+
+.nav-top-bar-content {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+}
+
+.nav-top-status {
+    color: #27AE60;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.nav-top-dest {
+    color: #11335C;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.nav-cancel-btn {
+    width: 44px;
+    height: 44px;
+    background: #EB5757;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.nav-bottom-step {
+    position: fixed;
+    bottom: 120px;
+    left: 20px;
+    right: 20px;
+    z-index: 1001;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nav-bottom-step.hidden {
+    transform: translateY(120%);
+    opacity: 0;
+}
+
+.nav-bottom-step-content {
+    background: #11335C;
+    border-radius: 20px;
+    padding: 16px;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 30px rgba(17, 51, 92, 0.3);
+    cursor: pointer;
+}
+
+.nav-bottom-icon {
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav-bottom-icon img {
+    width: 28px;
+    height: 28px;
+}
+
+.nav-bottom-text {
+    flex: 1;
+}
+
+.nav-step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.7;
+    text-transform: uppercase;
+}
+
+.nav-step-desc {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 2px 0;
+}
+
+.nav-step-meta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+/* Timeline updated */
+.travel-summary-card {
+    background: #11335C;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.tc-tl {
+    position: relative;
+    padding-left: 10px;
+}
+
+.tc-tl-node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.tc-tl-vline {
+    width: 3px;
+    flex: 1;
+    margin: 4px 6px;
+    position: relative;
+    min-height: 20px;
+}
+
+.tc-tl-linelabel {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    font-weight: 900;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.tc-tl-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.tc-tl-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tc-tl-body {
+    flex: 1;
+    color: #FFFFFF;
+    padding-bottom: 12px;
+}
+
+.tc-tl-name {
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.tc-tl-desc {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+.travel-step-detail-card {
+    background: #11335C;
+    border-radius: 20px;
+    margin-top: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+
+/* Ensure main banner stays on top of travel overlay */
+.top-wave-banner.travel-open {
+    background: #FFFFFF !important;
+    z-index: 2100 !important;
+}
+
+
+/* --- TRAVEL SYSTEM REFINEMENT (v2) --- */
+
+.travel-overlay {
+    position: fixed;
+    top: 70px; /* Below top wave banner */
+    bottom: 100px; /* Above bottom tab nav */
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    z-index: 950; /* Below bars (1000) */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.travel-overlay.hidden {
+    transform: translateY(100%);
+    display: none; /* Keep hidden logic */
+}
+
+.travel-overlay-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-top: 10px;
+}
+
+/* Dark Blue Title Card */
+.travel-title-card-v2 {
+    background: #11335C;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.travel-title-v2 {
+    color: #FFFFFF;
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Dark Blue Inputs */
+.travel-input-group-v2 {
+    margin-bottom: 24px;
+}
+
+.travel-input-label-v2 {
+    color: #11335C;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.travel-input-box-v2 {
+    background: #11335C;
+    border-radius: 20px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+}
+
+.travel-input-box-v2 img, .travel-input-box-v2 i {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+.travel-input-box-v2 input {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+}
+
+.travel-input-box-v2 input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+/* Results / Suggestions inside Input */
+.travel-suggestions-v2 {
+    background: #11335C;
+    border-radius: 0 0 20px 20px;
+    margin-top: -20px;
+    padding: 25px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.travel-suggestion-item-v2 {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px;
+    color: #FFFFFF;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+/* Green Action Button */
+.travel-btn-green-v2 {
+    background: #27AE60;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    height: 60px;
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+    margin-top: 20px;
+}
+
+/* Route Results Card (Step 2) */
+.tc-route-card-v2 {
+    background: #11335C;
+    border-radius: 24px;
+    padding: 20px;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tc-route-card-v2 .time-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.tc-route-card-v2 .duration {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.tc-route-card-v2 .duration-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+/* Timeline Card (Step 3) */
+.tc-summary-card-v2 {
+    background: #11335C;
+    border-radius: 24px;
+    padding: 24px;
+    color: #FFFFFF;
+    margin-bottom: 24px;
+}
+

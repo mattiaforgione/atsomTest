@@ -4,6 +4,75 @@ document.addEventListener('DOMContentLoaded', () => {
     let markers = [];
     let poiMarker = null; // Segnaposto temporaneo per POI/Indirizzi
 
+    // Icon mapping - accessible globally within DOMContentLoaded
+    // Icon mappings for Map (pin version)
+    const STOP_ICONS = {
+        'STAV': 'Icons/BusStopSTAV.svg',
+        'ATM': 'Icons/BusStopATM.svg',
+        'AGV': 'Icons/BusStopAGV.svg',
+        'M': 'Icons/MetroStop.svg',
+        'S': 'Icons/SLinesStop.svg',
+        'T': 'Icons/TicketSelling.svg',
+        'default': 'Icons/GeneralBusStop.svg'
+    };
+
+    // Icon mappings for Lists (flat/logo version)
+    const LIST_ICONS = {
+        'STAV': 'Icons/IconaSTAV.svg',
+        'ATM': 'Icons/IconaATM.svg',
+        'AGV': 'Icons/IconaAGV.svg',
+        'M': 'Icons/Group 193.svg',
+        'S': 'Icons/Group 195.svg',
+        'T': 'Icons/Group 194.svg',
+        'default': 'Icons/Bus.svg'
+    };
+
+    function getStopIcon(stop) {
+        const iconPath = STOP_ICONS[stop.operatore] || STOP_ICONS['default'];
+        return L.divIcon({
+            className: 'custom-map-marker-raw',
+            html: `<img src="${iconPath}" style="width:36px; height:40px; display:block;">`,
+            iconSize: [36, 40],
+            iconAnchor: [18, 40]
+        });
+    }
+
+    // Pre-calculate lines passing through each stop efficiently
+    const stopsById = new Map();
+    stavData.stops.forEach(stop => {
+        stop.passingLines = [];
+        stopsById.set(stop.id, stop);
+    });
+
+    stavData.lines.forEach(line => {
+        const uniqueStopsInLine = new Set();
+        for (let dayVariant in line.dayTypes) {
+            const variantTrips = line.dayTypes[dayVariant];
+            if (variantTrips) {
+                variantTrips.forEach(trip => {
+                    trip.stops.forEach(st => uniqueStopsInLine.add(st.stopId));
+                });
+            }
+        }
+        uniqueStopsInLine.forEach(stopId => {
+            const stop = stopsById.get(stopId);
+            if (stop) {
+                stop.passingLines.push({
+                    id: line.id,
+                    color: line.color,
+                    txColor: line.txColor
+                });
+            }
+        });
+    });
+
+    // Unify all stops — accessible by renderLists and other functions
+    const allStops = [
+        ...(typeof stavData !== 'undefined' ? stavData.stops : []),
+        ...(typeof metroTreniStops !== 'undefined' ? metroTreniStops : []),
+        ...(typeof rivenditeBiglietti !== 'undefined' ? rivenditeBiglietti : [])
+    ];
+
     if (document.getElementById('map')) {
         map = L.map('map', { zoomControl: false }).setView([45.41, 8.95], 11);
         window.appMap = map;
@@ -19,38 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
             initStibmZones(map);
         }
 
-        const stopIcon = L.divIcon({
-            className: 'custom-map-marker',
-            html: `<div class="marker-pin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
-            iconSize: [36, 36], // Managed via CSS, but good to have
-            iconAnchor: [18, 36]
-        });
-
-        // Pre-calculate lines passing through each stop to avoid doing it on every render
-        stavData.stops.forEach(stop => {
-            stop.passingLines = [];
-            stavData.lines.forEach(line => {
-                let passesHere = false;
-                for (let dayVariant in line.dayTypes) {
-                    const variantTrips = line.dayTypes[dayVariant];
-                    if (variantTrips && variantTrips.some(trip => trip.stops.some(st => st.stopId === stop.id))) {
-                        passesHere = true;
-                        break;
-                    }
-                }
-                if (passesHere) {
-                    stop.passingLines.push({
-                        id: line.id,
-                        color: line.color,
-                        txColor: line.txColor
-                    });
-                }
-            });
-        });
-
-        stavData.stops.forEach(stop => {
+        allStops.forEach(stop => {
             if (stop.lat && stop.lng) {
-                const marker = L.marker([stop.lat, stop.lng], { icon: stopIcon }).addTo(map);
+                const marker = L.marker([stop.lat, stop.lng], { icon: getStopIcon(stop) }).addTo(map);
                 marker.on('click', () => {
                     openStopDetails(stop);
                 });
@@ -60,6 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Event listeners to update markers and list on map changes
         map.on('moveend', () => {
+            updateMarkersVisibility();
+            if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
             if (!activeStop || activeStop.id === "user_location_stop") {
                 renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
             }
@@ -69,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof updateStibmVisibility === 'function') {
                 updateStibmVisibility(map);
             }
+            updateMarkersVisibility();
+            if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
             if (!activeStop || activeStop.id === "user_location_stop") {
                 renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
             }
@@ -94,21 +138,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnFilter = document.getElementById('btn-filter');
     const searchPremiumContainer = document.getElementById('premium-search-container');
     const rightActionGroup = document.getElementById('action-group-right');
+    const mainListsWrapper = document.getElementById('main-lists-wrapper');
+    const internalViewWrapper = document.getElementById('internal-view-wrapper');
+    const nearbySection = document.getElementById('nearby-section');
+    const nearbyResults = document.getElementById('nearby-results');
+    const otherServicesResults = document.getElementById('other-services-results');
 
-    // SEARCH TOGGLE
+    const floatingResults = document.getElementById('floating-results-container');
+    const floatingList = document.getElementById('floating-results-list');
+
+    const blurOverlay = document.getElementById('map-blur-overlay');
+
+    // SEARCH TOGGLE & BLUR (IMM 1, 2, 4)
+    if (searchInput) {
+        searchInput.addEventListener('focus', () => {
+            map.getContainer().classList.add('map-blurred');
+            if (blurOverlay) blurOverlay.classList.remove('hidden');
+            if (searchInput.value.trim() !== "") {
+                floatingResults.classList.remove('hidden');
+            }
+        });
+
+        searchInput.addEventListener('blur', () => {
+            // Piccolo timeout per permettere il click sui risultati
+            setTimeout(() => {
+                // Se il focus non è sul overlay o sui risultati, chiudi tutto
+                if (document.activeElement !== searchInput) {
+                    map.getContainer().classList.remove('map-blurred');
+                    if (blurOverlay) blurOverlay.classList.add('hidden');
+                    floatingResults.classList.add('hidden');
+                }
+            }, 300);
+        });
+    }
+
+    if (blurOverlay) {
+        blurOverlay.addEventListener('click', () => {
+            searchInput.blur();
+            map.getContainer().classList.remove('map-blurred');
+            blurOverlay.classList.add('hidden');
+            floatingResults.classList.add('hidden');
+        });
+    }
+
     if (btnOpenSearch && searchPremiumContainer && rightActionGroup) {
         btnOpenSearch.addEventListener('click', () => {
             searchPremiumContainer.classList.remove('collapsed');
             rightActionGroup.classList.add('hidden-group');
-            // Timeout to allow expansion animation to start prima del focus
             setTimeout(() => searchInput.focus(), 50);
-        });
-
-        searchInput.addEventListener('blur', () => {
-            if (searchInput.value.trim() === '') {
-                searchPremiumContainer.classList.add('collapsed');
-                rightActionGroup.classList.remove('hidden-group');
-            }
         });
     }
 
@@ -149,10 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Close menu if open
                 if (isMenuOpen) {
-                    infoSection.classList.add('hidden');
-                    if (typeof btnMenu !== 'undefined') btnMenu.classList.remove('active');
-                    if (typeof menuIconHamburger !== 'undefined') menuIconHamburger.classList.remove('hidden');
-                    if (typeof menuIconClose !== 'undefined') menuIconClose.classList.add('hidden');
+                    if (typeof setActiveTab === 'function') setActiveTab(tabMappa);
+                    else infoSection && infoSection.classList.add('hidden');
                 }
                 filterSection.classList.remove('hidden');
                 btnFilter.classList.add('active');
@@ -210,54 +285,86 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // MENU BUTTON TOGGLE
+    // NAV BAR: ACTIVE TAB + SLIDING INDICATOR + MENU OVERLAY
     const btnMenu = document.getElementById('btn-menu');
-    const infoSection = document.getElementById('info-section');
-    const menuIconHamburger = document.getElementById('menu-icon-hamburger');
-    const menuIconClose = document.getElementById('menu-icon-close');
-    const allSection = document.getElementById('all-section');
+    const tabMappa = document.getElementById('tab-mappa');
+    const tabViaggio = document.getElementById('tab-viaggio');
+    const infoSection = document.getElementById('info-section'); // Keep ref for compat
+    const menuOverlay = document.getElementById('menu-overlay');
+    const navIndicator = document.getElementById('nav-active-indicator');
+    const nav = document.getElementById('bottom-tab-nav');
 
-    if (btnMenu && infoSection) {
-        btnMenu.addEventListener('click', () => {
-            const isMenuOpen = !infoSection.classList.contains('hidden');
+    const mainSearchBar = document.getElementById('main-search-bar');
 
-            if (isMenuOpen) {
-                // Chiudi menu, mostra liste
-                infoSection.classList.add('hidden');
-                btnMenu.classList.remove('active');
-                menuIconHamburger.classList.remove('hidden');
-                menuIconClose.classList.add('hidden');
+    function setActiveTab(activeBtn) {
+        // Update active class
+        [tabViaggio, tabMappa, btnMenu].forEach(btn => btn && btn.classList.remove('active'));
+        if (activeBtn) activeBtn.classList.add('active');
 
-                // Assicurati che le sezioni delle liste siano visibili
-                allSection.classList.remove('hidden');
+        // Move sliding indicator
+        if (navIndicator && nav && activeBtn) {
+            const navRect = nav.getBoundingClientRect();
+            const btnRect = activeBtn.getBoundingClientRect();
+            const indicatorLeft = (btnRect.left - navRect.left) + (btnRect.width / 2) - 16;
+            navIndicator.style.left = indicatorLeft + 'px';
+        }
 
-                // Forza un re-render per mostrare i risultati corretti
-                renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+        const isMenuTab = activeBtn === btnMenu;
+
+        // Show/hide menu overlay
+        if (menuOverlay) {
+            if (isMenuTab) {
+                menuOverlay.classList.remove('hidden');
             } else {
-                // Apri menu, nascondi liste
-                infoSection.classList.remove('hidden');
-                btnMenu.classList.add('active');
-                menuIconHamburger.classList.add('hidden');
-                menuIconClose.classList.remove('hidden');
+                menuOverlay.classList.add('hidden');
+            }
+        }
 
-                nearbySection.classList.add('hidden');
-                allSection.classList.add('hidden');
+        // Hide top search bar on menu tab, show it otherwise
+        if (mainSearchBar) {
+            mainSearchBar.style.transition = 'opacity 0.2s';
+            mainSearchBar.style.opacity = isMenuTab ? '0' : '1';
+            mainSearchBar.style.pointerEvents = isMenuTab ? 'none' : '';
+        }
 
-                // Chiudi Filtri se aperti
-                if (filterSection) {
-                    filterSection.classList.add('hidden');
-                    if (btnFilter) btnFilter.classList.remove('active');
-                }
+        // White background on wave banner only when menu is open
+        const waveBanner = document.querySelector('.top-wave-banner');
+        if (waveBanner) {
+            waveBanner.classList.toggle('menu-open', isMenuTab);
+        }
 
-                // Se la ricerca è attiva, chiudiamola
-                if (!searchPremiumContainer.classList.contains('collapsed')) {
-                    searchInput.value = '';
-                    searchPremiumContainer.classList.add('collapsed');
-                    rightActionGroup.classList.remove('hidden-group');
-                }
+        // Hide old info-section if it exists
+        if (infoSection) infoSection.classList.add('hidden');
+    }
+
+    // Wire up buttons
+    if (tabMappa) {
+        tabMappa.addEventListener('click', () => {
+            setActiveTab(tabMappa);
+            renderLists(searchInput && searchInput.value ? searchInput.value.toLowerCase().trim() : '');
+        });
+    }
+    if (tabViaggio) {
+        tabViaggio.addEventListener('click', () => {
+            setActiveTab(tabViaggio);
+            if (window.TravelCompanion && window.TravelCompanion.open) window.TravelCompanion.open();
+        });
+    }
+    if (btnMenu) {
+        btnMenu.addEventListener('click', () => {
+            const isMenuOpen = !menuOverlay.classList.contains('hidden');
+            if (isMenuOpen) {
+                setActiveTab(tabMappa);
+            } else {
+                setActiveTab(btnMenu);
             }
         });
     }
+
+    // Initial indicator position (on mappa)
+    requestAnimationFrame(() => {
+        if (tabMappa) setActiveTab(tabMappa);
+    });
 
     // Riferimenti Modal
     const stopDetailsSheet = document.getElementById('stop-details');
@@ -374,9 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Logica di ricerca e geolocalizzazione
-    const nearbySection = document.getElementById('nearby-section');
-    const nearbyResults = document.getElementById('nearby-results');
+    // 2. Logica di  e geolocalizzazione
     const allStopsTitle = document.getElementById('all-stops-title');
 
     let userLocation = null;
@@ -495,7 +600,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let searchDebounce = null;
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
-        renderLists(query);
+
+        if (query.length > 0) {
+            floatingResults.classList.remove('hidden');
+            renderFloatingResults(query);
+        } else {
+            floatingResults.classList.add('hidden');
+        }
 
         // Se query > 3, cerchiamo anche su Nominatim
         clearTimeout(searchDebounce);
@@ -503,64 +614,99 @@ document.addEventListener('DOMContentLoaded', () => {
             searchDebounce = setTimeout(async () => {
                 const results = await window.TravelCompanion.searchNominatim(query);
                 if (results && results.length > 0) {
-                    renderPoiResults(results);
+                    renderFloatingPoiResults(results);
                 }
             }, 500);
         }
     });
 
-    function renderPoiResults(results) {
-        // Se il menu info è aperto o la ricerca è stata pulita, ignoriamo
-        if (infoSection && !infoSection.classList.contains('hidden')) return;
-        const currentQuery = searchInput.value.trim();
-        if (currentQuery.length < 3) return;
+    function renderFloatingResults(query) {
+        floatingList.innerHTML = '';
 
-        // Cerchiamo se esiste già una sezione POI o la creiamo
-        let poiSection = document.getElementById('poi-section');
-        if (!poiSection) {
-            poiSection = document.createElement('div');
-            poiSection.id = 'poi-section';
-            poiSection.className = 'list-section';
-            poiSection.innerHTML = `
-                <h3 class="section-subtitle">Luoghi e Indirizzi</h3>
-                <ul id="poi-results" class="results-list"></ul>
+        // 1. Linee
+        const filteredLines = stavData.lines.filter(l =>
+            l.id.toLowerCase().includes(query) ||
+            (l.description && l.description.toLowerCase().includes(query))
+        );
+
+        filteredLines.forEach(line => {
+            const card = document.createElement('div');
+            card.className = 'search-card-premium';
+            const iconPath = LIST_ICONS[line.operatore] || LIST_ICONS['default'];
+            card.innerHTML = `
+                <div class="search-card-icon-box line-circle" style="background: rgba(255,255,255,0.05);">
+                    <img src="${iconPath}" style="width:20px; height:20px;">
+                </div>
+                <div class="search-card-info">
+                    <div class="card-main-text">Linea ${line.id}</div>
+                    <div class="card-sub-text">${line.description || 'Autolinea d\'area'}</div>
+                </div>
             `;
-            // Lo inseriamo prima della sezione "Tutte le fermate" ma dopo i risultati correnti
-            searchResults.parentElement.insertBefore(poiSection, searchResults.nextSibling);
-        }
+            card.onclick = () => {
+                // Trova la prima destinazione valida per questa linea
+                const firstTrip = Object.values(line.dayTypes)[0]?.[0];
+                if (firstTrip) {
+                    window.openTripDetail(line.id, firstTrip.destination);
+                }
+            };
+            floatingList.appendChild(card);
+        });
 
-        const poiList = document.getElementById('poi-results');
-        poiList.innerHTML = '';
+        // 2. Fermate
+        const allStops = [
+            ...(typeof stavData !== 'undefined' ? stavData.stops : []),
+            ...(typeof metroTreniStops !== 'undefined' ? metroTreniStops : []),
+            ...(typeof rivenditeBiglietti !== 'undefined' ? rivenditeBiglietti : [])
+        ];
 
+        const filteredStops = allStops.filter(s =>
+            s.name.toLowerCase().includes(query)
+        ).slice(0, 10);
+
+        filteredStops.forEach(stop => {
+            const card = document.createElement('div');
+            card.className = 'search-card-premium';
+            const iconPath = LIST_ICONS[stop.operatore] || LIST_ICONS['default'];
+            card.innerHTML = `
+                <div class="search-card-icon-box" style="background: rgba(255,255,255,0.05);">
+                    <img src="${iconPath}" style="width:20px; height:20px;">
+                </div>
+                <div class="search-card-info">
+                    <div class="card-main-text">${stop.name}</div>
+                    <div class="card-sub-text">Fermata &bull; ${stop.operatore || 'STAV'}</div>
+                </div>
+            `;
+            card.onclick = () => openStopDetails(stop);
+            floatingList.appendChild(card);
+        });
+    }
+
+    function renderFloatingPoiResults(results) {
+        // Aggiunge i risultati di Nominatim alla lista floating esistente
         results.forEach(poi => {
-            const li = document.createElement('li');
-            li.className = 'stop-ticket-card poi-result-card';
+            const name = poi.display_name.split(',')[0];
+            const sub = poi.display_name.split(',').slice(1, 3).join(', ');
 
-            const name = poi.display_name.split(',').slice(0, 3).join(', ');
-            const sub = poi.display_name.split(',').slice(1, 4).join(', ');
-
-            li.innerHTML = `
-                <div class="stop-ticket-header">
-                    <div class="stop-ticket-icon" style="background: var(--accent-color); color: white;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path></svg>
-                    </div>
-                    <div class="stop-ticket-name">${name}</div>
+            const card = document.createElement('div');
+            card.className = 'search-card-premium';
+            card.innerHTML = `
+                <div class="search-card-icon-box">
+                    <img src="Icons/Map_Pin.svg" style="width:20px; height:20px; filter:brightness(0) invert(1);">
                 </div>
-                <div class="stop-ticket-divider"></div>
-                <div class="stop-ticket-footer" style="font-size: 0.8rem; color: var(--text-muted);">
-                    ${sub}
+                <div class="search-card-info">
+                    <div class="card-main-text">${name}</div>
+                    <div class="card-sub-text">${sub}</div>
                 </div>
             `;
-
-            li.addEventListener('click', () => {
+            card.onclick = () => {
                 openPoiOnMap({
                     lat: parseFloat(poi.lat),
                     lng: parseFloat(poi.lon),
                     label: name,
                     fullAddress: poi.display_name
                 });
-            });
-            poiList.appendChild(li);
+            };
+            floatingList.appendChild(card);
         });
     }
 
@@ -568,8 +714,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!map) return;
 
         // Chiudi UI ricerca se aperta
-        if (!searchPremiumContainer.classList.contains('collapsed')) {
-            // Non puliamo l'input per permettere di tornare indietro, ma chiudiamo la "modalità focalizzata"
+        const searchInput = document.getElementById('stop-searchInput');
+        if (searchInput && document.activeElement === searchInput) {
+            searchInput.blur();
         }
 
         const latlng = [poi.lat, poi.lng];
@@ -593,30 +740,184 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         poiMarker = L.marker(latlng, { icon: poiIcon, zIndexOffset: 1500 }).addTo(map);
+        window.renderAddressPanel(poi.label || poi.fullAddress || "Punto selezionato", latlng);
+    };
 
-        const popupContent = `
-            <div class="premium-poi-popup">
-                <div class="poi-time-large">00:00</div>
-                <div class="poi-label-main">${poi.label}</div>
-                <div class="poi-divider-premium"></div>
-                <div class="poi-actions-row">
-                    <button class="poi-chip-btn" onclick="window.planToPoi(${poi.lat}, ${poi.lng}, '${poi.label.replace(/'/g, "\\'")}')">
+    window.renderAddressPanel = function (address, latlng) {
+        // Nascondi sezioni standard
+        if (mainListsWrapper) mainListsWrapper.style.display = 'none';
+        if (internalViewWrapper) {
+            internalViewWrapper.classList.remove('hidden');
+            internalViewWrapper.innerHTML = `
+                <div class="address-panel-view">
+                    <div class="address-main-row">
+                        <button class="address-close-btn" onclick="window.closeAddressPanel()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                        <div class="address-info-box">
+                            <svg class="address-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <div class="address-text">${address}</div>
+                        </div>
+                    </div>
+                    <button class="portami-qui-btn" onclick="window.startNavigationTo(${latlng[0]}, ${latlng[1]}, '${address.replace(/'/g, "\\'")}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                         Portami qui
                     </button>
-                    <!-- Possibilmente altre chips se necessario -->
                 </div>
-            </div>
-        `;
+            `;
+        }
 
-        poiMarker.bindPopup(popupContent, { offset: [0, -30], className: 'custom-premium-popup' }).openPopup();
-    };
+        // Espandi il pannello se non lo è già
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel && !mainPanel.classList.contains('expanded')) {
+            isExpanded = true;
+            mainPanel.classList.add('expanded');
+        }
+    }
+
+    window.closeAddressPanel = function () {
+        if (poiMarker) map.removeLayer(poiMarker);
+        if (internalViewWrapper) {
+            internalViewWrapper.classList.add('hidden');
+            internalViewWrapper.innerHTML = '';
+        }
+        if (mainListsWrapper) mainListsWrapper.style.display = 'flex';
+
+        isExpanded = false;
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel) mainPanel.classList.remove('expanded');
+    }
+
+    window.startNavigationTo = function (lat, lng, label) {
+        if (window.TravelCompanion && window.TravelCompanion.planRoute) {
+            window.TravelCompanion.open();
+            // Inyectamos destino en TC (presumibilmente tramite un metodo esistente o impostando input)
+            const destInput = document.getElementById('tc-dest-input');
+            if (destInput) {
+                destInput.value = label || "Punto sulla mappa";
+                // Esegui trigger planning se possibile o lascia che l'utente clicchi "Cerca"
+            }
+        }
+    }
+
+    // LISTENER LONG-PRESS MAPPA PER INDIRIZZI (IMM 3)
+    let pressTimer;
+    if (map) {
+        const startPress = (e) => {
+            // Se si clicca sulla mappa mentre la ricerca è aperta, l'overlay cattura il click.
+            // Se arriviamo qui, l'overlay è nascosto.
+
+            if (pressTimer) clearTimeout(pressTimer);
+            pressTimer = setTimeout(() => {
+                const latlng = [e.latlng.lat, e.latlng.lng];
+                handleMapSelection(latlng);
+            }, 600); // 600ms per il long-press
+        };
+
+        const cancelPress = () => {
+            if (pressTimer) clearTimeout(pressTimer);
+        };
+
+        map.on('mousedown', startPress);
+        map.on('touchstart', startPress);
+        map.on('mouseup', cancelPress);
+        map.on('touchend', cancelPress);
+        map.on('mousemove', cancelPress);
+        map.on('touchmove', cancelPress);
+        map.on('dragstart', cancelPress);
+        map.on('zoomstart', cancelPress);
+    }
+
+    async function handleMapSelection(latlng) {
+        // Mostra info caricamento
+        window.renderAddressPanel("Recupero indirizzo...", latlng);
+
+        // Aggiungi marker temporaneo
+        if (poiMarker) map.removeLayer(poiMarker);
+        const poiIcon = L.divIcon({
+            className: 'custom-map-marker poi-premium-marker',
+            html: `<div class="marker-pin red-version"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path></svg></div>`,
+            iconSize: [36, 36],
+            iconAnchor: [18, 36]
+        });
+        poiMarker = L.marker(latlng, { icon: poiIcon, zIndexOffset: 1500 }).addTo(map);
+
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng[0]}&lon=${latlng[1]}&format=json&addressdetails=1`);
+            const data = await response.json();
+            let addressString = "Indirizzo non trovato";
+            if (data && data.display_name) {
+                const parts = data.display_name.split(',');
+                addressString = parts.slice(0, 3).join(',');
+            }
+            window.renderAddressPanel(addressString, latlng);
+        } catch (err) {
+            window.renderAddressPanel("Errore recupero indirizzo", latlng);
+        }
+    }
 
     window.planToPoi = function (lat, lng, label) {
-        if (window.TravelCompanion && window.TravelCompanion.planTo) {
-            window.TravelCompanion.planTo({ lat, lng }, label);
-            if (poiMarker) poiMarker.closePopup();
+        window.startNavigationTo(lat, lng, label);
+    };
+
+    window.updateMapStatePill = function () {
+        const statePill = document.getElementById('map-state-pill');
+        const stateIcon = document.getElementById('map-state-icon');
+        const stateText = document.getElementById('map-state-text');
+        const mainPanel = document.getElementById('main-panel');
+        const searchOpen = document.getElementById('info-section') && !document.getElementById('info-section').classList.contains('hidden');
+
+        if (!statePill) return;
+
+        const isExpanded = mainPanel && mainPanel.classList.contains('expanded');
+        const mapZoom = map ? map.getZoom() : 0;
+        const MIN_ZOOM = 14;
+
+        if (searchOpen) {
+            statePill.classList.add('hidden');
+            return;
+        }
+
+        statePill.classList.remove('hidden');
+        if (map && mapZoom < MIN_ZOOM) {
+            stateIcon.src = "Icons/Wavy_Warning.svg";
+            stateText.textContent = "Aumenta lo zoom per visualizzare le fermate e i servizi!";
+        } else if (!isExpanded) {
+            stateIcon.src = "Icons/Wavy_Warning.svg";
+            stateText.textContent = "Trascina verso l'alto il pannello per visualizzare le fermate vicino a te!";
+        } else {
+            stateIcon.src = "Icons/Wavy_Help.svg";
+            stateText.textContent = "Quelle visibili sono le fermate ed i servizi nelle tue vicinanze.";
         }
     };
+
+    function updateMarkersVisibility() {
+        if (!map) return;
+        const mapZoom = map.getZoom();
+        const MIN_ZOOM = 14;
+
+        markers.forEach(m => {
+            const stop = m.stop;
+            // Apply current filters
+            let isFiltered = true;
+            if (mapFilters.showOnlyCorrespondences && stop.passingLines.length <= 1) {
+                isFiltered = false;
+            }
+            if (isFiltered && mapFilters.selectedLines.size > 0) {
+                const hasSelectedLine = stop.passingLines.some(l => mapFilters.selectedLines.has(l.id));
+                if (!hasSelectedLine) isFiltered = false;
+            }
+
+            const isZoomVisible = mapZoom >= MIN_ZOOM;
+
+            if (isFiltered && isZoomVisible) {
+                if (!map.hasLayer(m.marker)) map.addLayer(m.marker);
+            } else {
+                if (map.hasLayer(m.marker)) map.removeLayer(m.marker);
+            }
+        });
+    }
+
 
     function renderLists(query = '') {
         // Se il menu info è aperto, non renderizzare le liste normali
@@ -624,6 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchResults.innerHTML = '';
         nearbyResults.innerHTML = '';
+        if (otherServicesResults) otherServicesResults.innerHTML = '';
 
         // Puliamo anche i POI se query è vuota
         const poiSection = document.getElementById('poi-section');
@@ -634,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (poiList) poiList.innerHTML = '';
         }
 
-        let stopsToRender = stavData.stops.filter(stop => {
+        let filteredStops = allStops.filter(stop => {
             // Filter by Correspondences
             if (mapFilters.showOnlyCorrespondences && stop.passingLines.length <= 1) {
                 return false;
@@ -651,50 +953,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Se c'è la geolocalizzazione, calcola distanze
         if (userLocation) {
-            stopsToRender.forEach(stop => {
+            filteredStops.forEach(stop => {
                 stop.distance = getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, stop.lat, stop.lng);
             });
         } else {
-            stopsToRender.forEach(stop => stop.distance = Infinity);
+            filteredStops.forEach(stop => stop.distance = Infinity);
         }
 
         const mapZoom = map ? map.getZoom() : 0;
         const MIN_ZOOM = 14;
 
         // Gestione visibilità marker sulla mappa
-        if (map) {
-            markers.forEach(m => {
-                const isFiltered = stopsToRender.some(s => s.id === m.stop.id);
-                const isZoomVisible = mapZoom >= MIN_ZOOM;
+        updateMarkersVisibility();
 
-                if (isFiltered && isZoomVisible) {
-                    if (!map.hasLayer(m.marker)) map.addLayer(m.marker);
-                } else {
-                    if (map.hasLayer(m.marker)) map.removeLayer(m.marker);
-                }
-            });
-        }
+        // Separate transport from service (resellers)
+        const transportStops = filteredStops.filter(s => s.operatore !== 'T');
+        const serviceStops = filteredStops.filter(s => s.operatore === 'T');
 
         // === RICERCA ATTIVA ==============================
         if (query.length > 0) {
             nearbySection.classList.add('hidden');
-            allStopsTitle.textContent = "Risultati ricerca";
 
-            let searchItems = [];
+            let searchLines = [];
+            let searchStops = [];
+            let searchServices = [];
 
             // 1. Cerca nelle Linee (es. Z553)
             stavData.lines.forEach(line => {
                 if (line.id.toLowerCase().includes(query) || line.name.toLowerCase().includes(query)) {
-                    // Estrai destinazioni uniche per questa linea
                     const destinations = new Set();
                     for (let day in line.dayTypes) {
-                        line.dayTypes[day].forEach(trip => {
-                            destinations.add(trip.destination);
-                        });
+                        line.dayTypes[day].forEach(trip => destinations.add(trip.destination));
                     }
-
                     destinations.forEach(dest => {
-                        searchItems.push({
+                        searchLines.push({
                             type: 'line',
                             lineId: line.id,
                             lineName: line.name,
@@ -706,58 +998,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // 2. Cerca nelle Fermate
-            const filteredStops = stopsToRender.filter(stop => stop.name.toLowerCase().includes(query));
-            if (userLocation) {
-                filteredStops.sort((a, b) => a.distance - b.distance);
-            }
+            // 2. Cerca nelle Fermate (Trasporto)
+            const matchedTransport = transportStops.filter(stop => stop.name.toLowerCase().includes(query));
+            if (userLocation) matchedTransport.sort((a, b) => a.distance - b.distance);
+            matchedTransport.forEach(stop => searchStops.push({ type: 'stop', ...stop }));
 
-            // Unisci risultati (Linee prima, poi Fermate)
-            filteredStops.forEach(stop => {
-                searchItems.push({
-                    type: 'stop',
-                    ...stop
-                });
-            });
+            // 3. Cerca nei Servizi (Rivendite)
+            const matchedServices = serviceStops.filter(stop => stop.name.toLowerCase().includes(query));
+            if (userLocation) matchedServices.sort((a, b) => a.distance - b.distance);
+            matchedServices.forEach(stop => searchServices.push({ type: 'stop', ...stop }));
 
-            if (searchItems.length === 0) {
+            if (searchLines.length === 0 && searchStops.length === 0 && searchServices.length === 0) {
                 searchResults.innerHTML = '<div style="text-align:center; padding: 2rem 1rem; color:var(--text-muted);">Nessuna fermata o linea trovata per questa ricerca.</div>';
                 return;
             }
 
-            appendStopsToList(searchItems, searchResults);
+            // Render Results
+            if (searchLines.length > 0 || searchStops.length > 0) {
+                appendStopsToList([...searchLines, ...searchStops], searchResults);
+            }
+            if (searchServices.length > 0 && otherServicesResults) {
+                appendStopsToList(searchServices, otherServicesResults);
+            }
             return;
         }
 
         // === NESSUNA RICERCA ==============================
-
-        nearbySection.classList.add('hidden');
+        nearbySection.classList.add('hidden'); // Logic is elsewhere for nearby, here we handle 'All'
+        if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
 
         // Se lo zoom è troppo basso
         if (map && mapZoom < MIN_ZOOM) {
-            allStopsTitle.textContent = "Fermate sulla mappa";
-            searchResults.innerHTML = `
-                <div class="empty-state-container">
-                    <img src="img/LentePiu.png" alt="Zoom In" class="empty-state-img">
-                    <div class="empty-state-title">Non vedi nulla?</div>
-                    <div class="empty-state-subtitle">Aumenta lo zoom per visualizzare le fermate ed i servizi disponibili.</div>
-                </div>
-            `;
+            searchResults.innerHTML = '';
             return;
         }
 
-        // Se lo zoom è sufficiente (o se non c'è mappa per qualche motivo)
-        allStopsTitle.textContent = "Fermate visibili";
-
         if (map) {
             const bounds = map.getBounds();
-            // Filtra solo le fermate visibili nel current bound
-            stopsToRender = stopsToRender.filter(stop => {
-                if (!stop.lat || !stop.lng) return false;
-                return bounds.contains([stop.lat, stop.lng]);
-            });
+            // Filtra solo le visibili nel current bound per transport e services
+            const visibleTransport = transportStops.filter(s => s.lat && s.lng && bounds.contains([s.lat, s.lng]));
+            const visibleServices = serviceStops.filter(s => s.lat && s.lng && bounds.contains([s.lat, s.lng]));
 
-            if (stopsToRender.length === 0) {
+            if (visibleTransport.length === 0 && visibleServices.length === 0) {
                 searchResults.innerHTML = `
                     <div class="empty-state-container">
                         <img src="img/LentePuntoDiDomanda.png" alt="Zona senza STAV" class="empty-state-img">
@@ -771,11 +1053,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 return;
             }
-        }
 
-        // Ordina alfabeticamente per la view della lista
-        stopsToRender.sort((a, b) => a.name.localeCompare(b.name));
-        appendStopsToList(stopsToRender, searchResults);
+            visibleTransport.sort((a, b) => a.name.localeCompare(b.name));
+            visibleServices.sort((a, b) => a.name.localeCompare(b.name));
+
+            appendStopsToList(visibleTransport, searchResults);
+            
+            if (otherServicesResults) {
+                if (visibleServices.length > 0) {
+                    appendStopsToList(visibleServices, otherServicesResults);
+                } else {
+                    otherServicesResults.innerHTML = '<div style="padding: 10px; color: var(--text-muted); font-size: 0.9rem;">Nessuna rivendita in questa zona.</div>';
+                }
+            }
+        }
     }
 
     function appendStopsToList(itemsArray, listElement, showDistance = false) {
@@ -814,24 +1105,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (stop.passingLines && stop.passingLines.length > 0) {
                     const uniqueLines = Array.from(new Map(stop.passingLines.map(l => [l.id, l])).values());
                     linesHtml = uniqueLines.map(l =>
-                        `<div class="ticket-line-chip" style="background-color: ${l.color}; color: ${l.txColor};">${l.id}</div>`
+                        `<div class="line-pill" style="background-color: ${l.color}; color: ${l.txColor};">${l.id}</div>`
                     ).join('');
                 } else {
                     linesHtml = '<div style="font-size:0.8rem; color:var(--text-muted); padding:2px 0;">Nessuna linea</div>';
                 }
 
+                let nextBusHtml = '';
+                // Calcolo semplice del prossimo bus per la stop-card
+                if (typeof getTodayDayType === 'function' && typeof stavData !== 'undefined') {
+                    const todayType = getTodayDayType();
+                    const now = new Date();
+                    const currentMins = now.getHours() * 60 + now.getMinutes();
+                    let absoluteNext = null;
+
+                    stavData.lines.forEach(line => {
+                        const dayTrips = line.dayTypes[todayType] || [];
+                        dayTrips.forEach(trip => {
+                            const stopEntries = trip.stops.filter(s => s.stopId === stop.id);
+                            stopEntries.forEach(entry => {
+                                const [h, m] = entry.time.split(':').map(Number);
+                                let tMins = h * 60 + m;
+                                if (tMins < 240 && currentMins >= 18 * 60) tMins += 24 * 60; // oltre mezzanotte
+                                const diff = tMins - currentMins;
+                                if (diff >= 0 && diff <= 120) {
+                                    if (!absoluteNext || diff < absoluteNext.diff) {
+                                        absoluteNext = { line: line.id, dest: trip.destination, time: entry.time, diff: diff };
+                                    }
+                                }
+                            });
+                        });
+                    });
+
+                    if (absoluteNext) {
+                        nextBusHtml = `
+                            <div class="upcoming-bus-block">
+                                <div class="time-box">
+                                    <span class="big-num">${absoluteNext.diff === 0 ? 'Ora' : absoluteNext.diff}</span>
+                                    <span class="small-txt">minuti</span>
+                                </div>
+                                <div class="upcoming-info">
+                                    <span class="prossimo">Prossimo arrivo:</span>
+                                    <span class="dest">Linea ${absoluteNext.line}<br>Dest: ${absoluteNext.dest}</span>
+                                    <span class="ora">Ora: ${absoluteNext.time}</span>
+                                </div>
+                                <svg class="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        `;
+                    }
+                }
+
+                const iconPath = LIST_ICONS[stop.operatore] || LIST_ICONS['default'];
                 li.innerHTML = `
-                    <div class="stop-ticket-header">
-                        <div class="stop-ticket-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <div class="stop-card-header" style="${nextBusHtml ? '' : 'display: flex; justify-content: space-between; align-items: center; width: 100%;'}">
+                        <div class="stop-card-icon-box" style="margin-right: 12px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; width: 44px; height: 44px; flex-shrink: 0;">
+                            <img src="${iconPath}" style="width:32px; height:32px;">
                         </div>
-                        <div class="stop-ticket-name">${stop.name}</div>
-                        ${distanceHtml}
+                        <div style="${nextBusHtml ? '' : 'flex: 1;'}">
+                            <div class="stop-card-title">${stop.name}</div>
+                            <div class="line-pills-row">${linesHtml}</div>
+                            ${distanceHtml}
+                        </div>
+                        ${!nextBusHtml ? '<svg class="chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>' : ''}
                     </div>
-                    <div class="stop-ticket-divider"></div>
-                    <div class="stop-ticket-footer">
-                        ${linesHtml}
-                    </div>
+                    ${nextBusHtml}
                 `;
             }
             listElement.appendChild(li);
@@ -855,7 +1192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Apertura Timeline Generica per una Linea
-    function openGenericLineTimeline(lineId, destination) {
+    function _old_openGenericLineTimeline(lineId, destination) {
         const line = stavData.lines.find(l => l.id === lineId);
         if (!line) return;
 
@@ -918,7 +1255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGenericTimeline(variationsMap, activeVariation, line);
     }
 
-    window.switchGenericTimelineVariation = function (pathName, lineId) {
+    window._old_switchGenericTimelineVariation = function (pathName, lineId) {
         // Ripeschiamo la linea e la mappa delle variazioni attualmente renderizzate
         // Questo richiede di ricostruire o ripassare variationsMap, che per semplicità chiameremo ricreando openGenericLineTimeline
         // Ma per non ricalcolare rifacciamo il calcolo
@@ -947,7 +1284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGenericTimeline(variationsMap, pathName, line);
     };
 
-    function renderGenericTimeline(variationsMap, activeVariation, line) {
+    function _old_renderGenericTimeline(variationsMap, activeVariation, line) {
         let timelineEl = stopDetailsSheet.querySelector('.in-sheet-timeline');
         if (timelineEl) {
             timelineEl.remove();
@@ -1029,7 +1366,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Aprire i dettagli della fermata (BOTTOM SHEET MODAL)
-    function openStopDetails(stop) {
+    function _old_openStopDetails(stop) {
         activeStop = stop;
         stopNameHeader.textContent = stop.name;
 
@@ -1085,7 +1422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 4. Chiudere il Modal
-    function closeModal() {
+    function _old_closeModal() {
         if (currentInterval) clearInterval(currentInterval);
         activeStop = null;
 
@@ -1105,16 +1442,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    closeModalBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', closeModal);
+    // closeModalBtn.addEventListener('click', closeModal);
+    // overlay.addEventListener('click', closeModal);
 
-    const sheetHandle = document.querySelector('.sheet-handle');
+    const sheetHandle = null;
     let startY = 0;
-    sheetHandle.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
-    sheetHandle.addEventListener('touchend', (e) => {
-        const endY = e.changedTouches[0].clientY;
-        if (endY - startY > 30) closeModal();
-    });
+    if (sheetHandle) {
+        sheetHandle.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
+        sheetHandle.addEventListener('touchend', (e) => {
+            const endY = e.changedTouches[0].clientY;
+            if (endY - startY > 30) closeModal();
+        });
+    }
 
     // 5. Logica Core: Calcolo Tempi e Renderizzazione Linee
 
@@ -1134,7 +1473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "Via Monzoro ": "μ" // Spazio extra trovato in data.js
     };
 
-    function updateModalData() {
+    function _old_updateModalData() {
         if (!activeStop) return;
 
         routesContainer.innerHTML = '';
@@ -1401,7 +1740,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- TIMELINE IN-SHEET ---
-    window.openTripDetail = function (tripId, lineId, highlightStopId = null) {
+    window._old_openTripDetail = function (tripId, lineId, highlightStopId = null) {
         const line = stavData.lines.find(l => l.id === lineId);
         if (!line) return;
 
@@ -1613,7 +1952,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200); // 200ms per completare fade-out
     };
 
-    window.closeTripDetail = function () {
+    window._old_closeTripDetail = function () {
         const timelineEl = stopDetailsSheet.querySelector('.in-sheet-timeline');
         if (timelineEl) {
             timelineEl.classList.remove('slide-in-right-premium');
@@ -1960,6 +2299,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderLists();
 
+    window.renderOtherServices = function () {
+        const otherServicesResults = document.getElementById('other-services-results');
+        if (!otherServicesResults) return;
+
+        // Per ora sempre vuoto come da richiesta
+        otherServicesResults.innerHTML = `
+            <div class="empty-service-card">
+                Non ci sono altri servizi nelle vicinanze
+            </div>
+        `;
+    };
+
+    renderOtherServices();
+
     // --- MAIN BOTTOM PANEL INTERACTIVITY ---
     const mainPanel = document.getElementById('main-panel');
     const mainPanelHandle = document.getElementById('main-panel-handle');
@@ -1975,24 +2328,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let listScrollStart = 0;
 
         const handleDragStart = (clientY) => {
+            isExpanded = mainPanel.classList.contains('expanded');
             isDraggingHandle = true;
             startYHandle = clientY;
             mainPanel.classList.add('dragging');
             mainPanel.style.setProperty('--drag-y', `0px`);
-            document.body.style.userSelect = 'none'; // Previene la selezione del testo da PC
+            document.body.style.userSelect = 'none';
         };
 
         const handleDragMove = (clientY) => {
             if (!isDraggingHandle) return;
             let deltaY = clientY - startYHandle;
-
-            // Effetto molla se supero i limiti
             if (isExpanded && deltaY < 0) {
-                deltaY = deltaY * 0.2; // Resistenza se è già aperto
+                deltaY = deltaY * 0.2;
             } else if (!isExpanded && deltaY > 0) {
-                deltaY = deltaY * 0.2; // Resistenza se è già in basso
+                deltaY = deltaY * 0.2;
             }
-
             mainPanel.style.setProperty('--drag-y', `${deltaY}px`);
         };
 
@@ -2005,92 +2356,325 @@ document.addEventListener('DOMContentLoaded', () => {
             let deltaY = clientY - startYHandle;
             mainPanel.style.setProperty('--drag-y', `0px`);
 
-            // Se il movimento è stato piccolissimo, interpretalo come click (toggle)
             if (Math.abs(deltaY) < 5) {
                 isExpanded = !isExpanded;
                 mainPanel.classList.toggle('expanded', isExpanded);
                 if (!isExpanded) searchInput.blur();
+                if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
                 return;
             }
 
-            // Snap alla posizione vicina
-            if (!isExpanded && deltaY < -40) {
+            if (!isExpanded && deltaY < -60) {
                 isExpanded = true;
                 mainPanel.classList.add('expanded');
-            } else if (isExpanded && deltaY > 40) {
+            } else if (isExpanded && deltaY > 60) {
                 isExpanded = false;
                 mainPanel.classList.remove('expanded');
                 searchInput.blur();
             }
+            if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
         };
 
-        // Touch sulla maniglia
         mainPanelHandle.addEventListener('touchstart', (e) => handleDragStart(e.touches[0].clientY), { passive: true });
         mainPanelHandle.addEventListener('touchmove', (e) => handleDragMove(e.touches[0].clientY), { passive: true });
         mainPanelHandle.addEventListener('touchend', (e) => handleDragEnd(e.changedTouches[0].clientY), { passive: true });
 
-        // Mouse sulla maniglia (per test da Computer)
+        // Mouse (PC testing)
         mainPanelHandle.addEventListener('mousedown', (e) => handleDragStart(e.clientY));
         document.addEventListener('mousemove', (e) => handleDragMove(e.clientY));
         document.addEventListener('mouseup', (e) => handleDragEnd(e.clientY));
 
-        // Drag sulla lista per trascinare il pannello in basso (se si è in cima)
-        mainPanel.addEventListener('touchstart', (e) => {
-            if (isDraggingHandle) return;
-            if (e.target.closest('#search-results')) { // o un target generico nel pannello
-                startYList = e.touches[0].clientY;
-                listScrollStart = searchResults.scrollTop;
-            } else {
-                startYList = null;
-            }
-        }, { passive: true });
+        // Drag sulla lista rimosso su richiesta: il pannello si sposta solo dalla maniglia.
 
-        mainPanel.addEventListener('touchmove', (e) => {
-            if (isDraggingHandle || startYList === null || !isExpanded) return;
-
-            if (listScrollStart <= 0) {
-                let deltaY = e.touches[0].clientY - startYList;
-                if (deltaY > 0) { // dragging down to close
-                    isDraggingList = true;
-                    mainPanel.classList.add('dragging');
-                    mainPanel.style.setProperty('--drag-y', `${deltaY}px`);
-                }
-            }
-        }, { passive: true });
-
-        mainPanel.addEventListener('touchend', (e) => {
-            if (isDraggingList) {
-                isDraggingList = false;
-                mainPanel.classList.remove('dragging');
-                let deltaY = e.changedTouches[0].clientY - startYList;
-                mainPanel.style.setProperty('--drag-y', `0px`);
-
-                if (deltaY > 50) {
-                    isExpanded = false;
-                    mainPanel.classList.remove('expanded');
-                    searchInput.blur();
-                }
-            }
-        }, { passive: true });
-
-        // Espandi automaticamente quando si clicca la barra di ricerca
-        searchInput.addEventListener('focus', () => {
+        /* searchInput.addEventListener('focus', () => {
             if (!isExpanded) {
                 isExpanded = true;
                 mainPanel.classList.add('expanded');
             }
-        });
+        }); */
     }
 
-    // Registrazione Service Worker
-    if ('serviceWorker' in navigator) {
+    // Registrazione Service Worker (solo se su HTTPS o localhost)
+    const isLocalhost = Boolean(
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '[::1]' ||
+        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+    );
+
+    if (window.location.protocol === 'https:' || isLocalhost) {
+        // Inietta manifest dinamico
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = 'manifest.json';
+        document.head.appendChild(link);
+
         navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('Service Worker registered', reg))
             .catch(err => console.error('Service Worker registration failed', err));
+    } else if ('serviceWorker' in navigator) {
+        console.log('Service Worker & Manifest skipping (non-secure or local-file origin)');
     }
 
     // Nota: La logica di installazione è gestita in index.html (landing page).
     // app.js si occupa solo del funzionamento dell'app standalone.
+
+    // --- NUOVA GESTIONE IN-PANEL VIEWS ---
+    // mainListsWrapper e internalViewWrapper spostati all'inizio del DOMContentLoaded per visibilità globale 
+
+    window.closeInternalView = function () {
+        if (currentInterval) clearInterval(currentInterval);
+        if (nextBusInterval) { clearInterval(nextBusInterval); nextBusInterval = null; }
+        activeStop = null;
+        if (internalViewWrapper) internalViewWrapper.innerHTML = '';
+        if (internalViewWrapper) internalViewWrapper.classList.add('hidden');
+        if (mainListsWrapper) mainListsWrapper.classList.remove('hidden');
+
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel) mainPanel.scrollTop = 0;
+        if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
+    };
+
+    function closeModal() { window.closeInternalView(); }
+    window.closeModal = closeModal;
+
+    function openStopDetails(stop) {
+        activeStop = stop;
+        if (currentInterval) clearInterval(currentInterval);
+        if (nextBusInterval) { clearInterval(nextBusInterval); nextBusInterval = null; }
+
+        if (mainListsWrapper) mainListsWrapper.classList.add('hidden');
+        if (internalViewWrapper) internalViewWrapper.classList.remove('hidden');
+
+        const mainPanel = document.getElementById('main-panel');
+        if (mainPanel && !mainPanel.classList.contains('expanded')) {
+            mainPanel.classList.add('expanded');
+        }
+
+        let html = `
+            <div class="internal-header">
+                <button class="internal-back-btn" onclick="window.closeInternalView()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </button>
+                <div class="internal-title">${stop.name}</div>
+            </div>
+            <div id="inpanel-next-bus"></div>
+            <div id="inpanel-lines-list" style="padding-bottom: 40px;"></div>
+        `;
+        internalViewWrapper.innerHTML = html;
+        internalViewWrapper.scrollTop = 0;
+
+        function renderStopData() {
+            if (!activeStop || activeStop.id !== stop.id) return;
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            selectedDayType = getTodayDayType();
+
+            let absoluteNextTrip = null;
+            const routesMap = {};
+
+            stavData.lines.forEach(line => {
+                const dayTrips = line.dayTypes[selectedDayType] || [];
+                dayTrips.forEach(trip => {
+                    const stopEntries = trip.stops.filter(s => s.stopId === activeStop.id);
+                    stopEntries.forEach(stopEntry => {
+                        const key = line.id + '::' + trip.destination;
+                        if (!routesMap[key]) {
+                            routesMap[key] = { line: line, destination: trip.destination, trips: [] };
+                        }
+                        routesMap[key].trips.push({ time: stopEntry.time, fullTrip: trip, variation: stopEntry.variation });
+                    });
+                });
+            });
+
+            const routes = Object.values(routesMap);
+            const linesContainer = document.getElementById('inpanel-lines-list');
+            const nextBusContainer = document.getElementById('inpanel-next-bus');
+
+            if (!linesContainer || !nextBusContainer) return;
+            linesContainer.innerHTML = '';
+
+            if (routes.length === 0) {
+                linesContainer.innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-muted); font-size: 0.95rem;">Nessuna linea prevista oggi.</p>';
+            }
+
+            routes.forEach(route => {
+                route.trips.sort((a, b) => a.time.localeCompare(b.time));
+
+                for (let i = 0; i < route.trips.length; i++) {
+                    const t = route.trips[i];
+                    const [timeH, timeM] = t.time.split(':').map(Number);
+                    let timeTotalMinutes = timeH * 60 + timeM;
+                    // Midnight wrap
+                    if (timeTotalMinutes < 240 && currentTotalMinutes >= 18 * 60) timeTotalMinutes += 24 * 60;
+
+                    if (timeTotalMinutes >= currentTotalMinutes) {
+                        const diffMinutes = timeTotalMinutes - currentTotalMinutes;
+                        if (!absoluteNextTrip || diffMinutes < absoluteNextTrip.diff) {
+                            absoluteNextTrip = { line: route.line, dest: route.destination, timeStr: t.time, diff: diffMinutes };
+                        }
+                        break;
+                    }
+                }
+
+                const lineCard = document.createElement('div');
+                lineCard.className = 'line-detail-card-premium';
+                lineCard.onclick = () => window.openTripDetail(route.line.id, route.destination, stop.id);
+
+                lineCard.innerHTML = `
+                    <div class="line-color-stripe" style="background-color:${route.line.color};"></div>
+                    <div class="line-info-box">
+                        <div class="line-name">Linea ${route.line.name}</div>
+                        <div class="line-dest">Direzione ${route.destination}</div>
+                    </div>
+                    <svg viewBox="0 0 24 24" fill="none" class="chevron-right" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                `;
+                linesContainer.appendChild(lineCard);
+            });
+
+            if (absoluteNextTrip) {
+                const liveDiff = absoluteNextTrip.diff;
+                const isUrgent = liveDiff <= 5;
+                nextBusContainer.innerHTML = `
+                <div class="next-bus-card-premium ${isUrgent ? 'urgent' : ''}">
+                    <div class="next-bus-minutes-box">
+                        <div class="minutes-val">${liveDiff === 0 ? 'Ora' : liveDiff}</div>
+                        <div class="minutes-label">${liveDiff === 0 ? '' : 'minuti'}</div>
+                    </div>
+                    <div class="next-bus-details">
+                        <div class="arrival-label">Prossimo arrivo:</div>
+                        <div class="line-info">Linea ${absoluteNextTrip.line.name}</div>
+                        <div class="dest-info">Dest: ${absoluteNextTrip.dest}</div>
+                        <div class="time-info">Ora: ${absoluteNextTrip.timeStr}</div>
+                    </div>
+                </div>
+                `;
+            } else {
+                nextBusContainer.innerHTML = '';
+            }
+        }
+
+        renderStopData();
+        currentInterval = setInterval(renderStopData, 60000);
+
+        if (map && stop.lat && stop.lng) {
+            map.flyTo([stop.lat - 0.005, stop.lng], 16, { animate: true });
+        }
+    }
+    window.openStopDetails = openStopDetails;
+
+    window.openTripDetail = function (lineId, destination, activeStopId) {
+        if (currentInterval) clearInterval(currentInterval);
+        if (nextBusInterval) { clearInterval(nextBusInterval); nextBusInterval = null; }
+
+        const line = stavData.lines.find(l => l.id === lineId);
+        if (!line) return;
+
+        const sourceStop = stavData.stops.find(s => s.id === activeStopId) || activeStop;
+        if (!sourceStop) return;
+
+        const dayTrips = line.dayTypes[getTodayDayType()] || [];
+        const validTrips = dayTrips.filter(t => t.destination === destination);
+
+        let mainVariationTrip = validTrips.length > 0 ? validTrips[0] : null;
+        validTrips.forEach(t => {
+            if (t.stops.length > mainVariationTrip.stops.length) {
+                mainVariationTrip = t;
+            }
+        });
+
+        if (internalViewWrapper) internalViewWrapper.scrollTop = 0;
+
+        let headerHtml = `
+            <div class="internal-header">
+                <button class="internal-back-btn" onclick="openStopDetails(stavData.stops.find(s=>s.id === '${activeStopId}'))">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </button>
+                <div class="internal-title">${sourceStop.name}</div>
+            </div>
+            
+            <div class="line-detail-header" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:16px; display:flex; align-items:center; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
+                <div class="route-line" style="background:${line.color}; padding:6px 12px; border-radius:12px; font-weight:800; color:${line.txColor || '#fff'}; font-size:1rem; box-shadow:0 2px 6px rgba(0,0,0,0.2); margin-right: 14px;">${line.name}</div>
+                <div style="flex:1; font-weight:600; color:white; font-size:0.95rem; line-height:1.2;">Direzione:<br><span style="opacity:0.8; font-weight:500;">${destination}</span></div>
+            </div>
+            
+            <div class="orari-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
+                <div style=" font-size:1.05rem; color:var(--text-white); margin-bottom:16px; font-style: italic;">
+    Orari
+</div>
+                <div class="times-grid" style="display:flex; flex-wrap:wrap; gap:10px;">
+        `;
+
+        if (validTrips.length === 0) {
+            headerHtml += `<div style="color:var(--text-muted); font-size:0.9rem;">Nessuna corsa prevista.</div>`;
+        } else {
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const stopTimes = [];
+            validTrips.forEach(t => {
+                const stopEntry = t.stops.find(s => s.stopId === activeStopId);
+                if (stopEntry) {
+                    stopTimes.push({ time: stopEntry.time, variation: stopEntry.variation, tripId: t.tripId });
+                }
+            });
+
+            stopTimes.sort((a, b) => a.time.localeCompare(b.time));
+
+            let nextIndexFound = false;
+            stopTimes.forEach(st => {
+                const [h, m] = st.time.split(':').map(Number);
+                let tm = h * 60 + m;
+                if (tm < 240 && currentTotalMinutes >= 18 * 60) tm += 24 * 60;
+
+                let cls = 'future';
+                if (tm < currentTotalMinutes) cls = 'past';
+                else if (!nextIndexFound && tm >= currentTotalMinutes) { cls = 'next'; nextIndexFound = true; }
+
+                headerHtml += `<div class="time-badge ${cls}" style="flex: 1 1 calc(25% - 10px); min-width: 60px; justify-content:center; margin:0;"><span>${st.time}</span>${st.variation ? `<span class="time-variation" style="margin-left:4px;">${st.variation}</span>` : ''}</div>`;
+            });
+        }
+        headerHtml += `</div></div>`;
+
+        if (mainVariationTrip && mainVariationTrip.stops.length > 0) {
+            headerHtml += `
+            <div class="timeline-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2); margin-bottom: 2rem;">
+                <div style="font-size:1.05rem; color:white; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-style: italic;">Fermate e percorso</span>
+    <button class="back-btn" onclick="window.showTripOnMap('${mainVariationTrip.tripId}', '${line.id}')" style="background:var(--accent-color); color:white; border:none; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.2);">Mappa</button>
+</div>
+                <div class="timeline-scroll" style="position:relative; margin-top:0.5rem; margin-bottom: 1rem;">
+            `;
+
+            mainVariationTrip.stops.forEach((s, idx) => {
+                const isMatch = (s.stopId === activeStopId);
+                const sInfo = stavData.stops.find(fs => fs.id === s.stopId);
+                const sName = sInfo ? sInfo.name : 'Fermata';
+                const isLast = idx === mainVariationTrip.stops.length - 1;
+
+                headerHtml += `
+                    <div class="timeline-row ${isMatch ? 'next' : ''}" style="${isMatch ? 'background-color:rgba(255,235,59,0.15); border-radius:8px; display:flex; align-items:stretch;' : 'display:flex; align-items:stretch;'} cursor:pointer; min-height:50px; padding: 0 8px; margin-bottom:0px;" onclick="window.openStopFromTimeline('${s.stopId}')">
+                        <div class="timeline-graphic" style="position:relative; width:40px; display:flex; flex-direction:column; align-items:center;">
+                            <div class="timeline-node" style="width:14px; height:14px; border-radius:50%; border:3px solid ${line.color}; background:${isMatch ? line.color : 'white'}; position:absolute; top:18px; z-index:2; ${isMatch ? 'transform:scale(1.2); box-shadow:0 0 0 3px rgba(' + hexToRgb(line.color) + ',0.3);' : ''}"></div>
+                            ${!isLast ? `<div class="timeline-line" style="width:4px; height:100%; background:${line.color}; position:absolute; top:25px; bottom:-25px; z-index:1;"></div>` : ''}
+                        </div>
+                        <div class="timeline-content" style="flex:1; padding:16px 0; border-bottom: ${!isLast ? '1px dashed var(--border-color)' : 'none'}; display:flex; align-items:center;">
+                            <div class="stop-name" style="font-size:0.95rem; line-height:1.3; ${isMatch ? 'font-weight:700; color:#ffeb3b;' : 'color:var(--text-white);'}">${sName}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            headerHtml += `</div></div>`;
+        }
+
+        internalViewWrapper.innerHTML = headerHtml;
+    }
+
+    // Helper:
+    function hexToRgb(hex) {
+        var r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+        return r + ", " + g + ", " + b;
+    }
+
 });
 
 // --- STIBM MODAL CONTROL ---

@@ -59,6 +59,12 @@ body {
     border: none;
 }
 
+.custom-map-marker-raw {
+    background: transparent;
+    border: none;
+    pointer-events: auto;
+}
+
 .custom-map-marker .marker-pin {
     width: 36px;
     height: 36px;
@@ -115,11 +121,16 @@ body {
     transform: translateX(-50%);
     width: 100%;
     max-width: 600px;
-    /* Same max-width of the app */
-    z-index: 10;
+    z-index: 1000;
     display: flex;
     justify-content: center;
     pointer-events: none;
+    background: transparent;
+}
+
+/* White background only when menu is open */
+.top-wave-banner.menu-open {
+    background: white;
 }
 
 .wave-bg {

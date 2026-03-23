@@ -36,7 +36,7 @@ const linea_Z554 = {
                     { "stopId": "stop_ros_pellico", "time": "07:08", "variation": "Via Einstein - Termina ad Abbiategrasso" },
                     { "stopId": "stop_gud_sp30", "time": "07:13", "variation": "Via Einstein - Termina ad Abbiategrasso" },
                     { "stopId": "stop_zelo_roma", "time": "07:17", "variation": "Via Einstein - Termina ad Abbiategrasso" },
-                    { "stopId": "stop_zelo_manzoni", "time": "07:18", "variation": "Via Einstein - Termina ad Abbiategrasso" },
+                    { "stopId": "stop_zelo_manzoni2", "time": "07:18", "variation": "Via Einstein - Termina ad Abbiategrasso" },
                     { "stopId": "stop_verm_comunale", "time": "07:20", "variation": "Via Einstein - Termina ad Abbiategrasso" },
                     { "stopId": "stop_alb_fs", "time": "07:24", "variation": "Via Einstein - Termina ad Abbiategrasso" },
                     { "stopId": "stop_alb_indipendenza/marconi", "time": "07:29", "variation": "Via Einstein - Termina ad Abbiategrasso" },

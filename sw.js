@@ -11,8 +11,7 @@ const ASSETS_TO_CACHE = [
     './CurvaturaSuperiore.png',
     './FavIconAtsom.png',
     './icon-192.png',
-    './icon-512.png',
-    './placeholder-stop.jpg'
+    './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
