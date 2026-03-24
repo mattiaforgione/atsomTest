@@ -880,13 +880,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         statePill.classList.remove('hidden');
         if (map && mapZoom < MIN_ZOOM) {
-            stateIcon.src = "Icons/Wavy_Warning.svg";
+            stateIcon.src = "icons/Wavy_Warning.svg";
             stateText.textContent = "Aumenta lo zoom per visualizzare le fermate e i servizi!";
         } else if (!isExpanded) {
-            stateIcon.src = "Icons/Wavy_Warning.svg";
+            stateIcon.src = "icons/Wavy_Warning.svg";
             stateText.textContent = "Trascina verso l'alto il pannello per visualizzare le fermate vicino a te!";
         } else {
-            stateIcon.src = "Icons/Wavy_Help.svg";
+            stateIcon.src = "icons/Wavy_Help.svg";
             stateText.textContent = "Quelle visibili sono le fermate ed i servizi nelle tue vicinanze.";
         }
     };
