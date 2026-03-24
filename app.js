@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Icon mapping - accessible globally within DOMContentLoaded
     // Icon mappings for Map (pin version)
     const STOP_ICONS = {
-        'STAV': 'icons/BusStopSTAV.svg',
+        'STAV': 'BusStopSTAV.svg',
         'ATM': 'icons/BusStopATM.svg',
         'AGV': 'icons/BusStopAGV.svg',
         'M': 'icons/MetroStop.svg',
