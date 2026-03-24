@@ -7,24 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Icon mapping - accessible globally within DOMContentLoaded
     // Icon mappings for Map (pin version)
     const STOP_ICONS = {
-        'STAV': 'Icons/BusStopSTAV.svg',
-        'ATM': 'Icons/BusStopATM.svg',
-        'AGV': 'Icons/BusStopAGV.svg',
-        'M': 'Icons/MetroStop.svg',
-        'S': 'Icons/SLinesStop.svg',
-        'T': 'Icons/TicketSelling.svg',
-        'default': 'Icons/GeneralBusStop.svg'
+        'STAV': 'icons/BusStopSTAV.svg',
+        'ATM': 'icons/BusStopATM.svg',
+        'AGV': 'icons/BusStopAGV.svg',
+        'M': 'icons/MetroStop.svg',
+        'S': 'icons/SLinesStop.svg',
+        'T': 'icons/TicketSelling.svg',
+        'default': 'icons/GeneralBusStop.svg'
     };
 
     // Icon mappings for Lists (flat/logo version)
     const LIST_ICONS = {
-        'STAV': 'Icons/IconaSTAV.svg',
-        'ATM': 'Icons/IconaATM.svg',
-        'AGV': 'Icons/IconaAGV.svg',
-        'M': 'Icons/Group 193.svg',
-        'S': 'Icons/Group 195.svg',
-        'T': 'Icons/Group 194.svg',
-        'default': 'Icons/Bus.svg'
+        'STAV': 'icons/IconaSTAV.svg',
+        'ATM': 'icons/IconaATM.svg',
+        'AGV': 'icons/IconaAGV.svg',
+        'M': 'icons/Group 193.svg',
+        'S': 'icons/Group 195.svg',
+        'T': 'icons/Group 194.svg',
+        'default': 'icons/Bus.svg'
     };
 
     function getStopIcon(stop) {
