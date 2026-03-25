@@ -65,9 +65,9 @@
             <button class="circular-btn top-btn" title="Notifiche">
                 <img src="icons/Bell.svg" alt="Notifiche">
             </button>
-            <button class="profile-btn top-btn" title="Profilo">
+            <button class="profile-btn top-btn" id="btn-profile" title="Profilo">
                 <div class="profile-placeholder">
-                    <img src="" onerror="this.src=''" alt="avatar" />
+                    <img id="profile-img" src="icons/User.svg" alt="avatar" />
                 </div>
             </button>
         </div>
@@ -787,6 +787,7 @@
         </div>
     </div>
     <!-- MODAL CONSIGLI PER VIAGGIARE -->
+    <!-- MODAL CONSIGLI PER VIAGGIARE -->
     <div id="travel-tips-modal" class="modal-info-premium hidden">
         <div class="modal-info-content glass-premium">
             <button class="modal-info-close" onclick="window.closeTravelTips()">
@@ -798,9 +799,9 @@
             </button>
             <div class="modal-info-header">
                 <div class="stibm-badge" style="background: #27ae60;">TIPS</div>
-                <h2>Consigli per viaggiare</h2>
+                <h2 id="tips-modal-title">Consigli per viaggiare</h2>
             </div>
-            <div class="modal-info-body">
+            <div class="modal-info-body" id="tips-modal-body">
                 <div class="tip-section">
                     <h3 style="color: #27ae60; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -862,10 +863,35 @@
                     </p>
                 </div>
             </div>
-            <button class="btn-primary-premium" onclick="window.closeTravelTips()"
-                style="background: #27ae60; margin-top: 10px;">Ho capito</button>
+            <button class="btn-primary-premium" onclick="window.closeTravelTips()" style="background: #27ae60; margin-top: 10px;">Ho capito</button>
         </div>
     </div>
+
+    <!-- PROFILE UPLOAD MODAL -->
+    <div id="profile-upload-overlay" class="profile-upload-overlay hidden">
+        <div class="profile-upload-container">
+            <div class="profile-upload-options">
+                <button class="profile-option-btn top" id="btn-import-device">
+                    Importa dal tuo dispositivo
+                </button>
+                <button class="profile-option-btn middle" id="btn-capture-photo">
+                    Scatta al momento
+                </button>
+                <button class="profile-option-btn bottom" id="btn-remove-photo">
+                    Rimuovi foto attuale
+                </button>
+            </div>
+            <button class="profile-close-btn" id="btn-close-profile-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <input type="file" id="profile-file-input" accept="image/*" class="hidden">
+    <input type="file" id="profile-capture-input" accept="image/*" capture="camera" class="hidden">
+
 </body>
 
 </html>

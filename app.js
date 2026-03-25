@@ -229,6 +229,11 @@ document.addEventListener('DOMContentLoaded', () => {
             mainListsWrapper.classList.add('hidden');
             filterSection.classList.remove('hidden');
             if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
+
+            // Assicurati che il pannello sia alzato per mostrare i filtri
+            if (mainPanel && !mainPanel.classList.contains('expanded')) {
+                mainPanel.classList.add('expanded');
+            }
         });
     }
 
@@ -2760,6 +2765,83 @@ document.addEventListener('DOMContentLoaded', () => {
             target.classList.add('touch-pressed');
         }
     }, { passive: true });
+
+    // --- PROFILE PICTURE LOGIC ---
+    const btnProfile = document.getElementById('btn-profile');
+    const profileImg = document.getElementById('profile-img');
+    const profilePlaceholder = profileImg ? profileImg.parentElement : null;
+    const profileUploadOverlay = document.getElementById('profile-upload-overlay');
+    const btnCloseProfileModal = document.getElementById('btn-close-profile-modal');
+    const btnImportDevice = document.getElementById('btn-import-device');
+    const btnCapturePhoto = document.getElementById('btn-capture-photo');
+    const profileFileInput = document.getElementById('profile-file-input');
+    const profileCaptureInput = document.getElementById('profile-capture-input');
+
+    function loadProfilePicture() {
+        const savedPic = localStorage.getItem('atmsom_profile_pic');
+        if (savedPic && profileImg) {
+            profileImg.src = savedPic;
+            if (profilePlaceholder) profilePlaceholder.classList.add('has-image');
+        } else if (profileImg) {
+            profileImg.src = 'icons/User.svg';
+            if (profilePlaceholder) profilePlaceholder.classList.remove('has-image');
+        }
+    }
+
+    if (btnProfile) {
+        btnProfile.addEventListener('click', () => {
+            if (profileUploadOverlay) profileUploadOverlay.classList.remove('hidden');
+        });
+    }
+
+    if (btnCloseProfileModal) {
+        btnCloseProfileModal.addEventListener('click', () => {
+            if (profileUploadOverlay) profileUploadOverlay.classList.add('hidden');
+        });
+    }
+
+    if (profileUploadOverlay) {
+        profileUploadOverlay.addEventListener('click', (e) => {
+            if (e.target === profileUploadOverlay) {
+                profileUploadOverlay.classList.add('hidden');
+            }
+        });
+    }
+
+    const handleFile = (input) => {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                localStorage.setItem('atmsom_profile_pic', dataUrl);
+                loadProfilePicture();
+                if (profileUploadOverlay) profileUploadOverlay.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    if (btnImportDevice && profileFileInput) {
+        btnImportDevice.addEventListener('click', () => profileFileInput.click());
+        profileFileInput.addEventListener('change', () => handleFile(profileFileInput));
+    }
+
+    if (btnCapturePhoto && profileCaptureInput) {
+        btnCapturePhoto.addEventListener('click', () => profileCaptureInput.click());
+        profileCaptureInput.addEventListener('change', () => handleFile(profileCaptureInput));
+    }
+
+    const btnRemovePhoto = document.getElementById('btn-remove-photo');
+    if (btnRemovePhoto) {
+        btnRemovePhoto.addEventListener('click', () => {
+            localStorage.removeItem('atmsom_profile_pic');
+            loadProfilePicture();
+            if (profileUploadOverlay) profileUploadOverlay.classList.add('hidden');
+        });
+    }
+
+    loadProfilePicture();
 
     const clearTouchPressed = () => {
         document.querySelectorAll('.touch-pressed').forEach(el => el.classList.remove('touch-pressed'));
