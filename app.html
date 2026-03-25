@@ -52,7 +52,7 @@
         <!-- NUOVA TOP SEARCH BAR -->
         <div class="top-search-bar" id="main-search-bar">
             <div class="search-input-wrapper">
-                <img src="Icons/Search.svg" alt="Cerca" class="search-icon">
+                <img src="icons/Search.svg" alt="Cerca" class="search-icon">
                 <input type="text" id="stop-searchInput" placeholder="Cerca..." autocomplete="off">
                 <!-- RISULTATI FLOATING (IMM 1-2) -->
                 <div id="floating-results-container" class="floating-results-container hidden">
@@ -292,40 +292,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Sezione Filtri -->
-                        <div id="filter-section" class="list-section hidden">
-                            <div class="filter-panel">
-                                <h3 class="section-subtitle">Mappa</h3>
-                                <div class="filter-group-card">
-                                    <div class="filter-row">
-                                        <div class="filter-label">
-                                            <div class="filter-main">Zone STIBM</div>
-                                            <div class="filter-sub">Mostra le zone Mi1-Mi7</div>
-                                        </div>
-                                        <label class="switch-premium">
-                                            <input type="checkbox" id="chk-stibm" checked>
-                                            <span class="slider-premium"></span>
-                                        </label>
-                                    </div>
-                                    <div class="filter-divider"></div>
-                                    <div class="filter-row">
-                                        <div class="filter-label">
-                                            <div class="filter-main">Solo Corrispondenze</div>
-                                            <div class="filter-sub">Fermate con più linee/treni</div>
-                                        </div>
-                                        <label class="switch-premium">
-                                            <input type="checkbox" id="chk-correspondences">
-                                            <span class="slider-premium"></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <h3 class="section-subtitle">Filtra per Linea</h3>
-                                <div id="filter-lines-grid" class="filter-lines-grid">
-                                    <!-- Chips delle linee generate via JS -->
-                                </div>
-                            </div>
-                        </div>
                         <!-- Sezione Vicino a te (nascosta di default se non ci sono dati) -->
                         <div id="nearby-section" class="list-section hidden">
                             <h3 class="section-subtitle">
@@ -348,6 +314,74 @@
                     </div>
                 </section>
             </div> <!-- Chiude main-lists-wrapper -->
+
+            <!-- Sezione Filtri spostata fuori da main-lists-wrapper per visibilità corretta -->
+            <div id="filter-section" class="list-section hidden stagger-in">
+                <div class="filter-header-split">
+                    <button class="filter-btn-back-special" id="btn-back-filters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <div class="filter-title-special">
+                        <span>Filtri</span>
+                    </div>
+                </div>
+
+                <!-- Zone STIBM -->
+                <div class="filter-premium-card stagger-in">
+                    <div class="filter-icon-circle">
+                        <img src="icons/STIBMIcon.svg" alt="STIBM">
+                    </div>
+                    <div class="filter-label-group">
+                        <div class="filter-label-main">Zone STIBM (Mi1 - Mi7)</div>
+                    </div>
+                    <label class="switch-premium">
+                        <input type="checkbox" id="chk-stibm" checked>
+                        <span class="slider-premium"></span>
+                    </label>
+                </div>
+
+                <!-- Fermate Metropolitana -->
+                <div class="filter-premium-card stagger-in">
+                    <div class="filter-icon-circle">
+                        <img src="icons/Group 193.svg" alt="Metro">
+                    </div>
+                    <div class="filter-label-group">
+                        <div class="filter-label-main">Fermate metropolitana</div>
+                    </div>
+                    <label class="switch-premium">
+                        <input type="checkbox" id="chk-metro" checked>
+                        <span class="slider-premium"></span>
+                    </label>
+                </div>
+
+                <!-- Fermate di superficie -->
+                <div class="filter-premium-card stagger-in">
+                    <div class="filter-icon-circle">
+                        <img src="icons/Bus.svg" alt="Superficie">
+                    </div>
+                    <div class="filter-label-group">
+                        <div class="filter-label-main">Fermate di superficie</div>
+                    </div>
+                    <label class="switch-premium">
+                        <input type="checkbox" id="chk-surface" checked>
+                        <span class="slider-premium"></span>
+                    </label>
+                </div>
+
+                <!-- Stazioni treno -->
+                <div class="filter-premium-card stagger-in">
+                    <div class="filter-icon-circle">
+                        <img src="icons/Group 195.svg" alt="Treno">
+                    </div>
+                    <div class="filter-label-group">
+                        <div class="filter-label-main">Stazioni treno</div>
+                    </div>
+                    <label class="switch-premium">
+                        <input type="checkbox" id="chk-train" checked>
+                        <span class="slider-premium"></span>
+                    </label>
+                </div>
+            </div>
 
             <!-- Wrapper per le viste interne (fermata, linea) integrate nel pannello -->
             <div id="internal-view-wrapper" class="hidden" style="width: 100%; padding: 0 16px;">
@@ -611,15 +645,22 @@
     <script src="fermate.js"></script>
     <script src="metrotreni.js"></script>
     <script src="rivendite.js"></script>
-    <script src="linea_1.js"></script>
-    <script src="linea_Z551.js"></script>
-    <script src="linea_Z552.js"></script>
-    <script src="linea_Z553.js"></script>
-    <script src="linea_Z554.js"></script>
-    <script src="linea_Z555.js"></script>
-    <script src="linea_Z557.js"></script>
-    <script src="linea_Z559.js"></script>
-    <script src="linea_Z560.js"></script>
+    <script src="Linee/linea_1.js"></script>
+    <script src="Linee/linea_Z551.js"></script>
+    <script src="Linee/linea_Z552.js"></script>
+    <script src="Linee/linea_Z553.js"></script>
+    <script src="Linee/linea_Z554.js"></script>
+    <script src="Linee/linea_Z555.js"></script>
+    <script src="Linee/linea_Z557.js"></script>
+    <script src="Linee/linea_Z559.js"></script>
+    <script src="Linee/linea_Z560.js"></script>
+    <!-- Linee S -->
+    <script src="Linee/linea_S9.js"></script>
+    <script src="Linee/linea_S19.js"></script>
+    <!-- Linee ATM -->
+    <script src="Linee/linea_327.js"></script>
+
+
     <script src="data.js"></script>
 
     <!-- Zone STIBM -->

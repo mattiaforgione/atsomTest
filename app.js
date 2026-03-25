@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Icon mapping - accessible globally within DOMContentLoaded
     // Icon mappings for Map (pin version)
     const STOP_ICONS = {
-        'STAV': 'BusStopSTAV.svg',
+        'STAV': 'icons/BusStopSTAV.svg',
         'ATM': 'icons/BusStopATM.svg',
         'AGV': 'icons/BusStopAGV.svg',
         'M': 'icons/MetroStop.svg',
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'default': 'icons/GeneralBusStop.svg'
     };
 
-    // Icon mappings for Lists (flat/logo version)
     const LIST_ICONS = {
         'STAV': 'icons/IconaSTAV.svg',
         'ATM': 'icons/IconaATM.svg',
@@ -26,6 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'T': 'icons/Group 194.svg',
         'default': 'icons/Bus.svg'
     };
+
+    function getOperatorDisplayName(op) {
+        if (op === 'M') return 'Metro';
+        if (op === 'S') return 'Linee Suburbane';
+        return op || 'STAV';
+    }
 
     function getStopIcon(stop) {
         const iconPath = STOP_ICONS[stop.operatore] || STOP_ICONS['default'];
@@ -205,44 +210,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FILTER SYSTEM ---
     const mapFilters = {
         showStibm: true,
-        showOnlyCorrespondences: false,
+        showMetro: true,
+        showSurface: true,
+        showTrain: true,
         selectedLines: new Set()
     };
 
     const filterSection = document.getElementById('filter-section');
     const chkStibm = document.getElementById('chk-stibm');
-    const chkCorrespondences = document.getElementById('chk-correspondences');
-    const filterLinesGrid = document.getElementById('filter-lines-grid');
+    const chkMetro = document.getElementById('chk-metro');
+    const chkSurface = document.getElementById('chk-surface');
+    const chkTrain = document.getElementById('chk-train');
+    const btnBackFilters = document.getElementById('btn-back-filters');
 
     // Toggle Filter Section
-    if (btnFilter && filterSection) {
+    if (btnFilter && filterSection && mainListsWrapper) {
         btnFilter.addEventListener('click', () => {
-            const isFilterOpen = !filterSection.classList.contains('hidden');
-            const isMenuOpen = !infoSection.classList.contains('hidden');
-
-            if (isFilterOpen) {
-                filterSection.classList.add('hidden');
-                btnFilter.classList.remove('active');
-            } else {
-                // Close menu if open
-                if (isMenuOpen) {
-                    if (typeof setActiveTab === 'function') setActiveTab(tabMappa);
-                    else infoSection && infoSection.classList.add('hidden');
-                }
-                filterSection.classList.remove('hidden');
-                btnFilter.classList.add('active');
-
-                // Close search if open
-                if (!searchPremiumContainer.classList.contains('collapsed')) {
-                    searchInput.value = '';
-                    searchPremiumContainer.classList.add('collapsed');
-                    rightActionGroup.classList.remove('hidden-group');
-                }
-            }
+            mainListsWrapper.classList.add('hidden');
+            filterSection.classList.remove('hidden');
+            if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
         });
     }
 
-    // STIBM Toggle
+    if (btnBackFilters && filterSection && mainListsWrapper) {
+        btnBackFilters.addEventListener('click', () => {
+            filterSection.classList.add('hidden');
+            mainListsWrapper.classList.remove('hidden');
+            if (typeof window.updateMapStatePill === 'function') window.updateMapStatePill();
+        });
+    }
+
+    const refreshAll = () => {
+        updateMarkersVisibility();
+        renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
+    };
+
     if (chkStibm) {
         chkStibm.addEventListener('change', (e) => {
             mapFilters.showStibm = e.target.checked;
@@ -252,38 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Correspondences Toggle
-    if (chkCorrespondences) {
-        chkCorrespondences.addEventListener('change', (e) => {
-            mapFilters.showOnlyCorrespondences = e.target.checked;
-            renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
-        });
-    }
-
-    // Lines Filter Chips
-    if (filterLinesGrid && stavData && stavData.lines) {
-        stavData.lines.forEach(line => {
-            const chip = document.createElement('div');
-            chip.className = 'filter-line-chip';
-            chip.textContent = line.id;
-            chip.style.borderColor = line.color;
-            chip.addEventListener('click', () => {
-                if (mapFilters.selectedLines.has(line.id)) {
-                    mapFilters.selectedLines.delete(line.id);
-                    chip.classList.remove('selected');
-                    chip.style.backgroundColor = '';
-                    chip.style.color = '';
-                } else {
-                    mapFilters.selectedLines.add(line.id);
-                    chip.classList.add('selected');
-                    chip.style.backgroundColor = line.color;
-                    chip.style.color = line.txColor || 'white';
-                }
-                renderLists(searchInput.value ? searchInput.value.toLowerCase().trim() : "");
-            });
-            filterLinesGrid.appendChild(chip);
-        });
-    }
+    if (chkMetro) chkMetro.addEventListener('change', (e) => { mapFilters.showMetro = e.target.checked; refreshAll(); });
+    if (chkSurface) chkSurface.addEventListener('change', (e) => { mapFilters.showSurface = e.target.checked; refreshAll(); });
+    if (chkTrain) chkTrain.addEventListener('change', (e) => { mapFilters.showTrain = e.target.checked; refreshAll(); });
 
     // NAV BAR: ACTIVE TAB + SLIDING INDICATOR + MENU OVERLAY
     const btnMenu = document.getElementById('btn-menu');
@@ -673,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="search-card-info">
                     <div class="card-main-text">${stop.name}</div>
-                    <div class="card-sub-text">Fermata &bull; ${stop.operatore || 'STAV'}</div>
+                    <div class="card-sub-text">Fermata &bull; ${getOperatorDisplayName(stop.operatore)}</div>
                 </div>
             `;
             card.onclick = () => openStopDetails(stop);
@@ -691,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'search-card-premium';
             card.innerHTML = `
                 <div class="search-card-icon-box">
-                    <img src="Icons/Map_Pin.svg" style="width:20px; height:20px; filter:brightness(0) invert(1);">
+                    <img src="icons/Map_Pin.svg" style="width:20px; height:20px; filter:brightness(0) invert(1);">
                 </div>
                 <div class="search-card-info">
                     <div class="card-main-text">${name}</div>
@@ -862,8 +835,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.updateMapStatePill = function () {
         const statePill = document.getElementById('map-state-pill');
-        const stateIcon = document.getElementById('map-state-icon');
-        const stateText = document.getElementById('map-state-text');
         const mainPanel = document.getElementById('main-panel');
         const searchOpen = document.getElementById('info-section') && !document.getElementById('info-section').classList.contains('hidden');
 
@@ -879,15 +850,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         statePill.classList.remove('hidden');
-        if (map && mapZoom < MIN_ZOOM) {
-            stateIcon.src = "icons/Wavy_Warning.svg";
-            stateText.textContent = "Aumenta lo zoom per visualizzare le fermate e i servizi!";
-        } else if (!isExpanded) {
-            stateIcon.src = "icons/Wavy_Warning.svg";
-            stateText.textContent = "Trascina verso l'alto il pannello per visualizzare le fermate vicino a te!";
+
+        // Check if out of zone: zoom is high but no markers are in view
+        let visibleMarkersCount = 0;
+        if (map && mapZoom >= MIN_ZOOM) {
+            const bounds = map.getBounds();
+            markers.forEach(m => {
+                if (bounds.contains(m.marker.getLatLng())) visibleMarkersCount++;
+            });
+        }
+
+        if (map && mapZoom >= MIN_ZOOM && visibleMarkersCount === 0) {
+            statePill.classList.add('ooz-look');
+            statePill.innerHTML = `
+                <div class="ooz-status">
+                    <img src="icons/Wavy_Warning.svg" style="width:32px; height:32px; filter: brightness(0) invert(1);">
+                    <span>Sei andato fuori zona!</span>
+                </div>
+                <div class="ooz-action" onclick="if(window.centerMapOnAllStops) window.centerMapOnAllStops()">
+                    Portami a Milano
+                </div>
+            `;
         } else {
-            stateIcon.src = "icons/Wavy_Help.svg";
-            stateText.textContent = "Quelle visibili sono le fermate ed i servizi nelle tue vicinanze.";
+            statePill.classList.remove('ooz-look');
+            if (map && mapZoom < MIN_ZOOM) {
+                statePill.innerHTML = `
+                    <img id="map-state-icon" src="icons/Wavy_Warning.svg">
+                    <div id="map-state-text">Aumenta lo zoom per visualizzare le fermate e i servizi!</div>
+                `;
+            } else if (!isExpanded) {
+                statePill.innerHTML = `
+                    <img id="map-state-icon" src="icons/Wavy_Warning.svg">
+                    <div id="map-state-text">Trascina verso l'alto il pannello per visualizzare le fermate vicino a te!</div>
+                `;
+            } else {
+                statePill.innerHTML = `
+                    <img id="map-state-icon" src="icons/Wavy_Help.svg">
+                    <div id="map-state-text">Quelle visibili sono le fermate ed i servizi visibili sulla mappa.</div>
+                `;
+            }
         }
     };
 
@@ -898,19 +899,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         markers.forEach(m => {
             const stop = m.stop;
-            // Apply current filters
-            let isFiltered = true;
-            if (mapFilters.showOnlyCorrespondences && stop.passingLines.length <= 1) {
-                isFiltered = false;
-            }
-            if (isFiltered && mapFilters.selectedLines.size > 0) {
-                const hasSelectedLine = stop.passingLines.some(l => mapFilters.selectedLines.has(l.id));
-                if (!hasSelectedLine) isFiltered = false;
-            }
+            let categoryVisible = true;
+            if (stop.operatore === 'M' && !mapFilters.showMetro) categoryVisible = false;
+            if (['STAV', 'ATM', 'AGV'].includes(stop.operatore) && !mapFilters.showSurface) categoryVisible = false;
+            if (stop.operatore === 'S' && !mapFilters.showTrain) categoryVisible = false;
 
             const isZoomVisible = mapZoom >= MIN_ZOOM;
 
-            if (isFiltered && isZoomVisible) {
+            if (categoryVisible && isZoomVisible) {
                 if (!map.hasLayer(m.marker)) map.addLayer(m.marker);
             } else {
                 if (map.hasLayer(m.marker)) map.removeLayer(m.marker);
@@ -937,16 +933,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let filteredStops = allStops.filter(stop => {
-            // Filter by Correspondences
-            if (mapFilters.showOnlyCorrespondences && stop.passingLines.length <= 1) {
-                return false;
-            }
-
-            // Filter by selected Lines
-            if (mapFilters.selectedLines.size > 0) {
-                const hasSelectedLine = stop.passingLines.some(l => mapFilters.selectedLines.has(l.id));
-                if (!hasSelectedLine) return false;
-            }
+            // Filter by transport category
+            if (stop.operatore === 'M' && !mapFilters.showMetro) return false;
+            if (['STAV', 'ATM', 'AGV'].includes(stop.operatore) && !mapFilters.showSurface) return false;
+            if (stop.operatore === 'S' && !mapFilters.showTrain) return false;
 
             return true;
         });
@@ -1041,14 +1031,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (visibleTransport.length === 0 && visibleServices.length === 0) {
                 searchResults.innerHTML = `
-                    <div class="empty-state-container">
-                        <img src="img/LentePuntoDiDomanda.png" alt="Zona senza STAV" class="empty-state-img">
-                        <div class="empty-state-title">STAV non è qui!</div>
-                        <div class="empty-state-subtitle">Spostati nell'area di servizio per scoprire le fermate.</div>
-                        <button onclick="if(window.centerMapOnAllStops) window.centerMapOnAllStops()" class="btn-return-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                            Torna all'area STAV
-                        </button>
+                    <div class="out-of-zone-card stagger-in">
+                        <div class="ooz-status">
+                            <img src="icons/Wavy_Warning.svg">
+                            <span>Sei andato fuori zona!</span>
+                        </div>
+                        <div class="ooz-action" onclick="if(window.centerMapOnAllStops) window.centerMapOnAllStops()">
+                            Portami a Milano
+                        </div>
                     </div>
                 `;
                 return;
@@ -1058,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
             visibleServices.sort((a, b) => a.name.localeCompare(b.name));
 
             appendStopsToList(visibleTransport, searchResults);
-            
+
             if (otherServicesResults) {
                 if (visibleServices.length > 0) {
                     appendStopsToList(visibleServices, otherServicesResults);
@@ -1074,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
 
             if (item.type === 'line') {
-                li.className = 'line-result-card';
+                li.className = 'line-result-card stagger-in';
                 li.addEventListener('click', () => openGenericLineTimeline(item.lineId, item.destination));
 
                 li.innerHTML = `
@@ -1092,7 +1082,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // E' una fermata (compatibilità con type='stop' o oggetti stop normali)
                 const stop = item.type === 'stop' ? item : { ...item };
-                li.className = 'stop-ticket-card';
+                li.className = 'stop-ticket-card stagger-in';
                 li.addEventListener('click', () => openStopDetails(stop));
 
                 let distanceHtml = '';
@@ -1344,7 +1334,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const stopName = stopInfo ? stopInfo.name : 'Fermata';
 
             html += `
-                <div id="generic-timeline-row-${s.stopId}" class="timeline-row" style="cursor: pointer; transition: background-color 1s ease-out;" onclick="window.openStopFromTimeline('${s.stopId}')">
+                <div id="generic-timeline-row-${s.stopId}" class="timeline-row stagger-in" style="cursor: pointer; transition: background-color 1s ease-out;" onclick="window.openStopFromTimeline('${s.stopId}')">
                     <div class="timeline-graphic">
                         <div class="timeline-line" style="background:${line.color}"></div>
                         <div class="timeline-node" style="border-color:${line.color};"></div>
@@ -2477,11 +2467,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 dayTrips.forEach(trip => {
                     const stopEntries = trip.stops.filter(s => s.stopId === activeStop.id);
                     stopEntries.forEach(stopEntry => {
-                        const key = line.id + '::' + trip.destination;
+                        // Raggruppa per linea.id (proposto dall'utente)
+                        const key = line.id;
                         if (!routesMap[key]) {
-                            routesMap[key] = { line: line, destination: trip.destination, trips: [] };
+                            routesMap[key] = {
+                                line: line,
+                                destinations: new Set(),
+                                trips: []
+                            };
                         }
-                        routesMap[key].trips.push({ time: stopEntry.time, fullTrip: trip, variation: stopEntry.variation });
+                        routesMap[key].destinations.add(trip.destination);
+                        routesMap[key].trips.push({
+                            time: stopEntry.time,
+                            fullTrip: trip,
+                            variation: stopEntry.variation,
+                            destination: trip.destination
+                        });
                     });
                 });
             });
@@ -2510,21 +2511,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (timeTotalMinutes >= currentTotalMinutes) {
                         const diffMinutes = timeTotalMinutes - currentTotalMinutes;
                         if (!absoluteNextTrip || diffMinutes < absoluteNextTrip.diff) {
-                            absoluteNextTrip = { line: route.line, dest: route.destination, timeStr: t.time, diff: diffMinutes };
+                            absoluteNextTrip = { line: route.line, dest: t.destination, timeStr: t.time, diff: diffMinutes };
                         }
                         break;
                     }
                 }
 
                 const lineCard = document.createElement('div');
-                lineCard.className = 'line-detail-card-premium';
-                lineCard.onclick = () => window.openTripDetail(route.line.id, route.destination, stop.id);
+                lineCard.className = 'line-detail-card-premium stagger-in';
+
+                const allDests = Array.from(route.destinations);
+                // Apre il dettaglio per questa linea, passando la prima destinazione come default
+                lineCard.onclick = () => window.openTripDetail(route.line.id, stop.id, allDests[0]);
 
                 lineCard.innerHTML = `
                     <div class="line-color-stripe" style="background-color:${route.line.color};"></div>
                     <div class="line-info-box">
                         <div class="line-name">Linea ${route.line.name}</div>
-                        <div class="line-dest">Direzione ${route.destination}</div>
+                        <div class="line-dest">Direzione: ${allDests.join(' / ')}</div>
                     </div>
                     <svg viewBox="0 0 24 24" fill="none" class="chevron-right" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 `;
@@ -2535,7 +2539,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const liveDiff = absoluteNextTrip.diff;
                 const isUrgent = liveDiff <= 5;
                 nextBusContainer.innerHTML = `
-                <div class="next-bus-card-premium ${isUrgent ? 'urgent' : ''}">
+                <div class="next-bus-card-premium stagger-in ${isUrgent ? 'urgent' : ''}">
                     <div class="next-bus-minutes-box">
                         <div class="minutes-val">${liveDiff === 0 ? 'Ora' : liveDiff}</div>
                         <div class="minutes-label">${liveDiff === 0 ? '' : 'minuti'}</div>
@@ -2562,7 +2566,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.openStopDetails = openStopDetails;
 
-    window.openTripDetail = function (lineId, destination, activeStopId) {
+    window.openTripDetail = function (lineId, activeStopId, requestedDest, requestedDayType) {
         if (currentInterval) clearInterval(currentInterval);
         if (nextBusInterval) { clearInterval(nextBusInterval); nextBusInterval = null; }
 
@@ -2572,102 +2576,176 @@ document.addEventListener('DOMContentLoaded', () => {
         const sourceStop = stavData.stops.find(s => s.id === activeStopId) || activeStop;
         if (!sourceStop) return;
 
-        const dayTrips = line.dayTypes[getTodayDayType()] || [];
-        const validTrips = dayTrips.filter(t => t.destination === destination);
+        // Recupero di tutte le destinazioni disponibili per questa linea a questa fermata (tra tutti i daytypes)
+        const availableDestinations = new Set();
+        for (let dt in line.dayTypes) {
+            line.dayTypes[dt].forEach(t => {
+                if (t.stops.some(s => s.stopId === activeStopId)) {
+                    availableDestinations.add(t.destination);
+                }
+            });
+        }
+        const dests = Array.from(availableDestinations);
 
-        let mainVariationTrip = validTrips.length > 0 ? validTrips[0] : null;
-        validTrips.forEach(t => {
-            if (t.stops.length > mainVariationTrip.stops.length) {
-                mainVariationTrip = t;
+        // Stato corrente della vista
+        let currentDest = requestedDest || dests[0];
+        let currentDay = requestedDayType || getTodayDayType();
+
+        const labelsMap = {
+            "feriale_scolastico": "Lun-Ven scolastico",
+            "sabato_scolastico": "Sabato scolastico",
+            "feriale_non_scolastico": "Lun-Ven Non scolastico",
+            "sabato_non_scolastico": "Sabato Non scolastico",
+            "festivo": "Domeniche e festivi"
+        };
+
+        function renderAll() {
+            if (internalViewWrapper) internalViewWrapper.scrollTop = 0;
+
+            const dayTrips = line.dayTypes[currentDay] || [];
+            const validTrips = dayTrips.filter(t => t.destination === currentDest);
+
+            let mainVariationTrip = null;
+            if (validTrips.length > 0) {
+                mainVariationTrip = validTrips[0];
+                validTrips.forEach(t => {
+                    if (t.stops.length > mainVariationTrip.stops.length) mainVariationTrip = t;
+                });
             }
-        });
 
-        if (internalViewWrapper) internalViewWrapper.scrollTop = 0;
+            let html = `
+                <div class="internal-header">
+                    <button class="internal-back-btn" onclick="openStopDetails(stavData.stops.find(s=>s.id === '${activeStopId}'))">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    </button>
+                    <div class="internal-title">${sourceStop.name}</div>
+                </div>
 
-        let headerHtml = `
-            <div class="internal-header">
-                <button class="internal-back-btn" onclick="openStopDetails(stavData.stops.find(s=>s.id === '${activeStopId}'))">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                </button>
-                <div class="internal-title">${sourceStop.name}</div>
-            </div>
-            
-            <div class="line-detail-header" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:16px; display:flex; align-items:center; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
-                <div class="route-line" style="background:${line.color}; padding:6px 12px; border-radius:12px; font-weight:800; color:${line.txColor || '#fff'}; font-size:1rem; box-shadow:0 2px 6px rgba(0,0,0,0.2); margin-right: 14px;">${line.name}</div>
-                <div style="flex:1; font-weight:600; color:white; font-size:0.95rem; line-height:1.2;">Direzione:<br><span style="opacity:0.8; font-weight:500;">${destination}</span></div>
-            </div>
-            
-            <div class="orari-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
-                <div style=" font-size:1.05rem; color:var(--text-white); margin-bottom:16px; font-style: italic;">
-    Orari
-</div>
-                <div class="times-grid" style="display:flex; flex-wrap:wrap; gap:10px;">
-        `;
+                <div class="line-detail-header" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:12px; display:flex; align-items:center; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
+                    <div class="route-line" style="background:${line.color}; padding:6px 12px; border-radius:12px; font-weight:800; color:${line.txColor || '#fff'}; font-size:1rem; box-shadow:0 2px 6px rgba(0,0,0,0.2); margin-right: 14px;">${line.name}</div>
+                    <div style="flex:1; font-weight:600; color:white; font-size:0.95rem; line-height:1.2;">Direzione:<br><span style="opacity:0.8; font-weight:500;">${currentDest}</span></div>
+                </div>
+            `;
 
-        if (validTrips.length === 0) {
-            headerHtml += `<div style="color:var(--text-muted); font-size:0.9rem;">Nessuna corsa prevista.</div>`;
-        } else {
-            const now = new Date();
-            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            // DESTINATION SELECTOR (se ci sono più destinazioni)
+            if (dests.length > 1) {
+                html += `<div class="selector-row">`;
+                dests.forEach(d => {
+                    html += `<button class="selector-chip stagger-in ${d === currentDest ? 'active' : ''}" onclick="window.openTripDetail('${lineId}', '${activeStopId}', '${d.replace(/'/g, "\\'")}', '${currentDay}')">${d}</button>`;
+                });
+                html += `</div>`;
+            }
 
-            const stopTimes = [];
+            html += `
+                <div class="orari-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
+                    <div style="font-size:1.05rem; color:var(--text-white); margin-bottom:16px; font-style: italic; display: flex; justify-content: space-between; align-items: center;">
+                        Orari
+                        <span style="font-size: 0.65rem; opacity: 0.6; font-style: normal;">Fonte: ${line.operatore || 'STAV Autolinee'}</span>
+                    </div>
+            `;
+
+            // DAY SELECTOR
+            html += `<div class="selector-row" style="margin-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 12px;">`;
+            const availableDays = Object.keys(line.dayTypes);
+            availableDays.forEach(dayKey => {
+                const label = labelsMap[dayKey] || dayKey;
+                html += `<button class="selector-chip stagger-in ${dayKey === currentDay ? 'active' : ''}" onclick="window.openTripDetail('${lineId}', '${activeStopId}', '${currentDest.replace(/'/g, "\\'")}', '${dayKey}')">${label}</button>`;
+            });
+            html += `</div>`;
+
+            // TIMES GRID
+            html += `<div class="times-grid">`;
+            if (validTrips.length === 0) {
+                html += `<div style="color:var(--text-muted); font-size:0.9rem; width:100%; text-align:center; padding:20px;">Nessuna corsa prevista per questo giorno.</div>`;
+            } else {
+                const now = new Date();
+                const isToday = (currentDay === getTodayDayType());
+                const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+                const stopTimes = [];
+                validTrips.forEach(t => {
+                    const stopEntry = t.stops.find(s => s.stopId === activeStopId);
+                    if (stopEntry) {
+                        stopTimes.push({ time: stopEntry.time, variation: stopEntry.variation, tripId: t.tripId });
+                    }
+                });
+                stopTimes.sort((a, b) => a.time.localeCompare(b.time));
+
+                let nextIndexFound = false;
+                stopTimes.forEach(st => {
+                    const [h, m] = st.time.split(':').map(Number);
+                    let tm = h * 60 + m;
+                    if (tm < 240 && currentTotalMinutes >= 18 * 60) tm += 24 * 60;
+
+                    let cls = 'future';
+                    if (isToday) {
+                        if (tm < currentTotalMinutes) cls = 'past';
+                        else if (!nextIndexFound) { cls = 'next'; nextIndexFound = true; }
+                    }
+
+                    html += `<div class="time-badge stagger-in ${cls}"><span>${st.time}</span>${st.variation ? `<span class="time-variation">${st.variation}</span>` : ''}</div>`;
+                });
+            }
+            html += `</div>`;
+
+            // LEGENDA
+            let uniqueLegend = {};
             validTrips.forEach(t => {
-                const stopEntry = t.stops.find(s => s.stopId === activeStopId);
-                if (stopEntry) {
-                    stopTimes.push({ time: stopEntry.time, variation: stopEntry.variation, tripId: t.tripId });
+                if (t.legend) {
+                    Object.assign(uniqueLegend, t.legend);
                 }
             });
 
-            stopTimes.sort((a, b) => a.time.localeCompare(b.time));
-
-            let nextIndexFound = false;
-            stopTimes.forEach(st => {
-                const [h, m] = st.time.split(':').map(Number);
-                let tm = h * 60 + m;
-                if (tm < 240 && currentTotalMinutes >= 18 * 60) tm += 24 * 60;
-
-                let cls = 'future';
-                if (tm < currentTotalMinutes) cls = 'past';
-                else if (!nextIndexFound && tm >= currentTotalMinutes) { cls = 'next'; nextIndexFound = true; }
-
-                headerHtml += `<div class="time-badge ${cls}" style="flex: 1 1 calc(25% - 10px); min-width: 60px; justify-content:center; margin:0;"><span>${st.time}</span>${st.variation ? `<span class="time-variation" style="margin-left:4px;">${st.variation}</span>` : ''}</div>`;
-            });
-        }
-        headerHtml += `</div></div>`;
-
-        if (mainVariationTrip && mainVariationTrip.stops.length > 0) {
-            headerHtml += `
-            <div class="timeline-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2); margin-bottom: 2rem;">
-                <div style="font-size:1.05rem; color:white; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
-    <span style="font-style: italic;">Fermate e percorso</span>
-    <button class="back-btn" onclick="window.showTripOnMap('${mainVariationTrip.tripId}', '${line.id}')" style="background:var(--accent-color); color:white; border:none; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.2);">Mappa</button>
-</div>
-                <div class="timeline-scroll" style="position:relative; margin-top:0.5rem; margin-bottom: 1rem;">
-            `;
-
-            mainVariationTrip.stops.forEach((s, idx) => {
-                const isMatch = (s.stopId === activeStopId);
-                const sInfo = stavData.stops.find(fs => fs.id === s.stopId);
-                const sName = sInfo ? sInfo.name : 'Fermata';
-                const isLast = idx === mainVariationTrip.stops.length - 1;
-
-                headerHtml += `
-                    <div class="timeline-row ${isMatch ? 'next' : ''}" style="${isMatch ? 'background-color:rgba(255,235,59,0.15); border-radius:8px; display:flex; align-items:stretch;' : 'display:flex; align-items:stretch;'} cursor:pointer; min-height:50px; padding: 0 8px; margin-bottom:0px;" onclick="window.openStopFromTimeline('${s.stopId}')">
-                        <div class="timeline-graphic" style="position:relative; width:40px; display:flex; flex-direction:column; align-items:center;">
-                            <div class="timeline-node" style="width:14px; height:14px; border-radius:50%; border:3px solid ${line.color}; background:${isMatch ? line.color : 'white'}; position:absolute; top:18px; z-index:2; ${isMatch ? 'transform:scale(1.2); box-shadow:0 0 0 3px rgba(' + hexToRgb(line.color) + ',0.3);' : ''}"></div>
-                            ${!isLast ? `<div class="timeline-line" style="width:4px; height:100%; background:${line.color}; position:absolute; top:25px; bottom:-25px; z-index:1;"></div>` : ''}
-                        </div>
-                        <div class="timeline-content" style="flex:1; padding:16px 0; border-bottom: ${!isLast ? '1px dashed var(--border-color)' : 'none'}; display:flex; align-items:center;">
-                            <div class="stop-name" style="font-size:0.95rem; line-height:1.3; ${isMatch ? 'font-weight:700; color:#ffeb3b;' : 'color:var(--text-white);'}">${sName}</div>
-                        </div>
-                    </div>
+            if (Object.keys(uniqueLegend).length > 0) {
+                html += `
+                <div style="margin-top:20px; border-top:1px dashed rgba(255,255,255,0.2); padding-top:12px;">
+                    <div style="font-size:0.9rem; color:white; font-weight:700; margin-bottom:6px; font-style: italic;">Legenda</div>
                 `;
-            });
-            headerHtml += `</div></div>`;
+                for (let key in uniqueLegend) {
+                    html += `<div style="font-size:0.85rem; color:white; opacity:0.9; margin-bottom:2px;"><span style="color:#FFEB3B; font-weight:700;">${key}</span> - ${uniqueLegend[key]}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+
+            // TIMELINE (Stops path)
+            if (mainVariationTrip && mainVariationTrip.stops.length > 0) {
+                html += `
+                <div class="timeline-box" style="background:var(--bg-deep); border-radius:17px; padding:16px; box-shadow:0 4px 12px rgba(17,51,92,0.2); margin-bottom: 2rem;">
+                    <div style="font-size:1.05rem; color:white; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-style: italic;">Fermate e percorso</span>
+                        <button class="back-btn" onclick="window.showTripOnMap('${mainVariationTrip.tripId}', '${line.id}')" style="background:var(--accent-color); color:white; border:none; border-radius:8px; padding:6px 12px; font-size:0.8rem; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.2);">Mappa</button>
+                    </div>
+                    <div class="timeline-scroll" style="position:relative;">
+                `;
+
+                mainVariationTrip.stops.forEach((s, idx) => {
+                    const isMatch = (s.stopId === activeStopId);
+                    const sInfo = stavData.stops.find(fs => fs.id === s.stopId);
+                    const sName = sInfo ? sInfo.name : 'Fermata';
+                    const isLast = idx === mainVariationTrip.stops.length - 1;
+
+                    html += `
+                        <div class="timeline-row stagger-in ${isMatch ? 'next' : ''}" onclick="window.openStopFromTimeline('${s.stopId}')">
+                            <div class="timeline-graphic" style="color:${line.color};">
+                                <div class="timeline-line"></div>
+                                <div class="timeline-node"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="stop-name ${isMatch ? 'active' : ''}">${sName}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            }
+
+            internalViewWrapper.innerHTML = html;
         }
 
-        internalViewWrapper.innerHTML = headerHtml;
-    }
+        renderAll();
+    };
 
     // Helper:
     function hexToRgb(hex) {
@@ -2675,6 +2753,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return r + ", " + g + ", " + b;
     }
 
+    // --- GLOBAL TOUCH FEEDBACK ---
+    document.addEventListener('touchstart', (e) => {
+        const target = e.target.closest('button, .selector-chip, .time-badge, .menu-item-card, .line-detail-card-premium, .floating-btn, .internal-back-btn, .travel-btn-primary, .nav-icon-wrapper, .circular-btn, .search-card-premium, .filter-line-chip, .nav-cancel-btn');
+        if (target) {
+            target.classList.add('touch-pressed');
+        }
+    }, { passive: true });
+
+    const clearTouchPressed = () => {
+        document.querySelectorAll('.touch-pressed').forEach(el => el.classList.remove('touch-pressed'));
+    };
+    document.addEventListener('touchend', clearTouchPressed, { passive: true });
+    document.addEventListener('touchcancel', clearTouchPressed, { passive: true });
 });
 
 // --- STIBM MODAL CONTROL ---
