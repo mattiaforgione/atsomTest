@@ -2403,7 +2403,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.href = 'manifest.json';
         document.head.appendChild(link);
 
-        navigator.serviceWorker.register('sw.js')
+        navigator.serviceWorker.register('sw.js?v=5')
             .then(reg => console.log('Service Worker registered', reg))
             .catch(err => console.error('Service Worker registration failed', err));
     } else if ('serviceWorker' in navigator) {

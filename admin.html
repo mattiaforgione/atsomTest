@@ -1,72 +1,489 @@
-<h2>Invia Notifica</h2>
-<form id="notifica-form">
-    <input type="text" id="titolo" placeholder="Titolo" required />
-    <input type="text" id="sottotitolo" placeholder="Sottotitolo" />
-    <textarea id="testo" placeholder="Testo"></textarea>
-    <input type="text" id="immagini" placeholder="URL immagini separati da ," />
-    <input type="datetime-local" id="scadenza" required />
-    <button type="submit">Invia</button>
-</form>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, Timestamp }
-        from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDWNmVX1HIeXYFMzYnIeBZD4PZXSXifxxc",
-        authDomain: "myatsom-39ac3.firebaseapp.com",
-        projectId: "myatsom-39ac3",
-        storageBucket: "myatsom-39ac3.firebasestorage.app",
-        messagingSenderId: "446042556353",
-        appId: "1:446042556353:web:de8fbd1e575ca3736cd140"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const form = document.getElementById('notifica-form');
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Disabilita il bottone mentre salvi
-        submitBtn.disabled = true;
-
-        const titolo = document.getElementById('titolo').value.trim();
-        const sottotitolo = document.getElementById('sottotitolo').value.trim();
-        const testo = document.getElementById('testo').value.trim();
-        const immagini = document.getElementById('immagini').value
-            .split(',')
-            .map(u => u.trim())
-            .filter(u => u.length > 0); // rimuove stringhe vuote
-        const scadenzaInput = document.getElementById('scadenza').value;
-
-        if (!scadenzaInput) {
-            alert("Inserisci una data di scadenza valida!");
-            submitBtn.disabled = false;
-            return;
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - myATSOM</title>
+    <!-- Font Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #11335C;
+            --accent-green: #5EFF64;
+            --accent-red: #FF4747;
+            --bg-light: #F9F9FB;
+            --text-white: #FFFFFF;
+            --radius-large: 17px;
+            --radius-small: 4px;
         }
 
-        const scadenza = Timestamp.fromDate(new Date(scadenzaInput));
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: var(--bg-light); 
+            color: var(--primary-blue);
+            min-height: 100vh;
+            padding-bottom: 110px; 
+            overflow-x: hidden;
+        }
 
-        try {
-            await addDoc(collection(db, "notifiche"), {
-                titolo,
-                sottotitolo,
-                testo,
-                immagini,
-                scadenza,
-                timestamp: serverTimestamp()
+        /* Header logic matching images: Logo INSIDE white curve area of blue field */
+        .header-main {
+            background: var(--primary-blue);
+            height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 35px;
+            position: relative;
+        }
+        .header-main img.logo {
+            height: 38px;
+            z-index: 10;
+        }
+        .header-curve {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: -20px auto 20px auto; /* Pull up to overlap slightly with curve area if needed */
+            padding: 0 25px;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Admin Title Block (Image 1) */
+        .admin-block {
+            background: var(--primary-blue);
+            border-radius: var(--radius-large);
+            padding: 22px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(17, 51, 92, 0.15);
+        }
+        .admin-block h1 {
+            color: var(--text-white);
+            font-size: 2.1rem;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding-left: 5px;
+            color: var(--primary-blue);
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        input, textarea {
+            width: 100%;
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 50px; /* Pill */
+            padding: 15px 25px;
+            color: var(--text-white);
+            font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+        input::placeholder, textarea::placeholder {
+            color: rgba(255,255,255,0.45);
+        }
+        textarea {
+            border-radius: 25px;
+            min-height: 180px;
+            resize: none;
+        }
+        
+        /* Icon inside input */
+        .input-icon {
+            position: absolute;
+            right: 0;
+            background: var(--primary-blue);
+            height: 50px;
+            width: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+            border-left: 1px solid rgba(255,255,255,0.15);
+        }
+        .input-icon img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+
+        /* Unified Button (Image 1) */
+        .btn-submit {
+            background: var(--accent-green);
+            color: var(--text-white);
+            border: none;
+            border-radius: var(--radius-large);
+            padding: 18px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(94, 255, 100, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-submit:active { transform: scale(0.97); }
+
+        /* Listing Grid / Management (Image 2) */
+        .notifica-card {
+            background: var(--primary-blue);
+            border-radius: var(--radius-large) var(--radius-large) var(--radius-small) var(--radius-small);
+            padding: 20px;
+            color: var(--text-white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .item-titolo { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+        .item-meta { font-size: 0.75rem; opacity: 0.8; line-height: 1.4; font-weight: 500; }
+        
+        .item-actions {
+            display: flex;
+            gap: 2px; /* Small space between split buttons */
+            margin-bottom: 25px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        .btn-modifica { 
+            background: var(--accent-green); 
+            border-radius: var(--radius-small) var(--radius-small) var(--radius-large) var(--radius-large); /* Flipped radii as they touch card */
+            /* Wait, if card is top 17, bottom 4. Buttons should be top 4... actually, let's keep it simple: 
+               Buttons bottom corners 17, top corners 4. */
+            border-radius: var(--radius-small) 0 0 var(--radius-large);
+        }
+        .btn-elimina { 
+            background: var(--accent-red); 
+            border-radius: 0 var(--radius-small) var(--radius-large) 0;
+        }
+        
+        /* Tab Bar Redesign */
+        .tab-bar {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            background: #F4F7FB;
+            height: 90px;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            z-index: 100;
+        }
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+            transition: all 0.2s;
+            position: relative;
+        }
+        .tab-item.inactive { opacity: 0.4; }
+        .tab-indicator {
+            width: 80px;
+            height: 8px;
+            background: var(--primary-blue);
+            border-radius: 10px;
+            position: absolute;
+            bottom: -15px;
+            display: none;
+        }
+        .tab-item.active .tab-indicator { display: block; }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-light); z-index: 9999;
+            overflow-y: auto;
+        }
+        .login-error { color: var(--accent-red); font-size: 0.8rem; margin-top: 12px; font-weight: 700; text-align: center; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- HEADER REPLICATED FROM IMAGES -->
+    <div class="header-main">
+        <img src="atsom.png" class="logo">
+        <img src="CurvaturaSuperiore.png" class="header-curve">
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-overlay">
+        <div class="header-main">
+            <img src="atsom.png" class="logo">
+            <img src="CurvaturaSuperiore.png" class="header-curve">
+        </div>
+        <div class="container">
+            <div class="admin-block">
+                <h1>Admin</h1>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-user" placeholder="Inserisci username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-pass" placeholder="Inserisci password" required>
+                </div>
+                <button type="submit" class="btn-submit">Accedi</button>
+                <div id="login-error" class="login-error hidden">Credenziali non corrette.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN CONTENT -->
+    <div id="admin-panel-content" class="hidden">
+        <div class="container" id="section-invia">
+            <div class="admin-block">
+                <h1 id="form-title">Admin</h1>
+            </div>
+            
+            <form id="notifica-form">
+                <div class="form-group">
+                    <label>Titolo</label>
+                    <input type="text" id="titolo" placeholder="Inserisci titolo" required />
+                </div>
+                <div class="form-group">
+                    <label>Sottotitolo (breve descrizione)</label>
+                    <input type="text" id="sottotitolo" placeholder="Inserisci sottotitolo" />
+                </div>
+                <div class="form-group">
+                    <label>Testo completo</label>
+                    <textarea id="testo" placeholder="Inserisci testo"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Immagini</label>
+                    <div class="input-wrapper" id="immagini-wrapper">
+                        <input type="text" id="immagini" placeholder="URL separati da virgola" />
+                        <div class="input-icon"><img src="icons/Graffetta.svg"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Data e ora di scadenza</label>
+                    <div class="input-wrapper" id="scadenza-wrapper">
+                        <input type="datetime-local" id="scadenza" required />
+                        <div class="input-icon"><img src="icons/Calendar.svg"></div>
+                    </div>
+                </div>
+                <button type="submit" id="submit-btn" class="btn-submit">Invia</button>
+                <button type="button" id="cancel-edit" class="btn-submit hidden" style="background:#8e8e93; box-shadow:none;">Annulla Modifica</button>
+            </form>
+        </div>
+
+        <div class="container hidden" id="section-gestisci">
+            <div class="admin-block">
+                <h1>Admin</h1>
+            </div>
+            <div id="notifiche-container">Caricamento in corso...</div>
+        </div>
+
+        <!-- Bottom Tab Bar -->
+        <div class="tab-bar">
+            <div class="tab-item active" id="btn-tab-invia">
+                Invia Notifica
+                <div class="tab-indicator"></div>
+            </div>
+            <div class="tab-item inactive" id="btn-tab-gestisci">
+                Gestisci Notifiche
+                <div class="tab-indicator"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp }
+            from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWNmVX1HIeXYFMzYnIeBZD4PZXSXifxxc",
+            authDomain: "myatsom-39ac3.firebaseapp.com",
+            projectId: "myatsom-39ac3",
+            storageBucket: "myatsom-39ac3.firebasestorage.app",
+            messagingSenderId: "446042556353",
+            appId: "1:446042556353:web:de8fbd1e575ca3736cd140"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('notifica-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const container = document.getElementById('notifiche-container');
+
+        // --- AUTH ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const adminContent = document.getElementById('admin-panel-content');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+
+        async function checkAuth() {
+            if (sessionStorage.getItem('admin_authenticated') === 'true') {
+                loginOverlay.classList.add('hidden');
+                adminContent.classList.remove('hidden');
+            }
+        }
+        checkAuth();
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userInput = document.getElementById('login-user').value.trim();
+            const passInput = document.getElementById('login-pass').value.trim();
+            try {
+                const snap = await getDoc(doc(db, "credenziali", "adminPanel"));
+                if (snap.exists() && userInput === snap.data().user.toString() && passInput === snap.data().password.toString()) {
+                    sessionStorage.setItem('admin_authenticated', 'true');
+                    loginOverlay.classList.add('hidden');
+                    adminContent.classList.remove('hidden');
+                } else {
+                    loginError.classList.remove('hidden');
+                }
+            } catch (err) { alert("Errore: " + err.message); }
+        });
+
+        // --- NAVIGATION ---
+        const btnInvia = document.getElementById('btn-tab-invia');
+        const btnGestisci = document.getElementById('btn-tab-gestisci');
+        const secInvia = document.getElementById('section-invia');
+        const secGestisci = document.getElementById('section-gestisci');
+
+        btnInvia.onclick = () => {
+            btnInvia.classList.add('active'); btnInvia.classList.remove('inactive');
+            btnGestisci.classList.add('inactive'); btnGestisci.classList.remove('active');
+            secInvia.classList.remove('hidden'); secGestisci.classList.add('hidden');
+        };
+
+        btnGestisci.onclick = () => {
+            btnGestisci.classList.add('active'); btnGestisci.classList.remove('inactive');
+            btnInvia.classList.add('inactive'); btnInvia.classList.remove('active');
+            secGestisci.classList.remove('hidden'); secInvia.classList.add('hidden');
+        };
+
+        let editId = null;
+        let allDataMap = {};
+
+        // --- CRUD LOGIC ---
+        const q = query(collection(db, "notifiche"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            container.innerHTML = '';
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                allDataMap[docSnap.id] = data;
+                
+                let sDate = data.scadenza && data.scadenza.toDate ? data.scadenza.toDate() : new Date(data.scadenza);
+                const isExp = sDate < new Date();
+                const sStr = sDate.toLocaleDateString('it-IT');
+
+                const cardBox = document.createElement('div');
+                cardBox.style.marginBottom = "20px";
+                cardBox.innerHTML = `
+                    <div class="notifica-card">
+                        <div class="item-titolo">${data.titolo}</div>
+                        <div class="item-meta">
+                            Scadenza: ${sStr}<br>
+                            Stato: ${isExp ? 'SCADUTA' : 'ATTIVA'}
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-action btn-modifica" onclick="window.preparaEdit('${docSnap.id}')">Modifica</button>
+                        <button class="btn-action btn-elimina" onclick="window.eliminaNotifica('${docSnap.id}')">Elimina</button>
+                    </div>
+                `;
+                container.appendChild(cardBox);
             });
-            alert("Notifica inviata con successo!");
-            form.reset();
-        } catch (err) {
-            console.error(err);
-            alert("Errore nell'invio: " + err.message);
-        }
+        });
 
-        submitBtn.disabled = false;
-    });
-</script>
+        window.eliminaNotifica = async (id) => {
+            if (confirm("Eliminare questa notifica?")) {
+                await deleteDoc(doc(db, "notifiche", id));
+            }
+        };
+
+        window.preparaEdit = (id) => {
+            const data = allDataMap[id];
+            editId = id;
+            document.getElementById('titolo').value = data.titolo || '';
+            document.getElementById('sottotitolo').value = data.sottotitolo || '';
+            document.getElementById('testo').value = data.testo || '';
+            document.getElementById('immagini').value = (data.immagini || []).join(', ');
+            if (data.scadenza) {
+                const d = data.scadenza.toDate ? data.scadenza.toDate() : new Date(data.scadenza);
+                const iso = (new Date(d - d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+                document.getElementById('scadenza').value = iso;
+            }
+            btnInvia.onclick();
+            submitBtn.textContent = "Aggiorna";
+            cancelEditBtn.classList.remove('hidden');
+        };
+
+        cancelEditBtn.onclick = () => {
+            editId = null; form.reset();
+            submitBtn.textContent = "Invia";
+            cancelEditBtn.classList.add('hidden');
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            const payload = {
+                titolo: document.getElementById('titolo').value.trim(),
+                sottotitolo: document.getElementById('sottotitolo').value.trim(),
+                testo: document.getElementById('testo').value.trim(),
+                immagini: document.getElementById('immagini').value.split(',').map(u=>u.trim()).filter(u=>u.length>0),
+                scadenza: Timestamp.fromDate(new Date(document.getElementById('scadenza').value)),
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                if (editId) {
+                    delete payload.timestamp; 
+                    await updateDoc(doc(db, "notifiche", editId), payload);
+                    alert("Aggiornata!");
+                    cancelEditBtn.onclick();
+                } else {
+                    await addDoc(collection(db, "notifiche"), payload);
+                    alert("Inviata!");
+                    form.reset();
+                }
+            } catch (err) { alert("Errore: " + err.message); }
+            submitBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>

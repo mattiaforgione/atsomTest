@@ -197,7 +197,7 @@
                 link.href = 'manifest.json';
                 document.head.appendChild(link);
 
-                navigator.serviceWorker.register('sw.js');
+                navigator.serviceWorker.register('sw.js?v=5');
             } else if ('serviceWorker' in navigator) {
                 console.log('SW & Manifest skipping (non-secure origin)');
             }

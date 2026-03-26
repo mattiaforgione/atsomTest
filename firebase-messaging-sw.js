@@ -28,21 +28,27 @@ messaging.onBackgroundMessage((payload) => {
 // Gestione del click sulla notifica
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
+    const notificationId = event.notification.data ? (event.notification.data.id || event.notification.data.notificationId) : null;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            // Se c'è già una finestra aperta, focalizzala
-            if (clientList.length > 0) {
-                let client = clientList[0];
-                for (let i = 0; i < clientList.length; i++) {
-                    if (clientList[i].focused) {
-                        client = clientList[i];
+            // Se c'è già una finestra aperta, focalizzala e invia messaggio
+            for (const client of clientList) {
+                if (client.url.includes('/app.html') && 'focus' in client) {
+                    client.focus();
+                    if (notificationId) {
+                        client.postMessage({
+                            type: 'OPEN_NOTIFICATION',
+                            id: notificationId
+                        });
                     }
+                    return;
                 }
-                return client.focus();
             }
-            // Altrimenti apri l'app
-            return clients.openWindow('./app.html');
+            // Altrimenti apri l'app con parametro ID
+            let url = './app.html';
+            if (notificationId) url += '?notificaId=' + notificationId;
+            return clients.openWindow(url);
         })
     );
 });

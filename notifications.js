@@ -56,6 +56,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allNotifications = [];
     let readIds = JSON.parse(localStorage.getItem('read_notifications') || '[]');
+    let pendingNotificaId = new URLSearchParams(window.location.search).get('notificaId');
+
+    // --- MESSAGGI DAL SERVICE WORKER (Deep Link) ---
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'OPEN_NOTIFICATION') {
+                console.log("Ricevuto comando deep-link SW per ID:", event.data.id);
+                pendingNotificaId = event.data.id;
+                tryOpenPending();
+            }
+        });
+    }
+
+    function tryOpenPending() {
+        if (!pendingNotificaId) return;
+        const n = allNotifications.find(notif => notif.id === pendingNotificaId);
+        if (n) {
+            console.log("Apertura automatica notifica deep-link:", n.titolo);
+            popup.classList.remove('hidden');
+            showDetail(n);
+            pendingNotificaId = null;
+            // Pulisci URL per evitare riaperture al refresh
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }
 
     // --- FIRESTORE LISTENER ---
     const q = query(collection(db, "notifiche"), orderBy("timestamp", "desc"));
@@ -82,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Notifiche attive da mostrare:", allNotifications.length);
         updateUI();
         checkNewForToast();
+        tryOpenPending(); // Controlla se c'era un deep-link in attesa dei dati
     }, (error) => {
         console.error("Errore listener Firestore:", error);
     });
@@ -104,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderList() {
         listView.innerHTML = '';
         if (allNotifications.length === 0) {
-            listView.innerHTML = '<div style="color:white; text-align:center; padding:20px; opacity:0.6;">Nessuna modifica attiva</div>';
+            listView.innerHTML = '<div style="color:#11335C; text-align:center; padding:20px; font-weight:600; font-family:\'Montserrat\', sans-serif;">Non ci sono notifiche attive</div>';
             return;
         }
 
@@ -173,29 +199,36 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.classList.remove('hidden');
 
             // --- NOTIFICA DI SISTEMA (PUSH) ---
+            const showSystemNotification = async (title, opt) => {
+                console.log("[MOBILE-FIX-V3] Provo a mostrare notifica di sistema per:", title);
+                if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const reg = await navigator.serviceWorker.ready;
+                        await reg.showNotification(title, opt);
+                        console.log("[MOBILE-FIX-V3] Notifica mostrata tramite Service Worker.");
+                    } catch (err) {
+                        console.warn("[MOBILE-FIX-V3] showNotification fallito:", err);
+                        // Fallback disperato solo se non siamo su mobile (o se supportato)
+                        try { new Notification(title, opt); } catch(e) {}
+                    }
+                } else {
+                    try {
+                        new Notification(title, opt);
+                    } catch(e) { console.warn("[MOBILE-FIX-V3] Notifiche non supportate."); }
+                }
+            };
+
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
                 const options = {
                     body: latest.sottotitolo || (latest.testo ? latest.testo.substring(0, 80) + '...' : ''),
                     icon: 'FavIconAtsom.png',
                     badge: 'FavIconAtsom.png',
                     tag: 'notifica-' + latest.id,
-                    data: { 
-                        url: window.location.href,
-                        id: latest.id
-                    }
+                    data: { url: window.location.href, id: latest.id }
                 };
-
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification(latest.titolo, options);
-                    }).catch(() => {
-                        new Notification(latest.titolo, options);
-                    });
-                } else {
-                    try {
-                        new Notification(latest.titolo, options);
-                    } catch(e) { console.warn("Notifiche non supportate su questo device."); }
-                }
+                showSystemNotification(latest.titolo, options);
             }
             
             // Clicca sulla parte bianca -> Apri dettaglio e segna come letto

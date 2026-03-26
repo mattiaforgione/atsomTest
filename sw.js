@@ -66,19 +66,30 @@ self.addEventListener('fetch', event => {
 // Gestione del click sulle notifiche
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
+    const notificationId = event.notification.data ? event.notification.data.id : null;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            if (clientList.length > 0) {
-                let client = clientList[0];
-                for (let i = 0; i < clientList.length; i++) {
-                    if (clientList[i].focused) {
-                        client = clientList[i];
+            // Se c'Ã¨ una finestra aperta, metti a fuoco e invia messaggio
+            for (const client of clientList) {
+                if (client.url.includes('/app.html') && 'focus' in client) {
+                    client.focus();
+                    if (notificationId) {
+                        client.postMessage({
+                            type: 'OPEN_NOTIFICATION',
+                            id: notificationId
+                        });
                     }
+                    return;
                 }
-                return client.focus();
             }
-            return clients.openWindow('./app.html');
+            // Altrimenti apri nuova finestra con parametro ID
+            let url = './app.html';
+            if (notificationId) url += '?notificaId=' + notificationId;
+            
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
         })
     );
 });
