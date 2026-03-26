@@ -1,0 +1,72 @@
+<h2>Invia Notifica</h2>
+<form id="notifica-form">
+    <input type="text" id="titolo" placeholder="Titolo" required />
+    <input type="text" id="sottotitolo" placeholder="Sottotitolo" />
+    <textarea id="testo" placeholder="Testo"></textarea>
+    <input type="text" id="immagini" placeholder="URL immagini separati da ," />
+    <input type="datetime-local" id="scadenza" required />
+    <button type="submit">Invia</button>
+</form>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, Timestamp }
+        from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDWNmVX1HIeXYFMzYnIeBZD4PZXSXifxxc",
+        authDomain: "myatsom-39ac3.firebaseapp.com",
+        projectId: "myatsom-39ac3",
+        storageBucket: "myatsom-39ac3.firebasestorage.app",
+        messagingSenderId: "446042556353",
+        appId: "1:446042556353:web:de8fbd1e575ca3736cd140"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('notifica-form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Disabilita il bottone mentre salvi
+        submitBtn.disabled = true;
+
+        const titolo = document.getElementById('titolo').value.trim();
+        const sottotitolo = document.getElementById('sottotitolo').value.trim();
+        const testo = document.getElementById('testo').value.trim();
+        const immagini = document.getElementById('immagini').value
+            .split(',')
+            .map(u => u.trim())
+            .filter(u => u.length > 0); // rimuove stringhe vuote
+        const scadenzaInput = document.getElementById('scadenza').value;
+
+        if (!scadenzaInput) {
+            alert("Inserisci una data di scadenza valida!");
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const scadenza = Timestamp.fromDate(new Date(scadenzaInput));
+
+        try {
+            await addDoc(collection(db, "notifiche"), {
+                titolo,
+                sottotitolo,
+                testo,
+                immagini,
+                scadenza,
+                timestamp: serverTimestamp()
+            });
+            alert("Notifica inviata con successo!");
+            form.reset();
+        } catch (err) {
+            console.error(err);
+            alert("Errore nell'invio: " + err.message);
+        }
+
+        submitBtn.disabled = false;
+    });
+</script>

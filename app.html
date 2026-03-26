@@ -34,42 +34,11 @@
     </style>
 </head>
 
-<body>
+<body>    <!-- Firebase & Notifications Logic -->
+    <script type="module" src="notifications.js"></script>
+
     <!-- CONTENUTI APP -->
     <div id="app-content-wrapper">
-
-        <!--firebase logic added by user -->
-        <script type="module">
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-            import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
-
-            const firebaseConfig = {
-                apiKey: "AIzaSyAsEa2LDN-q0YcoXCnaAPnT3NmALkK_fjA",
-                authDomain: "myatsom-29431.firebaseapp.com",
-                projectId: "myatsom-29431",
-                storageBucket: "myatsom-29431.firebasestorage.app",
-                messagingSenderId: "550570346589",
-                appId: "1:550570346589:web:790e47cbb2079a501d25b4"
-            };
-
-            const app = initializeApp(firebaseConfig);
-            const messaging = getMessaging(app);
-
-            async function subscribe() {
-                const permission = await Notification.requestPermission();
-
-                if (permission === "granted") {
-                    const token = await getToken(messaging, {
-                        vapidKey: "BHetqqU3safGK1H3bwxjxQ60FsrrROfyp4dxUDGHm1Uq8UgzK3ma7GyaAwtCjuDkL14O107ITkKZGuLrikYBc9k"
-                    });
-
-                    console.log("TOKEN:", token);
-                    alert("Notifiche attivate!");
-                }
-            }
-
-            window.subscribe = subscribe;
-        </script>
 
         <!-- SPLASH SCREEN -->
         <div id="splash-screen" class="splash-container">
@@ -97,9 +66,12 @@
                     </div>
                 </div>
             </div>
-            <button class="circular-btn top-btn" title="Notifiche" onclick="window.subscribe && window.subscribe()">
-                <img src="icons/Bell.svg" alt="Notifiche">
-            </button>
+            <div class="notification-btn-wrapper">
+                <button class="circular-btn top-btn" id="btn-notifications" title="Notifiche">
+                    <img src="icons/Bell.svg" alt="Notifiche">
+                </button>
+                <div id="notification-badge" class="notification-badge hidden">0</div>
+            </div>
             <button class="profile-btn top-btn" id="btn-profile" title="Profilo">
                 <div class="profile-placeholder">
                     <img id="profile-img" src="icons/User.svg" alt="avatar" />
@@ -110,6 +82,32 @@
         <div id="map"></div>
         <!-- Overlay per catturare i click quando la mappa è sfocata dalla ricerca -->
         <div id="map-blur-overlay" class="hidden"></div>
+
+        <!-- NOTIFICATION TOAST (Screenshot 1) -->
+        <div id="notification-toast" class="notification-toast hidden">
+            <div class="toast-main" id="toast-main-click">
+                <div class="toast-content">
+                    <div class="toast-title" id="toast-title">Sciopero Venerdì 27 Marzo</div>
+                    <div class="toast-subtitle" id="toast-subtitle">E' stato indetto uno sciopero per il giorno Venerdì 17 Marzo. Cliccate per maggiori informazioni</div>
+                </div>
+                <img src="icons/ArrowRight.svg" class="toast-chevron" alt="Apri">
+            </div>
+            <button class="toast-close-btn" id="toast-close">
+                <img src="icons/X.svg" alt="Chiudi">
+            </button>
+        </div>
+
+        <!-- NOTIFICATION POPUP (Screenshot 2 & 3) -->
+        <div id="notification-popup" class="notification-popup hidden">
+            <!-- List View -->
+            <div id="notification-list-view">
+                <!-- Cards will be injected here -->
+            </div>
+            <!-- Detail View -->
+            <div id="notification-detail-view" class="hidden">
+                <!-- Detail content will be injected here -->
+            </div>
+        </div>
 
         <!-- NEW MAP FLOATING ACTIONS (Right) -->
         <div class="map-floating-actions">

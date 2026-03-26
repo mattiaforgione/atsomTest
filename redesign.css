@@ -99,6 +99,258 @@ textarea {
 .weather-temp {
     line-height: 1;
 }
+/* --- NOTIFICATIONS --- */
+.notification-btn-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #FF3B30;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    padding: 0 4px;
+    z-index: 10;
+}
+
+.notification-badge.hidden {
+    display: none;
+}
+
+/* Floating Toast (Screenshot 1) */
+.notification-toast {
+    position: absolute;
+    top: 130px; /* Aligned relative to search bar properly */
+    left: 20px;
+    right: 20px;
+    max-width: 500px;
+    display: flex;
+    align-items: stretch; /* Match heights perfectly */
+    gap: 4px;
+    z-index: 2000;
+    animation: slideDownIn 0.4s var(--ease-ios);
+}
+
+.toast-main {
+    flex: 1;
+    background: white;
+    border-radius: 17px 4px 4px 17px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.toast-main:hover {
+    background: #F8FAFC;
+}
+
+.toast-close-btn {
+    width: 50px;
+    background: #FF3B30;
+    border-radius: 4px 17px 17px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.toast-close-btn img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+/* Removed old toast-action-panel */
+
+
+@keyframes slideDownIn {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.notification-toast.hidden {
+    display: none;
+}
+
+
+
+.toast-title {
+    font-weight: 800;
+    font-size: 15px;
+    color: #11335C;
+    margin-bottom: 2px;
+}
+
+.toast-subtitle {
+    font-size: 12px;
+    color: #11335C;
+    opacity: 0.8;
+    line-height: 1.3;
+}
+
+/* Removing old toast-actions as we use toast-action-panel and toast-close separately */
+
+/* Toast Arrow replaced by toast-main chevron and toast-close-btn */
+
+
+/* Popup List (Screenshot 2 & 3) */
+.notification-popup {
+    position: absolute;
+    top: 135px;
+    left: 20px;
+    right: 20px;
+    max-width: 400px;
+    background: white; /* Container is white in screenshot 2 */
+    border-radius: 25px;
+    padding: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    z-index: 2101;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: translate(-50%, 10px) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.notification-popup.hidden {
+    display: none;
+}
+
+.notification-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification-list-card {
+    background: #11335C;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.toast-chevron {
+    width: 20px;
+    height: 20px;
+    opacity: 0.4;
+    filter: brightness(0);
+}
+
+.notification-list-card:hover {
+    background: #254E82;
+    transform: translateY(-2px);
+}
+
+.card-info {
+    flex: 1;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.card-subtitle {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.card-arrow img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    filter: brightness(0) invert(1);
+}
+
+/* Detail View (Screenshot 3) */
+.notification-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-header {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    height: 52px;
+}
+
+.back-btn {
+    width: 52px;
+    background: #1A3F6D;
+    border-radius: 17px 4px 4px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+}
+
+.back-btn img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+.detail-title-block {
+    flex: 1;
+    background: #11335C;
+    border-radius: 4px 17px 17px 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.detail-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: white;
+}
+
+.detail-body {
+    background: #11335C;
+    padding: 20px;
+    border-radius: 17px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: white;
+}
+
+.detail-image {
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 12px;
+    object-fit: cover;
+}
 
 /* --- NEW TOP SEARCH BAR --- */
 .top-search-bar {
