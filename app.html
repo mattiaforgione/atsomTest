@@ -2,17 +2,6 @@
 <html lang="it">
 
 <head>
-    <!--ONESIGNAL-->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function (OneSignal) {
-            await OneSignal.init({
-                appId: "329e6e6d-6046-4772-9d19-d5e8e3b8cee3",
-            });
-        });
-    </script>
-    <!--SITO-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#11335C">
@@ -46,14 +35,47 @@
 </head>
 
 <body>
-    <!-- SPLASH SCREEN -->
-    <div id="splash-screen" class="splash-container">
-        <img src="myAtsomLogo.png" alt="myATSOM Logo" class="splash-logo">
-        <div class="splash-footer">2026 ATSOM | Associazione Trasporti Sud Ovest Milanese</div>
-    </div>
-
     <!-- CONTENUTI APP -->
     <div id="app-content-wrapper">
+
+        <!--firebase logic added by user -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+            import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAsEa2LDN-q0YcoXCnaAPnT3NmALkK_fjA",
+                authDomain: "myatsom-29431.firebaseapp.com",
+                projectId: "myatsom-29431",
+                storageBucket: "myatsom-29431.firebasestorage.app",
+                messagingSenderId: "550570346589",
+                appId: "1:550570346589:web:790e47cbb2079a501d25b4"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const messaging = getMessaging(app);
+
+            async function subscribe() {
+                const permission = await Notification.requestPermission();
+
+                if (permission === "granted") {
+                    const token = await getToken(messaging, {
+                        vapidKey: "BHetqqU3safGK1H3bwxjxQ60FsrrROfyp4dxUDGHm1Uq8UgzK3ma7GyaAwtCjuDkL14O107ITkKZGuLrikYBc9k"
+                    });
+
+                    console.log("TOKEN:", token);
+                    alert("Notifiche attivate!");
+                }
+            }
+
+            window.subscribe = subscribe;
+        </script>
+
+        <!-- SPLASH SCREEN -->
+        <div id="splash-screen" class="splash-container">
+            <img src="myAtsomLogo.png" alt="myATSOM Logo" class="splash-logo">
+            <div class="splash-footer">2026 ATSOM | Associazione Trasporti Sud Ovest Milanese</div>
+        </div>
 
         <!-- WEATHER PILL -->
         <div class="weather-pill">
@@ -75,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <button class="circular-btn top-btn" title="Notifiche">
+            <button class="circular-btn top-btn" title="Notifiche" onclick="window.subscribe && window.subscribe()">
                 <img src="icons/Bell.svg" alt="Notifiche">
             </button>
             <button class="profile-btn top-btn" id="btn-profile" title="Profilo">
