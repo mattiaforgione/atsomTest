@@ -174,16 +174,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // --- NOTIFICA DI SISTEMA (PUSH) ---
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                const systemNotif = new Notification(latest.titolo, {
+                const options = {
                     body: latest.sottotitolo || (latest.testo ? latest.testo.substring(0, 80) + '...' : ''),
-                    icon: 'FavIconAtsom.png'
-                });
-                systemNotif.onclick = () => {
-                    window.focus();
-                    toast.classList.add('hidden');
-                    if (popup) popup.classList.remove('hidden');
-                    showDetail(latest);
+                    icon: 'FavIconAtsom.png',
+                    badge: 'FavIconAtsom.png',
+                    tag: 'notifica-' + latest.id,
+                    data: { 
+                        url: window.location.href,
+                        id: latest.id
+                    }
                 };
+
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.showNotification(latest.titolo, options);
+                    }).catch(() => {
+                        new Notification(latest.titolo, options);
+                    });
+                } else {
+                    try {
+                        new Notification(latest.titolo, options);
+                    } catch(e) { console.warn("Notifiche non supportate su questo device."); }
+                }
             }
             
             // Clicca sulla parte bianca -> Apri dettaglio e segna come letto
