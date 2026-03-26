@@ -2,6 +2,17 @@
 <html lang="it">
 
 <head>
+    <!--ONESIGNAL-->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function (OneSignal) {
+            await OneSignal.init({
+                appId: "329e6e6d-6046-4772-9d19-d5e8e3b8cee3",
+            });
+        });
+    </script>
+    <!--SITO-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#11335C">
@@ -43,10 +54,12 @@
 
     <!-- CONTENUTI APP -->
     <div id="app-content-wrapper">
-        <!-- TOP BANNER CON CURVATURA E LOGO -->
-        <div class="top-wave-banner">
-            <img src="CurvaturaSuperiore.png" alt="Onda Superiore" class="wave-bg">
-            <img src="atsom.png" alt="ATSOM Logo" class="wave-logo">
+
+        <!-- WEATHER PILL -->
+        <div class="weather-pill">
+            <img src="icons/CloudySunny.svg" alt="Meteo" class="weather-icon">
+            <div class="weather-separator"></div>
+            <span class="weather-temp">20°</span>
         </div>
 
         <!-- NUOVA TOP SEARCH BAR -->
@@ -319,7 +332,10 @@
             <div id="filter-section" class="list-section hidden stagger-in">
                 <div class="filter-header-split">
                     <button class="filter-btn-back-special" id="btn-back-filters">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
                     </button>
                     <div class="filter-title-special">
                         <span>Filtri</span>
@@ -667,6 +683,8 @@
     <script src="ZoneSTIBM_data.js"></script>
     <script src="stibm_zones.js"></script>
 
+    <!-- Weather logic -->
+    <script src="weather.js"></script>
     <!-- Main app logic -->
     <script src="app.js"></script>
 
@@ -863,7 +881,8 @@
                     </p>
                 </div>
             </div>
-            <button class="btn-primary-premium" onclick="window.closeTravelTips()" style="background: #27ae60; margin-top: 10px;">Ho capito</button>
+            <button class="btn-primary-premium" onclick="window.closeTravelTips()"
+                style="background: #27ae60; margin-top: 10px;">Ho capito</button>
         </div>
     </div>
 
@@ -882,7 +901,8 @@
                 </button>
             </div>
             <button class="profile-close-btn" id="btn-close-profile-modal">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
