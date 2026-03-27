@@ -475,7 +475,7 @@ const linea_Z560 = {
                         "time": "07:08"
                     },
                     {
-                        "stopId": "stop_trez_vinci/cellini",
+                        "stopId": "stop_trez_colombo/cellini",
                         "time": "07:09"
                     },
                     {
