@@ -452,6 +452,13 @@ const stavStops = [
         "lng": 9.065638
     },
     {
+        "id": "stop_trez_colombo/curiel3",
+        "name": "Trezzano sul Naviglio - V.le Colombo/Curiel",
+        "operatore": "ATM",
+        "lat": 45.422791,
+        "lng": 9.065615
+    },
+    {
         "id": "stop_trez_colombo/moro",
         "name": "Trezzano sul Naviglio - V.le Colombo/Moro",
         "lat": 45.42502,
@@ -1306,5 +1313,12 @@ const stavStops = [
         "operatore": "ATM",
         "lat": 45.447632,
         "lng": 9.120267,
+    },
+    {
+        "id": "stop_mil_bisceglie/bensi2",
+        "name": "Milano - Via Bisceglie/Via Bensi",
+        "operatore": "ATM",
+        "lat": 45.446802,
+        "lng": 9.120607,
     },
 ];

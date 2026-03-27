@@ -3,7 +3,7 @@
  * Integrates with Firestore to show real-time notifications, toasts, and list view.
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, query, where, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, onSnapshot, orderBy, addDoc, serverTimestamp, doc, updateDoc, increment, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
 
 const firebaseConfig = {
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const listView = document.getElementById('notification-list-view');
     const detailView = document.getElementById('notification-detail-view');
     const btnNotifications = document.getElementById('btn-notifications');
-    
+
     // Richiesta permessi notifiche di sistema (Push)
     if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
         setTimeout(() => Notification.requestPermission(), 3000);
@@ -84,11 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FIRESTORE LISTENER ---
     const q = query(collection(db, "notifiche"), orderBy("timestamp", "desc"));
-    
+
     onSnapshot(q, (snapshot) => {
         const now = new Date().toISOString();
         console.log("Ricevuto aggiornamento Firestore. Ora:", now);
-        
+
         allNotifications = snapshot.docs
             .map(doc => {
                 const data = doc.data();
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUI() {
         const unreadCount = allNotifications.filter(n => !readIds.includes(n.id)).length;
-        
+
         // Update Badge
         if (unreadCount > 0) {
             badge.textContent = unreadCount;
@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-        
+
         listView.classList.add('hidden');
         detailView.classList.remove('hidden');
-        
+
         document.getElementById('detail-back').onclick = () => {
             detailView.classList.add('hidden');
             listView.classList.remove('hidden');
@@ -211,12 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     } catch (err) {
                         console.warn("[MOBILE-FIX-V3] showNotification fallito:", err);
                         // Fallback disperato solo se non siamo su mobile (o se supportato)
-                        try { new Notification(title, opt); } catch(e) {}
+                        try { new Notification(title, opt); } catch (e) { }
                     }
                 } else {
                     try {
                         new Notification(title, opt);
-                    } catch(e) { console.warn("[MOBILE-FIX-V3] Notifiche non supportate."); }
+                    } catch (e) { console.warn("[MOBILE-FIX-V3] Notifiche non supportate."); }
                 }
             };
 
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 showSystemNotification(latest.titolo, options);
             }
-            
+
             // Clicca sulla parte bianca -> Apri dettaglio e segna come letto
             tMain.onclick = () => {
                 toast.classList.add('hidden');
@@ -269,4 +269,114 @@ document.addEventListener('DOMContentLoaded', () => {
             popup.classList.add('hidden');
         }
     });
+
+    // --- REAL-TIME DELAY REPORTING ---
+    window.activeDelays = {}; // Global state for delay banners
+    window.lastReportedLineId = null;
+
+    function initDelayListener() {
+        // Query reports from the last 2 hours (to have a buffer for local 1-hour filtering)
+        const twoHoursAgo = new Date(Date.now() - 7200000);
+        const q = query(collection(db, "reports"), where("createdAt", ">", twoHoursAgo));
+
+        onSnapshot(q, (snapshot) => {
+            const now = Date.now();
+            const oneHour = 3600000;
+            const delays = {};
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (!data.createdAt) return;
+                
+                const createdAt = data.createdAt.toDate().getTime();
+                // Local filter for 1 hour window
+                if (now - createdAt < oneHour) {
+                    const { lineId, type } = data;
+                    if (!delays[lineId]) delays[lineId] = { ritardo: 0, saltata: 0, guasto: 0, total: 0 };
+                    delays[lineId][type]++;
+                    delays[lineId].total++;
+                }
+            });
+
+            window.activeDelays = delays;
+            console.log("Update Active Delays:", delays);
+            
+            // Refresh UI if functions exist in app.js
+            if (typeof window.refreshDelayBanners === 'function') {
+                window.refreshDelayBanners();
+            }
+        }, (err) => console.error("Delay listener error:", err));
+    }
+
+    initDelayListener();
+
+    window.openReportModal = (lineId) => {
+        window.lastReportedLineId = lineId;
+        document.getElementById('report-modal-overlay').classList.remove('hidden');
+    };
+
+    window.closeReportModal = () => {
+        document.getElementById('report-modal-overlay').classList.add('hidden');
+    };
+
+    window.closeSuccessModal = () => {
+        document.getElementById('success-modal-overlay').classList.add('hidden');
+    };
+
+    window.submitReport = async (type) => {
+        const lineId = window.lastReportedLineId;
+        if (!lineId) return;
+
+        // Check cooldown (10 minutes)
+        const lastReportTime = localStorage.getItem('last_report_timestamp');
+        const now = Date.now();
+        if (lastReportTime && (now - parseInt(lastReportTime)) < 600000) {
+            const minutesLeft = Math.ceil((600000 - (now - parseInt(lastReportTime))) / 60000);
+            alert(`Segnalazione bloccata. Devi attendere ancora ${minutesLeft} minuti.`);
+            return;
+        }
+
+        try {
+            // 1. Individual report for accurate real-time display
+            await addDoc(collection(db, "reports"), {
+                lineId: lineId,
+                type: type,
+                createdAt: serverTimestamp()
+            });
+
+            // 2. Update summary document (optional, but keep for consistency)
+            const avvisoRef = doc(db, "avvisi", lineId);
+            const avvisoDoc = await getDoc(avvisoRef);
+            if (!avvisoDoc.exists()) {
+                await setDoc(avvisoRef, { ritardo: 0, saltata: 0, guasto: 0 });
+            }
+            await updateDoc(avvisoRef, {
+                [type]: increment(1)
+            });
+
+            localStorage.setItem('last_report_timestamp', now.toString());
+            window.closeReportModal();
+            window.showReportSuccess(type, lineId);
+        } catch (err) {
+            console.error("Submission error:", err);
+            alert("Errore nell'invio. Riprova.");
+        }
+    };
+
+    window.showReportSuccess = (type, lineId) => {
+        const modal = document.getElementById('success-modal-overlay');
+        const msg = document.getElementById('success-message');
+        
+        let typeStr = "Disservizio";
+        if(type === 'ritardo') typeStr = "Ritardo";
+        if(type === 'saltata') typeStr = "Corsa Saltata";
+        if(type === 'guasto') typeStr = "Guasto o incidente";
+
+        // We assume globalCurrentDest and globalLineName are set in app.js
+        const lineName = window.globalLineName || lineId;
+        const destName = window.globalCurrentDest || "destinazione";
+
+        msg.innerHTML = `Hai segnalato <b>${typeStr}</b> per la linea <b>${lineName}</b> con direzione <b>${destName}</b> e il tuo avviso è stato inviato correttamente!`;
+        modal.classList.remove('hidden');
+    };
 });

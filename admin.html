@@ -327,7 +327,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp }
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, where, serverTimestamp, Timestamp }
             from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -350,13 +350,39 @@
         // --- AUTH ---
         const loginOverlay = document.getElementById('login-overlay');
         const adminContent = document.getElementById('admin-panel-content');
-        const loginForm = document.getElementById('login-form');
         const loginError = document.getElementById('login-error');
+        const loginForm = document.getElementById('login-form');
+
+        async function cleanupFirestore() {
+            try {
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000));
+
+                // 1. Pulizia Notifiche Scadute
+                const qNotifiche = query(collection(db, "notifiche"), where("scadenza", "<", Timestamp.fromDate(now)));
+                const snapNotifiche = await getDocs(qNotifiche);
+                snapNotifiche.forEach(async (d) => {
+                    await deleteDoc(d.ref);
+                    console.log("Deleted expired notification:", d.id);
+                });
+
+                // 2. Pulizia Reports > 1 ora
+                const qReports = query(collection(db, "reports"), where("createdAt", "<", Timestamp.fromDate(oneHourAgo)));
+                const snapReports = await getDocs(qReports);
+                snapReports.forEach(async (d) => {
+                    await deleteDoc(d.ref);
+                    console.log("Deleted old report:", d.id);
+                });
+            } catch (err) {
+                console.error("Cleanup error:", err);
+            }
+        }
 
         async function checkAuth() {
             if (sessionStorage.getItem('admin_authenticated') === 'true') {
                 loginOverlay.classList.add('hidden');
                 adminContent.classList.remove('hidden');
+                cleanupFirestore();
             }
         }
         checkAuth();
@@ -371,6 +397,7 @@
                     sessionStorage.setItem('admin_authenticated', 'true');
                     loginOverlay.classList.add('hidden');
                     adminContent.classList.remove('hidden');
+                    cleanupFirestore();
                 } else {
                     loginError.classList.remove('hidden');
                 }

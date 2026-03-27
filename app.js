@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Festività Nazionali Regolari (trattate come Domenica/Festivo)
     const nationalHolidays = [
         { month: 3, date: 25 },  // 25 Aprile - Liberazione
-        { month: 5, date: 2 }    // 2 Giugno - Festa Repubblica
+        { month: 5, date: 2 },    // 2 Giugno - Festa Repubblica
     ];
 
     // Controlla se una data (oggi) matcha un array di giorni specifici
@@ -1015,6 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchServices.length > 0 && otherServicesResults) {
                 appendStopsToList(searchServices, otherServicesResults);
             }
+            if (typeof window.refreshDelayBanners === 'function') window.refreshDelayBanners();
             return;
         }
 
@@ -1062,6 +1063,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+        if (typeof window.refreshDelayBanners === 'function') window.refreshDelayBanners();
     }
 
     function appendStopsToList(itemsArray, listElement, showDistance = false) {
@@ -2432,6 +2434,95 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal() { window.closeInternalView(); }
     window.closeModal = closeModal;
 
+    let currentLineId = null;
+
+    function getDelayMessage(lineId, info, customDest) {
+        const counts = {
+            ritardo: info.ritardo || 0,
+            saltata: info.saltata || 0,
+            guasto: info.guasto || 0
+        };
+        
+        // Determina il tipo prevalente
+        let maxType = 'ritardo';
+        let maxVal = counts.ritardo;
+        if (counts.saltata > maxVal) { maxType = 'saltata'; maxVal = counts.saltata; }
+        if (counts.guasto > maxVal) { maxType = 'guasto'; maxVal = counts.guasto; }
+        
+        const prefix = info.total >= 5 ? 'Molti utenti segnalano' : 'Alcuni utenti segnalano';
+        const dest = customDest ? ` con direzione <b>${customDest}</b>` : '';
+        
+        if (maxType === 'guasto') {
+            return `${prefix} che una corsa della linea <b>${lineId}</b>${dest} potrebbe aver subito un guasto.`;
+        } else if (maxType === 'saltata') {
+            return `${prefix} che una corsa della linea <b>${lineId}</b>${dest} non è stata eseguita.`;
+        } else {
+            return `${prefix} che la linea <b>${lineId}</b>${dest} potrebbe subire dei ritardi.`;
+        }
+    }
+
+    window.refreshDelayBanners = function () {
+        // 1. Global (Main Panel) Banner - Disabled for main screen per user request
+        const globalBanner = document.getElementById('global-delay-banner');
+        if (globalBanner) {
+            globalBanner.classList.add('hidden');
+        }
+
+        // 2. Stop Details Banner
+        const stopBanner = document.getElementById('stop-delay-banner');
+        if (stopBanner && activeStop) {
+            const linesAtStop = [];
+            stavData.lines.forEach(l => {
+                for (let dt in l.dayTypes) {
+                    if (l.dayTypes[dt].some(t => t.stops.some(s => s.stopId === activeStop.id))) {
+                        linesAtStop.push(l.id);
+                        break;
+                    }
+                }
+            });
+            
+            const lineWithDelay = linesAtStop.find(id => window.activeDelays[id] && window.activeDelays[id].total >= 2);
+            if (lineWithDelay) {
+                const info = window.activeDelays[lineWithDelay];
+                const message = getDelayMessage(lineWithDelay, info);
+                stopBanner.innerHTML = `
+                    <div class="delay-alert-banner">
+                        <div class="delay-alert-icon">
+                            <img src="icons/Wavy_Warning.svg" style="width:100%; height:100%;">
+                        </div>
+                        <div class="delay-alert-text">${message}</div>
+                    </div>
+                `;
+                stopBanner.classList.remove('hidden');
+            } else {
+                stopBanner.innerHTML = '';
+                stopBanner.classList.add('hidden');
+            }
+        }
+
+        // 3. Trip Details Banner
+        const tripBanner = document.getElementById('trip-delay-banner');
+        if (tripBanner && currentLineId) {
+            const info = window.activeDelays[currentLineId];
+            if (info && info.total >= 2) {
+                const dest = window.globalCurrentDest || null;
+                const message = getDelayMessage(currentLineId, info, dest);
+                tripBanner.innerHTML = `
+                    <div class="delay-alert-banner">
+                        <div class="delay-alert-icon">
+                            <img src="icons/Wavy_Warning.svg" style="width:100%; height:100%;">
+                        </div>
+                        <div class="delay-alert-text">${message}</div>
+                    </div>
+                `;
+                tripBanner.classList.remove('hidden');
+            } else {
+                tripBanner.innerHTML = '';
+                tripBanner.classList.add('hidden');
+            }
+        }
+    };
+
     function openStopDetails(stop) {
         activeStop = stop;
         if (currentInterval) clearInterval(currentInterval);
@@ -2452,6 +2543,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 <div class="internal-title">${stop.name}</div>
             </div>
+            <div id="stop-delay-banner" class="hidden"></div>
             <div id="inpanel-next-bus"></div>
             <div id="inpanel-lines-list" style="padding-bottom: 40px;"></div>
         `;
@@ -2568,10 +2660,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (map && stop.lat && stop.lng) {
             map.flyTo([stop.lat - 0.005, stop.lng], 16, { animate: true });
         }
+        
+        window.refreshDelayBanners();
     }
     window.openStopDetails = openStopDetails;
 
     window.openTripDetail = function (lineId, activeStopId, requestedDest, requestedDayType) {
+        currentLineId = lineId;
         if (currentInterval) clearInterval(currentInterval);
         if (nextBusInterval) { clearInterval(nextBusInterval); nextBusInterval = null; }
 
@@ -2595,6 +2690,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Stato corrente della vista
         let currentDest = requestedDest || dests[0];
         let currentDay = requestedDayType || getTodayDayType();
+
+        // Set global variables for notifications.js
+        window.globalLineName = line.name;
+        window.globalCurrentDest = currentDest;
 
         const labelsMap = {
             "feriale_scolastico": "Lun-Ven scolastico",
@@ -2625,6 +2724,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                     <div class="internal-title">${sourceStop.name}</div>
                 </div>
+
+                <div id="trip-delay-banner" class="hidden" style="margin-top: 10px;"></div>
 
                 <div class="line-detail-header" style="background:var(--bg-deep); border-radius:17px; padding:16px; margin-bottom:12px; display:flex; align-items:center; box-shadow:0 4px 12px rgba(17,51,92,0.2);">
                     <div class="route-line" style="background:${line.color}; padding:6px 12px; border-radius:12px; font-weight:800; color:${line.txColor || '#fff'}; font-size:1rem; box-shadow:0 2px 6px rgba(0,0,0,0.2); margin-right: 14px;">${line.name}</div>
@@ -2712,6 +2813,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `</div>`;
             }
 
+            // ADD REPORT BUTTON (Redesigned as a pill in the legend area)
+            html += `
+                <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                    <button class="stagger-in" onclick="window.openReportModal('${lineId}')" style="background: #FF4757; color: white; border: none; border-radius: 20px; padding: 7px 16px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Ritardo?</button>
+                </div>
+            `;
+
             html += `</div>`;
 
             // TIMELINE (Stops path)
@@ -2750,6 +2858,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         renderAll();
+        window.refreshDelayBanners();
     };
 
     // Helper:
@@ -2908,3 +3017,20 @@ window.closeTravelTips = function () {
         modal.classList.add("hidden");
     }
 };
+
+// Override openReportModal for dynamic content (Visual Parity)
+(function() {
+    const originalOpenReportModal = window.openReportModal;
+    window.openReportModal = (lineId) => {
+        if (originalOpenReportModal) originalOpenReportModal(lineId);
+        
+        const line = typeof stavData !== 'undefined' ? stavData.lines.find(l => l.id === lineId) : null;
+        const lineName = line ? line.name : lineId;
+        const dest = window.globalCurrentDest || "destinazione";
+        
+        const question = document.getElementById('report-question');
+        if (question) {
+            question.innerHTML = `Che problema hai avuto con la linea <b>${lineName}</b> in direzione <b>${dest}</b>?`;
+        }
+    };
+})();
