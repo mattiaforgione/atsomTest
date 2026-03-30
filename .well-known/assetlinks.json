@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.atsom.my.twa",
+      "sha256_cert_fingerprints": [
+        "BE:94:D9:A6:38:9B:95:83:D7:7D:22:11:9A:33:F8:CF:35:38:AB:E5:CA:C6:7E:91:80:06:D2:DA:F7:4F:D3:E4"
+      ]
+    }
+  }
+]
